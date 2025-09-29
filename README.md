@@ -1,8 +1,5 @@
-# Trabajo Practico
-
-## Desarrollo de Sistemas
-
-
+# Desarrollo de Sistemas
+## Trabajo Practico
 
 Integrantes:
 
