@@ -1,0 +1,26 @@
+# Compilados de Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs y temporales
+*.log
+*.tmp
+*.swp
+
+# Carpetas de build y distribución
+/build/
+/dist/
+/out/
+
+# Configuración privada de NetBeans
+/nbproject/private/
+/nbbuild/
+/nbdist/
+/nbactions.xml
+/nb-configuration.xml
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
