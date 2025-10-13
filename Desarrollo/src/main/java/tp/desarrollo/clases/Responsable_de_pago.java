@@ -5,14 +5,14 @@
 package tp.desarrollo.clases;
 
 import java.time.LocalDate;
-
+import tp.desarrollo.modelo.TipoDocumento;
 /**
  *
  * @author juanc
  */
 public class Responsable_de_pago extends Persona {
     
-    public Responsable_de_pago(String apellido, String nombre, String tipo_documento, int num_documento, int cuit, LocalDate fecha_nacimiento, Direccion direccion, String nacionalidad) {
+    public Responsable_de_pago(String apellido, String nombre, TipoDocumento tipo_documento, int num_documento, int cuit, LocalDate fecha_nacimiento, Direccion direccion, String nacionalidad) {
         super(apellido, nombre, tipo_documento, num_documento, cuit, fecha_nacimiento, direccion, nacionalidad);
     }
     

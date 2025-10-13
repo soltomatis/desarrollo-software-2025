@@ -5,7 +5,7 @@
 package tp.desarrollo.clases;
 
 import java.time.LocalDate;
-
+import tp.desarrollo.modelo.TipoDocumento;
 /**
  *
  * @author Cesar
@@ -13,14 +13,14 @@ import java.time.LocalDate;
 public class Persona {
     private String apellido;
     private String nombre;
-    private String tipo_documento;
+    private TipoDocumento tipo_documento;
     private int num_documento;
     private int cuit;
     private LocalDate fecha_nacimiento;
     private Direccion direccion;
     private String nacionalidad;
 
-    public Persona(String apellido, String nombre, String tipo_documento, int num_documento, int cuit, LocalDate fecha_nacimiento, Direccion direccion, String nacionalidad) {
+    public Persona(String apellido, String nombre, TipoDocumento tipo_documento, int num_documento, int cuit, LocalDate fecha_nacimiento, Direccion direccion, String nacionalidad) {
         this.apellido = apellido;
         this.nombre = nombre;
         this.tipo_documento = tipo_documento;
@@ -38,7 +38,7 @@ public class Persona {
     public String getNombre(){
         return this.nombre;
     }
-    public String getTipoDocumento(){
+    public TipoDocumento getTipoDocumento(){
         return this.tipo_documento;
     }
     public int getNumDocumento(){
