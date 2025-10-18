@@ -4,7 +4,10 @@
 
 package tp.desarrollo;
 
+import java.util.List;
+
 import tp.desarrollo.Gestores.Gestor_Usuario;
+import tp.desarrollo.clases.Huesped;
 import tp.desarrollo.dao.HuespedDaoArchivos;
 
 /**
@@ -17,5 +20,6 @@ public class Desarrollo {
         System.out.println("Hello World!");
         HuespedDaoArchivos huespedDao = new HuespedDaoArchivos();
         Gestor_Usuario gestorUsuario = new Gestor_Usuario(huespedDao);
+        gestorUsuario.buscar_huespedes("Carlos", null, null, null);
     }
 }

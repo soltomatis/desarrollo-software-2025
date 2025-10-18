@@ -4,6 +4,8 @@
  */
 package tp.desarrollo.Gestores;
 
+import java.util.List;
+
 import tp.desarrollo.clases.*;
 import tp.desarrollo.dao.HuespedDaoArchivos;
 import tp.desarrollo.dto.*;
@@ -25,8 +27,21 @@ public class Gestor_Usuario{
     }
 
     public void buscar_huespedes(String nombre, String apellido, TipoDocumento tipoDocumento, String numeroDocumento){
+        if(nombre == null){
+            nombre = "";
+        }
+        if(apellido == null){
+            apellido = "";
+        }
+        if(numeroDocumento == null){
+            numeroDocumento = "-1";
+        }
         HuespedDTO huespedBusqueda = new HuespedDTO(nombre, apellido, tipoDocumento, numeroDocumento);
-        huespedDao.buscar_huespedes(huespedBusqueda);
+        List<Huesped> h = huespedDao.buscar_huespedes(huespedBusqueda);
+        System.out.println("Huéspedes encontrados: " + h.size());
+        for (Huesped huésped : h) {     
+            System.out.println("Nombre: " + huésped.getNombre() + ", Apellido: " + huésped.getApellido());
+        }
     }
     
 }

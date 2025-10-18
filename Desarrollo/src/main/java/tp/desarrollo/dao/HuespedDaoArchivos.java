@@ -19,11 +19,12 @@ public class HuespedDaoArchivos implements HuespedDAO{
         
     }
     public List<Huesped> buscar_huespedes(HuespedDTO huesped){
-        String archivo = "huespedes.csv";
+        String archivo = "C:\\Users\\Cesar\\Desktop\\UTN 2025\\DESARROLLO\\TP\\huespedes_ejemplo.csv";
         String linea;
         List<Huesped> resultado = new ArrayList<>();
         //Lógica para buscar huéspedes en el archivo CSV
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            linea = br.readLine(); // salta el encabezado
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(",");
                 // Comparar los datos con los del objeto huesped
@@ -33,16 +34,16 @@ public class HuespedDaoArchivos implements HuespedDAO{
                     int numDoc = Integer.parseInt(datos[6]);
                     boolean coincide = true;
 
-                    if (nombre != null && !nombre.isBlank()) {
+                    if (huesped.getNombre() != null && !huesped.getNombre().isBlank()) {
                         coincide &= huesped.getNombre().equalsIgnoreCase(nombre);
                     }
-                    if (apellido != null && !apellido.isBlank()) {
+                    if (huesped.getApellido() != null && !huesped.getApellido().isBlank()) {
                         coincide &= huesped.getApellido().equalsIgnoreCase(apellido);
                     }
-                    if (tipoDoc != null ) {
-                       coincide &= huesped.getTipoDocumento().toString().equalsIgnoreCase(tipoDoc);                            
+                    if (huesped.getTipoDocumento() != null) {
+                        coincide &= huesped.getTipoDocumento().toString().equalsIgnoreCase(tipoDoc);
                     }
-                    if (numDoc > 0) {
+                    if (huesped.getNumeroDocumento() > 0) {
                         coincide &= huesped.getNumeroDocumento() == numDoc;
                     }
                     if(coincide){
