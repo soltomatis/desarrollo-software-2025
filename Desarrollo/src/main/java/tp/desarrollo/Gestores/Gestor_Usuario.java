@@ -202,6 +202,7 @@ public class Gestor_Usuario{
     }
     public void dar_alta_huesped(){
         while(true){
+        System.out.println("Ingrese los datos del nuevo huésped:");
         HuespedDTO nuevoHuesped = ingresar_datos_huesped();
         while(huespedDao.existe_documento(nuevoHuesped.getTipoDocumento(), nuevoHuesped.getNumeroDocumento())){
             System.out.println("¡CUIDADO! El tipo y número de documento ya existen en el sistema");
@@ -210,7 +211,7 @@ public class Gestor_Usuario{
             Scanner scanner = new Scanner(System.in);
             decision = scanner.nextLine();
             if(decision.equalsIgnoreCase("S")){
-                
+                break;
             }
             else{
                 System.out.println("Corrija los datos del huésped.");
@@ -234,7 +235,14 @@ public class Gestor_Usuario{
                         nuevoHuesped.setNumeroDocumento(Integer.parseInt(numeroDocumento));
 
             }
-        }  
+        }
+        System.out.println("Huésped "+ nuevoHuesped.getNombre() + nuevoHuesped.getApellido() +" ha sido satisfactoriamente cargado al sistema. ¿Desea cargar otro? (S/N)");
+        String decision;
+        Scanner scanner = new Scanner(System.in);
+        decision = scanner.nextLine();
+        if(decision.equalsIgnoreCase("N")){
+            break;
+        }
     }    
     }
 
