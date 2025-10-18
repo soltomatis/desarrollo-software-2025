@@ -5,6 +5,7 @@
 package tp.desarrollo.Gestores;
 
 import java.util.List;
+import java.util.Scanner;
 
 import tp.desarrollo.clases.*;
 import tp.desarrollo.dao.HuespedDaoArchivos;
@@ -21,7 +22,9 @@ public class Gestor_Usuario{
     public Gestor_Usuario(HuespedDaoArchivos dao) {
         this.huespedDao = dao;
     }
-
+    private void dar_alta_huesped(){
+        System.out.println("Ejecutando alta de huésped...");
+    }
     public void modificar_huesped(HuespedDTO huesped){
         
     }
@@ -37,10 +40,42 @@ public class Gestor_Usuario{
             numeroDocumento = "-1";
         }
         HuespedDTO huespedBusqueda = new HuespedDTO(nombre, apellido, tipoDocumento, numeroDocumento);
-        List<Huesped> h = huespedDao.buscar_huespedes(huespedBusqueda);
-        System.out.println("Huéspedes encontrados: " + h.size());
-        for (Huesped huésped : h) {     
-            System.out.println("Nombre: " + huésped.getNombre() + ", Apellido: " + huésped.getApellido());
+        List<Huesped> lista_huespedes = huespedDao.buscar_huespedes(huespedBusqueda);
+        if(lista_huespedes == null || lista_huespedes.isEmpty()){
+        dar_alta_huesped();
+        }
+        else{
+        System.out.println("Huéspedes encontrados: " + lista_huespedes.size());
+        int i = 1;
+        for (Huesped huesped : lista_huespedes) {
+            System.out.println(i + ". " + huesped.getNombre() + " " + huesped.getApellido() + " - " + huesped.getTipoDocumento() + " " + huesped.getNumDocumento());
+            i++;
+        }
+        System.out.println("Seleccione el número del huésped o presione ENTER para dar de alta uno nuevo:");
+        String entrada;
+        try (Scanner scanner = new Scanner(System.in)) {
+            entrada = scanner.nextLine();
+        }
+
+        if (entrada.isBlank()) {
+            System.out.println("No se seleccionó ningún huésped. Ejecutando alta...");
+            dar_alta_huesped(); // CU11
+            return;
+        }
+         try {
+        int seleccion = Integer.parseInt(entrada);
+        if (seleccion >= 1 && seleccion <= lista_huespedes.size()) {
+            Huesped huespedSeleccionado = lista_huespedes.get(seleccion - 1);
+            System.out.println("Huésped seleccionado: " + huespedSeleccionado.getNombre() + " " + huespedSeleccionado.getApellido());
+            //modificar_huesped(); // CU10
+        } else {
+            System.out.println("Selección fuera de rango. Ejecutando alta...");
+            dar_alta_huesped(); // CU11
+        }
+        } catch (NumberFormatException e) {
+            System.out.println("Entrada inválida. Ejecutando alta...");
+            dar_alta_huesped(); // CU11
+        }
         }
     }
     
