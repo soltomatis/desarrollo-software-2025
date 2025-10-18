@@ -16,17 +16,20 @@ import tp.desarrollo.modelo.TipoDocumento;
  *
  * @author juanc
  */
+
 public class Gestor_Usuario{
+
     private HuespedDaoArchivos huespedDao;
 
     public Gestor_Usuario(HuespedDaoArchivos dao) {
         this.huespedDao = dao;
     }
+
     private void dar_alta_huesped(){
         System.out.println("Ejecutando alta de huésped...");
     }
+
     public void modificar_huesped(HuespedDTO huesped){
-        
     }
 
     public void buscar_huespedes(String nombre, String apellido, TipoDocumento tipoDocumento, String numeroDocumento){
@@ -78,5 +81,57 @@ public class Gestor_Usuario{
         }
         }
     }
-    
+
+    public boolean autenticar_conserje() {
+        java.util.Scanner sc = new java.util.Scanner(System.in);
+
+        System.out.print("Usuario (CONSERJE): ");
+        String user = sc.nextLine().trim();
+
+        System.out.print("Contraseña: ");
+        String pass = sc.nextLine();
+
+        String ruta = "C:\\Users\\Maria Sol\\Desarrollo\\usuarios.csv";
+
+        java.io.BufferedReader br = null;
+        try {
+            br = new java.io.BufferedReader(new java.io.FileReader(ruta));
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                if (linea.isBlank() || linea.startsWith("#")) continue;
+                String[] cols = linea.split(";");
+                if (cols.length < 3) continue;
+
+                String u = cols[0].trim();
+                String p = cols[1].trim();
+                boolean activo = Boolean.parseBoolean(cols[2].trim());
+
+                if (u.equalsIgnoreCase(user)) {
+                    if (!activo) {
+                        System.out.println("El conserje está inactivo.");
+                        return false;
+                    }
+                    if (p.equals(pass)) {
+                        System.out.println("Conserje autenticado.");
+                        return true;
+                    } else {
+                        System.out.println("Contraseña incorrecta.");
+                        return false;
+                    }
+                }
+            }
+            System.out.println("Conserje no encontrado.");
+            return false;
+        } catch (java.io.IOException e) {
+            System.out.println("Error leyendo credenciales: " + e.getMessage());
+            return false;
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (java.io.IOException ignore) {
+                }
+            }
+        }
+    }
 }

@@ -4,7 +4,6 @@
  */
 package tp.desarrollo.dto;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import tp.desarrollo.clases.Direccion;
 import tp.desarrollo.modelo.TipoDocumento;
