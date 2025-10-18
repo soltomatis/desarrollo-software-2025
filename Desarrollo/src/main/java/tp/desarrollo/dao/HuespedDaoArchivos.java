@@ -3,7 +3,10 @@ import tp.desarrollo.interfaces.HuespedDAO;
 import tp.desarrollo.modelo.TipoDocumento;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -136,5 +139,47 @@ public class HuespedDaoArchivos implements HuespedDAO{
             e.printStackTrace();
         }
         return resultado;
+    }
+    
+    public void eliminar(Huesped huespedAEliminar) {
+        String archivo = "src/main/java/tp/desarrollo/db/huespedes.csv";
+        File archivoOriginal = new File(archivo);
+        // Creamos un archivo temporal en el mismo directorio que el original.
+        File archivoTemporal = new File(archivoOriginal.getParent(), "temp_huespedes.csv");
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(archivoOriginal));
+             BufferedWriter bw = new BufferedWriter(new FileWriter(archivoTemporal))) {
+
+            String linea;
+            
+            if ((linea = br.readLine()) != null) {
+                bw.write(linea + System.lineSeparator());
+            }
+
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(",");
+                // Asumimos que las columnas 5 y 6 contienen el tipo y nro de documento.
+                String tipoDocArchivo = datos[5].trim();
+                int numDocArchivo = Integer.parseInt(datos[6].trim());
+
+                // Si la línea actual NO corresponde al huesped a eliminar la escribimos en el temporal.
+                if (!(huespedAEliminar.getTipoDocumento().toString().equalsIgnoreCase(tipoDocArchivo) &&
+                      huespedAEliminar.getNumDocumento() == numDocArchivo)) {
+                    bw.write(linea + System.lineSeparator());
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            System.err.println("Error durante la operación de eliminación de huésped: " + e.getMessage());
+            return;
+        }
+
+        // Una vez que el archivo temporal está completo reemplazamos el original.
+        if (archivoOriginal.delete()) {
+            if (!archivoTemporal.renameTo(archivoOriginal)) {
+                System.err.println("Error crítico: No se pudo renombrar el archivo temporal. Los datos originales pueden estar en 'temp_huespedes.csv'");
+            }
+        } else {
+            System.err.println("Error crítico: No se pudo borrar el archivo original.");
+        }
     }
 }

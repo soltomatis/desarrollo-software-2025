@@ -13,6 +13,8 @@ import tp.desarrollo.dao.HuespedDaoArchivos;
 import tp.desarrollo.dao.UsuarioDaoArchivos;
 import tp.desarrollo.dto.*;
 import tp.desarrollo.modelo.TipoDocumento;
+import tp.desarrollo.dao.ReservaDaoArchivos;
+import tp.desarrollo.excepciones.HuespedConReservasExcepcion;
 
 /**
  *
@@ -24,6 +26,8 @@ public class Gestor_Usuario{
     private HuespedDaoArchivos huespedDao;
 
     private UsuarioDaoArchivos usuarioDao;
+    
+    private ReservaDaoArchivos reservaDao;
 
 
     public Gestor_Usuario(HuespedDaoArchivos dao, UsuarioDaoArchivos usuarioDao) {
@@ -317,6 +321,20 @@ public class Gestor_Usuario{
         } else {
             System.out.println("Usuario o contraseña incorrectos o inactivo.");
             return false;
+        }
+    }
+    
+    public void darBajaHuesped(Huesped huespedAEliminar) throws HuespedConReservasExcepcion {
+        // Paso 2.A (Flujo Alternativo): Verificar si el huesped ha estado alojado
+        boolean tieneReservas = reservaDao.tieneReservas(huespedAEliminar);
+
+        if (tieneReservas) {
+            // Si tiene reservas se cumple el flujo alternativo
+            // Excepcion para que la UI muestre el mensaje
+            throw new HuespedConReservasExcepcion("El huésped " + huespedAEliminar.getNombre() + " " + huespedAEliminar.getApellido() + " no puede ser eliminado pues tiene reservas asociadas.");
+        } else {
+            // Flujo Principal: El huésped no tiene reservas, se puede eliminar.
+            huespedDao.eliminar(huespedAEliminar);
         }
     }
 }
