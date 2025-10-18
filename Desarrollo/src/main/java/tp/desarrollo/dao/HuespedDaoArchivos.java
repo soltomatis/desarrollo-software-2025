@@ -40,7 +40,8 @@ public class HuespedDaoArchivos implements HuespedDAO{
         return existe;
     }
     public List<Huesped> buscar_huespedes(HuespedDTO huesped){
-        String archivo = "C:\\Users\\Cesar\\Desktop\\UTN 2025\\DESARROLLO\\TP\\huespedes_ejemplo.csv";
+        String archivo = "C:\\Users\\Maria Sol\\Desarrollo\\huespedes_ejemplo.csv";
+
         String linea;
         List<Huesped> resultado = new ArrayList<>();
         //Lógica para buscar huéspedes en el archivo CSV

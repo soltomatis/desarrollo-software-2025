@@ -4,11 +4,9 @@
 
 package tp.desarrollo;
 
-import java.util.List;
-
 import tp.desarrollo.Gestores.Gestor_Usuario;
-import tp.desarrollo.clases.Huesped;
 import tp.desarrollo.dao.HuespedDaoArchivos;
+import tp.desarrollo.dao.UsuarioDaoArchivos;
 
 /**
  *
@@ -19,7 +17,27 @@ public class Desarrollo {
     public static void main(String[] args) {
         System.out.println("Hello World!");
         HuespedDaoArchivos huespedDao = new HuespedDaoArchivos();
-        Gestor_Usuario gestorUsuario = new Gestor_Usuario(huespedDao);
+        UsuarioDaoArchivos usuarioDao = new UsuarioDaoArchivos();
+        Gestor_Usuario gestorUsuario = new Gestor_Usuario(huespedDao, usuarioDao);
+
+        boolean autenticado = false;
+
+        while (!autenticado) {
+            autenticado = gestorUsuario.autenticar_conserje();
+
+            if (!autenticado) {
+                System.out.println("Intentar nuevamente? (S/N): ");
+                java.util.Scanner sc = new java.util.Scanner(System.in);
+                String opcion = sc.nextLine().trim().toUpperCase();
+                if (!opcion.equals("S")) {
+                    System.out.println("Fin del programa");
+                    return;
+                }
+            }
+        }
+
+        System.out.println("Acceso concedido");
+
         //gestorUsuario.buscar_huespedes("Carlos", null, null, null);
         gestorUsuario.dar_alta_huesped();
     }

@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import tp.desarrollo.clases.*;
 import tp.desarrollo.dao.HuespedDaoArchivos;
+import tp.desarrollo.dao.UsuarioDaoArchivos;
 import tp.desarrollo.dto.*;
 import tp.desarrollo.modelo.TipoDocumento;
 
@@ -17,11 +18,17 @@ import tp.desarrollo.modelo.TipoDocumento;
  *
  * @author juanc
  */
+
 public class Gestor_Usuario{
+
     private HuespedDaoArchivos huespedDao;
 
-    public Gestor_Usuario(HuespedDaoArchivos dao) {
+    private UsuarioDaoArchivos usuarioDao;
+
+
+    public Gestor_Usuario(HuespedDaoArchivos dao, UsuarioDaoArchivos usuarioDao) {
         this.huespedDao = dao;
+        this.usuarioDao = usuarioDao;
     }
     private HuespedDTO ingresar_datos_huesped(){
         String apellido;
@@ -232,7 +239,6 @@ public class Gestor_Usuario{
     }
 
     public void modificar_huesped(HuespedDTO huesped){
-        
     }
 
     public void buscar_huespedes(String nombre, String apellido, TipoDocumento tipoDocumento, String numeroDocumento){
@@ -265,7 +271,7 @@ public class Gestor_Usuario{
 
         if (entrada.isBlank()) {
             System.out.println("No se seleccionó ningún huésped. Ejecutando alta...");
-            dar_alta_huesped(); // CU11
+            dar_alta_huesped(); // CU9
             return;
         }
          try {
@@ -276,13 +282,32 @@ public class Gestor_Usuario{
             //modificar_huesped(); // CU10
         } else {
             System.out.println("Selección fuera de rango. Ejecutando alta...");
-            dar_alta_huesped(); // CU11
+            dar_alta_huesped(); // CU9
         }
         } catch (NumberFormatException e) {
             System.out.println("Entrada inválida. Ejecutando alta...");
-            dar_alta_huesped(); // CU11
+            dar_alta_huesped(); // CU9
         }
         }
     }
-    
+
+    public boolean autenticar_conserje() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Usuario (CONSERJE): ");
+        String user = sc.nextLine().trim();
+
+        System.out.print("Contraseña: ");
+        String pass = sc.nextLine().trim();
+
+        boolean valido = usuarioDao.validarCredenciales(user, pass);
+
+        if (valido) {
+            System.out.println("Conserje autenticado correctamente.");
+            return true;
+        } else {
+            System.out.println("Usuario o contraseña incorrectos o inactivo.");
+            return false;
+        }
+    }
 }

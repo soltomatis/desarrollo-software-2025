@@ -5,7 +5,6 @@
 package tp.desarrollo.clases;
 
 import java.time.LocalDate;
-import tp.desarrollo.clases.Persona;
 import tp.desarrollo.modelo.TipoDocumento;
 
 /**
