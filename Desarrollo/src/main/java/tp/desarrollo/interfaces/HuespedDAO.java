@@ -4,6 +4,8 @@
  */
 package tp.desarrollo.interfaces;
 
+import java.util.List;
+
 import tp.desarrollo.clases.*;
 import tp.desarrollo.dto.*;
 
@@ -13,5 +15,5 @@ import tp.desarrollo.dto.*;
  */
 public interface HuespedDAO {
     void modificar_huesped(HuespedDTO huesped);
-
+    List<Huesped> buscar_huespedes(HuespedDTO huesped);
 }

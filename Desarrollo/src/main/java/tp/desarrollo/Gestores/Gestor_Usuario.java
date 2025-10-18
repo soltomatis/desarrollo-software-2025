@@ -25,7 +25,8 @@ public class Gestor_Usuario{
     }
 
     public void buscar_huespedes(String nombre, String apellido, TipoDocumento tipoDocumento, String numeroDocumento){
-        
+        HuespedDTO huespedBusqueda = new HuespedDTO(nombre, apellido, tipoDocumento, numeroDocumento);
+        huespedDao.buscar_huespedes(huespedBusqueda);
     }
     
 }

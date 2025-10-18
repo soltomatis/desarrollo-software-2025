@@ -18,7 +18,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
     public void modificar_huesped(HuespedDTO huesped){
         
     }
-    public List<Huesped> buscarHuespedes(HuespedDTO huesped){
+    public List<Huesped> buscar_huespedes(HuespedDTO huesped){
         String archivo = "huespedes.csv";
         String linea;
         List<Huesped> resultado = new ArrayList<>();
