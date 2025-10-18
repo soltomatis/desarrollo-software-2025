@@ -29,6 +29,23 @@ public class Direccion {
         this.provincia = provincia;
         this.pais = pais;
     }
-    
+    public String getCalle() {
+        return calle;
+    }
+    public int getNumero() {
+        return numero;
+    }
+    public int getCodigoPostal() {
+        return codigo_postal;
+    }
+    public String getLocalidad() {
+        return localidad;
+    }
+    public String getProvincia() {
+        return provincia;
+    }
+    public String getPais() {
+        return pais;
+    }
    
 }

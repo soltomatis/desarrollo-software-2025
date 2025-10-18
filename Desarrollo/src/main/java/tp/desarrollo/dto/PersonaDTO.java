@@ -51,4 +51,29 @@ public class PersonaDTO {
     public int getNum_documento() {
         return num_documento;
     }
+    public int getCuit() {
+        return cuit;
+    }
+    public LocalDate getFecha_nacimiento() {
+        return fecha_nacimiento;
+    }
+    public Direccion getDireccion() {
+        return direccion;
+    }
+    public String getNacionalidad() {
+        return nacionalidad;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    public void setTipo_documento(TipoDocumento tipo_documento) {
+        this.tipo_documento = tipo_documento;
+    }
+    public void setNum_documento(int num_documento) {
+        this.num_documento = num_documento;
+    }
 }

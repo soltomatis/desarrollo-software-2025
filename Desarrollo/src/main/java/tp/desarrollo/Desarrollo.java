@@ -20,6 +20,7 @@ public class Desarrollo {
         System.out.println("Hello World!");
         HuespedDaoArchivos huespedDao = new HuespedDaoArchivos();
         Gestor_Usuario gestorUsuario = new Gestor_Usuario(huespedDao);
-        gestorUsuario.buscar_huespedes("Carlos", null, null, null);
+        //gestorUsuario.buscar_huespedes("Carlos", null, null, null);
+        gestorUsuario.dar_alta_huesped();
     }
 }

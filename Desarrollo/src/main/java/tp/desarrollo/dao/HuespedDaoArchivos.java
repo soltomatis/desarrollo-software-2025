@@ -18,6 +18,27 @@ public class HuespedDaoArchivos implements HuespedDAO{
     public void modificar_huesped(HuespedDTO huesped){
         
     }
+    public boolean existe_documento(TipoDocumento tipoDocumento, int numeroDocumento){
+        String archivo = "C:\\Users\\Cesar\\Desktop\\UTN 2025\\DESARROLLO\\TP\\huespedes_ejemplo.csv";
+        String linea;
+        boolean existe = false;
+        //Lógica para buscar huéspedes en el archivo CSV
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            linea = br.readLine(); // salta el encabezado
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(",");
+                String tipoDoc = datos[5];
+                int numDoc = Integer.parseInt(datos[6]);
+                if(tipoDocumento.toString().equalsIgnoreCase(tipoDoc) && numeroDocumento == numDoc){
+                    System.out.println("El documento ya existe en el sistema.");
+                    existe = true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return existe;
+    }
     public List<Huesped> buscar_huespedes(HuespedDTO huesped){
         String archivo = "C:\\Users\\Cesar\\Desktop\\UTN 2025\\DESARROLLO\\TP\\huespedes_ejemplo.csv";
         String linea;

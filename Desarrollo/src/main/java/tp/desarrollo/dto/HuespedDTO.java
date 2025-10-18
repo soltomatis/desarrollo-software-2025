@@ -49,6 +49,15 @@ public class HuespedDTO extends PersonaDTO{
     public Integer getNumeroDocumento(){
         return  super.getNum_documento();
     }
+    public LocalDate getFecha_nacimiento(){
+        return  super.getFecha_nacimiento();
+    }
+    public Direccion getDireccion(){
+        return  super.getDireccion();
+    }
+    public String getNacionalidad(){
+        return  super.getNacionalidad();
+    }
     //SETTERS
     public void setTelefono(String telefono){
         this.telefono = telefono;
@@ -59,4 +68,17 @@ public class HuespedDTO extends PersonaDTO{
     public void setOcupacion(String ocupacion){
         this.ocupacion = ocupacion;
     }
+    public void setNombre(String nombre){
+        super.setNombre(nombre);
+    }
+    public void setApellido(String apellido){
+        super.setApellido(apellido);
+    }
+    public void setTipoDocumento(TipoDocumento tipoDocumento){
+        super.setTipo_documento(tipoDocumento);
+    }
+    public void setNumeroDocumento(Integer numeroDocumento){
+        super.setNum_documento(numeroDocumento);
+    }
+
 }
