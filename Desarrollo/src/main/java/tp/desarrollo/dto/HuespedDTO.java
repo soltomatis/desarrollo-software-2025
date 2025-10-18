@@ -6,6 +6,7 @@ package tp.desarrollo.dto;
 
 import java.time.LocalDate;
 import tp.desarrollo.clases.Direccion;
+import tp.desarrollo.modelo.TipoDocumento;
 
 /**
  *
@@ -16,8 +17,10 @@ public class HuespedDTO extends PersonaDTO{
     private String telefono;
     private String email;
     private String ocupacion;
-    
-    public HuespedDTO(String telefono, String email, String ocupacion, String apellido, String nombre, String tipo_documento, int num_documento, int cuit, LocalDate fecha_nacimiento, Direccion direccion, String nacionalidad) {
+    public HuespedDTO(String nombre, String apellido, TipoDocumento tipoDocumento, String numeroDocumento) {
+        super(apellido, nombre, tipoDocumento, numeroDocumento);
+    }
+    public HuespedDTO(String telefono, String email, String ocupacion, String apellido, String nombre, TipoDocumento tipo_documento, int num_documento, int cuit, LocalDate fecha_nacimiento, Direccion direccion, String nacionalidad) {
         super(apellido, nombre, tipo_documento, num_documento, cuit, fecha_nacimiento, direccion, nacionalidad);
         this.telefono = telefono;
         this.email = email;
@@ -34,7 +37,18 @@ public class HuespedDTO extends PersonaDTO{
     public String getOcupacion(){
         return  this.ocupacion;
     }
-    
+    public String getNombre(){
+        return  super.getNombre();
+    }
+    public String getApellido(){
+        return  super.getApellido();
+    }
+    public TipoDocumento getTipoDocumento(){
+        return  super.getTipo_documento();
+    }
+    public Integer getNumeroDocumento(){
+        return  super.getNum_documento();
+    }
     //SETTERS
     public void setTelefono(String telefono){
         this.telefono = telefono;
