@@ -21,6 +21,7 @@ public class Desarrollo {
         Gestor_Usuario gestorUsuario = new Gestor_Usuario(huespedDao, usuarioDao);
 
         boolean autenticado = false;
+        gestorUsuario.buscar_huespedes("Carlos", null, null, null);
         gestorUsuario.dar_alta_huesped();
         while (!autenticado) {
             autenticado = gestorUsuario.autenticar_conserje();
@@ -37,8 +38,6 @@ public class Desarrollo {
         }
 
         System.out.println("Acceso concedido");
-
-        //gestorUsuario.buscar_huespedes("Carlos", null, null, null);
 
     }
 }

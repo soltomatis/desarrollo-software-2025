@@ -47,5 +47,11 @@ public class Direccion {
     public String getPais() {
         return pais;
     }
+    public String getDepartamento() {
+        return departamento;
+    }
+    public int getPiso() {
+        return piso;
+    }
    
 }

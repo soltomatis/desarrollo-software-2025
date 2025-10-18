@@ -58,6 +58,10 @@ public class HuespedDTO extends PersonaDTO{
     public String getNacionalidad(){
         return  super.getNacionalidad();
     }
+    public int getCuit(){
+        return  super.getCuit();
+    }
+    
     //SETTERS
     public void setTelefono(String telefono){
         this.telefono = telefono;

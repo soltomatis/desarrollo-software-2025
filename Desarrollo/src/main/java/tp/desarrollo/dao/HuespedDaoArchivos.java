@@ -18,6 +18,39 @@ public class HuespedDaoArchivos implements HuespedDAO{
     public void modificar_huesped(HuespedDTO huesped){
         
     }
+    public void registrar_huesped(HuespedDTO huesped){
+        String archivo = "src/main/java/tp/desarrollo/db/huespedes.csv";
+        //Lógica para registrar un nuevo huésped en el archivo CSV
+        try (java.io.FileWriter fw = new java.io.FileWriter(archivo, true)) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String fechaNacimiento = huesped.getFecha_nacimiento().format(formatter);
+            tp.desarrollo.clases.Direccion direccion = huesped.getDireccion();
+            String nuevaLinea = String.join(",",
+                huesped.getTelefono(),
+                huesped.getEmail(),
+                huesped.getOcupacion(),
+                huesped.getApellido(),
+                huesped.getNombre(),
+                huesped.getTipoDocumento().toString(),
+                String.valueOf(huesped.getNumeroDocumento()),
+                String.valueOf(huesped.getCuit()),
+                fechaNacimiento,
+                direccion.getCalle(),
+                String.valueOf(direccion.getNumero()),
+                String.valueOf(direccion.getPiso()),
+                String.valueOf(direccion.getDepartamento()),
+                String.valueOf(direccion.getCodigoPostal()),
+                direccion.getLocalidad(),
+                direccion.getProvincia(),
+                direccion.getPais(),
+                huesped.getNacionalidad()
+            ) + "\n";
+            fw.write(nuevaLinea);
+            System.out.println("Huésped registrado exitosamente.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public boolean existe_documento(TipoDocumento tipoDocumento, int numeroDocumento){
         String archivo = "src/main/java/tp/desarrollo/db/huespedes_ejemplo.csv";
         String linea;

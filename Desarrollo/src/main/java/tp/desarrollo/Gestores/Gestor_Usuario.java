@@ -236,6 +236,7 @@ public class Gestor_Usuario{
 
             }
         }
+        huespedDao.registrar_huesped(nuevoHuesped);
         System.out.println("Huésped "+ nuevoHuesped.getNombre() + nuevoHuesped.getApellido() +" ha sido satisfactoriamente cargado al sistema. ¿Desea cargar otro? (S/N)");
         String decision;
         Scanner scanner = new Scanner(System.in);
