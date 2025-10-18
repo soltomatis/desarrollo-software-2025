@@ -78,6 +78,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
         String linea;
         List<Huesped> resultado = new ArrayList<>();
         //Lógica para buscar huéspedes en el archivo CSV
+        System.out.println("Directorio actual: " + System.getProperty("user.dir"));
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             linea = br.readLine(); // salta el encabezado
             while ((linea = br.readLine()) != null) {

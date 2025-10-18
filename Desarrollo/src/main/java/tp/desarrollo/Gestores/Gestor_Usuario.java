@@ -25,6 +25,9 @@ public class Gestor_Usuario{
 
     private UsuarioDaoArchivos usuarioDao;
 
+    // Scanner compartido para todas las entradas de consola (evita cerrar System.in accidentalmente)
+    private final Scanner scanner = new Scanner(System.in);
+
 
     public Gestor_Usuario(HuespedDaoArchivos dao, UsuarioDaoArchivos usuarioDao) {
         this.huespedDao = dao;
@@ -49,8 +52,7 @@ public class Gestor_Usuario{
         String email = "";
         String ocupacion ;
         String nacionalidad;
-        //ingreso de datos por consola y validacion basica
-        Scanner scanner = new Scanner(System.in);
+    //ingreso de datos por consola y validacion basica (usa el scanner de instancia)
         System.out.println("Ingrese el apellido del huésped:");
 
         apellido = scanner.nextLine();
@@ -88,6 +90,9 @@ public class Gestor_Usuario{
         String cuitInput = scanner.nextLine();
         if (!cuitInput.isBlank()) {
             cuit = Integer.parseInt(cuitInput);
+        }
+        else {
+            cuit = -1;
         }
 
         System.out.println("Ingrese la fecha de nacimiento del huésped (YYYY-MM-DD):");
@@ -130,11 +135,17 @@ public class Gestor_Usuario{
         
         System.out.println("Ingrese el departamento del huésped (opcional):");
         departamento = scanner.nextLine();
+        if(departamento.isBlank()){
+            departamento = "0";
+        }
 
         System.out.println("Ingrese el piso del huésped (opcional):");
         String pisoInput = scanner.nextLine();
         if (!pisoInput.isBlank()) {
             piso = Integer.parseInt(pisoInput);
+        }
+        else {
+            piso = 0;
         }
 
         System.out.println("Ingrese el código postal del huésped:");
@@ -182,6 +193,9 @@ public class Gestor_Usuario{
 
         System.out.println("Ingrese el email del huésped (opcional):");
         email = scanner.nextLine();
+        if(email.isBlank()){
+            email = "-";
+        }
 
         System.out.println("Ingrese la ocupación del huésped:");
         ocupacion = scanner.nextLine();
@@ -208,7 +222,6 @@ public class Gestor_Usuario{
             System.out.println("¡CUIDADO! El tipo y número de documento ya existen en el sistema");
             System.out.println("Aceptar igualmente o Corregir (S/N):");
             String decision;
-            Scanner scanner = new Scanner(System.in);
             decision = scanner.nextLine();
             if(decision.equalsIgnoreCase("S")){
                 break;
@@ -238,10 +251,9 @@ public class Gestor_Usuario{
         }
         huespedDao.registrar_huesped(nuevoHuesped);
         System.out.println("Huésped "+ nuevoHuesped.getNombre() + nuevoHuesped.getApellido() +" ha sido satisfactoriamente cargado al sistema. ¿Desea cargar otro? (S/N)");
-        String decision;
-        Scanner scanner = new Scanner(System.in);
-        decision = scanner.nextLine();
-        if(decision.equalsIgnoreCase("N")){
+        String decision1;
+        decision1 = scanner.nextLine().trim();
+        if(decision1.equalsIgnoreCase("N") ){
             break;
         }
     }    
@@ -274,9 +286,7 @@ public class Gestor_Usuario{
         }
         System.out.println("Seleccione el número del huésped o presione ENTER para dar de alta uno nuevo:");
         String entrada;
-        try (Scanner scanner = new Scanner(System.in)) {
-            entrada = scanner.nextLine();
-        }
+        entrada = scanner.nextLine();
 
         if (entrada.isBlank()) {
             System.out.println("No se seleccionó ningún huésped. Ejecutando alta...");
@@ -301,13 +311,11 @@ public class Gestor_Usuario{
     }
 
     public boolean autenticar_conserje() {
-        Scanner sc = new Scanner(System.in);
+    System.out.print("Usuario (CONSERJE): ");
+    String user = scanner.nextLine().trim();
 
-        System.out.print("Usuario (CONSERJE): ");
-        String user = sc.nextLine().trim();
-
-        System.out.print("Contraseña: ");
-        String pass = sc.nextLine().trim();
+    System.out.print("Contraseña: ");
+    String pass = scanner.nextLine().trim();
 
         boolean valido = usuarioDao.validarCredenciales(user, pass);
 
