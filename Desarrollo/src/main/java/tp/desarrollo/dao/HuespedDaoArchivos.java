@@ -19,7 +19,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
         
     }
     public boolean existe_documento(TipoDocumento tipoDocumento, int numeroDocumento){
-        String archivo = "C:\\Users\\Cesar\\Desktop\\UTN 2025\\DESARROLLO\\TP\\huespedes_ejemplo.csv";
+        String archivo = "src/main/java/tp/desarrollo/db/huespedes_ejemplo.csv";
         String linea;
         boolean existe = false;
         //Lógica para buscar huéspedes en el archivo CSV
