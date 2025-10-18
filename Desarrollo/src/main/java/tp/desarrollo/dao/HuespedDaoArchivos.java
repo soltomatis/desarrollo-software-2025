@@ -19,7 +19,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
         
     }
     public List<Huesped> buscar_huespedes(HuespedDTO huesped){
-        String archivo = "C:\\Users\\Maria Sol\\Desarrollo\\huespedes_ejemplo.csv";
+        String archivo = "src/main/java/tp/desarrollo/db/huespedes.csv";
 
         String linea;
         List<Huesped> resultado = new ArrayList<>();
