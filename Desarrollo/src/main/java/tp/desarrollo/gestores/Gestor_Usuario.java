@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package tp.desarrollo.Gestores;
+package tp.desarrollo.gestores;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +12,7 @@ import tp.desarrollo.clases.*;
 import tp.desarrollo.dao.HuespedDaoArchivos;
 import tp.desarrollo.dao.UsuarioDaoArchivos;
 import tp.desarrollo.dto.*;
-import tp.desarrollo.modelo.TipoDocumento;
+import tp.desarrollo.enums.TipoDocumento;
 import tp.desarrollo.dao.ReservaDaoArchivos;
 import tp.desarrollo.excepciones.HuespedConReservasExcepcion;
 

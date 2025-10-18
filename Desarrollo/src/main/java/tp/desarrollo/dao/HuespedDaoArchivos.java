@@ -1,6 +1,6 @@
 package tp.desarrollo.dao;
 import tp.desarrollo.interfaces.HuespedDAO;
-import tp.desarrollo.modelo.TipoDocumento;
+import tp.desarrollo.enums.TipoDocumento;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

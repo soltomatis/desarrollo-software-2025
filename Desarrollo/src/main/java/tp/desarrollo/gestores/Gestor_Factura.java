@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package tp.desarrollo.Gestores;
+package tp.desarrollo.gestores;
 
 /**
  *
  * @author juanc
  */
-public class Gestor_Pago {
+public class Gestor_Factura {
     
 }

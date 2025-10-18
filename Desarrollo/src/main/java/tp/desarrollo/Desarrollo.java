@@ -4,7 +4,7 @@
 
 package tp.desarrollo;
 
-import tp.desarrollo.Gestores.Gestor_Usuario;
+import tp.desarrollo.gestores.Gestor_Usuario;
 import tp.desarrollo.dao.HuespedDaoArchivos;
 import tp.desarrollo.dao.UsuarioDaoArchivos;
 

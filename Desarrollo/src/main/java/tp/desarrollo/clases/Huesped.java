@@ -5,7 +5,7 @@
 package tp.desarrollo.clases;
 
 import java.time.LocalDate;
-import tp.desarrollo.modelo.TipoDocumento;
+import tp.desarrollo.enums.TipoDocumento;
 
 /**
  *

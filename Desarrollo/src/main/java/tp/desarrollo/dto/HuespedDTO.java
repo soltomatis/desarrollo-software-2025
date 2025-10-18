@@ -6,7 +6,7 @@ package tp.desarrollo.dto;
 
 import java.time.LocalDate;
 import tp.desarrollo.clases.Direccion;
-import tp.desarrollo.modelo.TipoDocumento;
+import tp.desarrollo.enums.TipoDocumento;
 
 /**
  *
