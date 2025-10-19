@@ -7,6 +7,7 @@ package tp.desarrollo;
 import tp.desarrollo.gestores.Gestor_Usuario;
 import tp.desarrollo.dao.HuespedDaoArchivos;
 import tp.desarrollo.dao.UsuarioDaoArchivos;
+import tp.desarrollo.dao.ReservaDaoArchivos;
 import java.util.Scanner;
 import tp.desarrollo.enums.TipoDocumento;
 
@@ -22,7 +23,8 @@ public class Desarrollo {
 
         HuespedDaoArchivos huespedDao = new HuespedDaoArchivos();
         UsuarioDaoArchivos usuarioDao = new UsuarioDaoArchivos();
-        Gestor_Usuario gestorUsuario = new Gestor_Usuario(huespedDao, usuarioDao);
+        ReservaDaoArchivos reservaDao = new ReservaDaoArchivos();
+        Gestor_Usuario gestorUsuario = new Gestor_Usuario(huespedDao, usuarioDao, reservaDao);
 
         Scanner sc = new Scanner(System.in);
 
