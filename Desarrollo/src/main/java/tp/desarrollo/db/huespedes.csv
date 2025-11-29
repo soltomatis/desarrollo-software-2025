@@ -4,4 +4,3 @@ telefono,email,ocupacion,apellido,nombre,tipo_documento,num_documento,cuit,fecha
 3412345678,maria.lopez@email.com,Doctora,López,María,LE,1234567,271234567,1975-12-09,San Juan,456,A,1,5000,Rosario,Santa Fe,Argentina,Argentina
 2215678901,carlos.fernandez@email.com,Abogado,Fernández,Carlos,LC,2345678,202345678,1965-03-22,Rivadavia,789,,0,1000,La Plata,Buenos Aires,Argentina,Argentina
 3426789012,sofia.martinez@email.com,Diseñadora,Martínez,Sofía,OTRO,9999999,209999999,2000-09-14,Urquiza,321,C,2,3500,Santa Fe,Santa Fe,Argentina,Argentina
-

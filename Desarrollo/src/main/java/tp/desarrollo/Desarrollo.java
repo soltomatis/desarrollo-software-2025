@@ -5,23 +5,30 @@
 package tp.desarrollo;
 
 import tp.desarrollo.gestores.Gestor_Usuario;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import tp.desarrollo.dao.HuespedDaoArchivos;
 import tp.desarrollo.dao.UsuarioDaoArchivos;
 
-/**
- *
- * @author juanc
- */
+@SpringBootApplication
 public class Desarrollo {
 
     public static void main(String[] args) {
+        System.out.println("TP ACTUAL (1) - TP ANTERIOR (2): ");
+        java.util.Scanner sc1 = new java.util.Scanner(System.in);
+        String op = sc1.nextLine().trim().toUpperCase();
+        if(op.equals("1")) {
+            SpringApplication.run(Desarrollo.class, args);
+        } else if(op.equals("2")) {
         System.out.println("Hello World!");
         HuespedDaoArchivos huespedDao = new HuespedDaoArchivos();
         UsuarioDaoArchivos usuarioDao = new UsuarioDaoArchivos();
         Gestor_Usuario gestorUsuario = new Gestor_Usuario(huespedDao, usuarioDao);
 
         boolean autenticado = false;
-        gestorUsuario.buscar_huespedes("Cesa", null, null, null);
+        gestorUsuario.buscar_huespedes("Carlos", null, null, null);
         gestorUsuario.dar_alta_huesped();
         while (!autenticado) {
             autenticado = gestorUsuario.autenticar_conserje();
@@ -38,6 +45,6 @@ public class Desarrollo {
         }
 
         System.out.println("Acceso concedido");
-
+        }
     }
 }
