@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -18,9 +20,69 @@ import tp.desarrollo.dto.HuespedDTO;
 
 public class HuespedDaoArchivos implements HuespedDAO{
     @Override
-    public void modificar_huesped(HuespedDTO huesped){
-        
+    public void modificar_huesped(HuespedDTO huespedOriginal, HuespedDTO huespedModificado) {
+    File archivoOriginal = new File("src/main/java/tp/desarrollo/db/huespedes.csv");
+    File archivoTmp = new File("src/main/java/tp/desarrollo/db/huespedes_tmp.csv");
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(archivoOriginal));
+         BufferedWriter writer = new BufferedWriter(new FileWriter(archivoTmp))) {
+
+        String linea;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        while ((linea = reader.readLine()) != null) {
+            String[] campos = linea.split(",");
+
+            String apellido = campos[3];
+            String nombre = campos[4];
+            String tipoDoc = campos[5];
+            String nroDoc = campos[6];
+
+            if (apellido.equalsIgnoreCase(huespedOriginal.getApellido().trim())
+                    && nombre.equalsIgnoreCase(huespedOriginal.getNombre().trim())
+                    && tipoDoc.equalsIgnoreCase(huespedOriginal.getTipo_documento().toString().trim())
+                    && nroDoc.equals(String.valueOf(huespedOriginal.getNum_documento()))) {
+
+                String nuevaLinea = String.join(",",
+                    huespedModificado.getTelefono(),
+                    huespedModificado.getEmail(),
+                    huespedModificado.getOcupacion(),
+                    huespedModificado.getApellido(),
+                    huespedModificado.getNombre(),
+                    huespedModificado.getTipo_documento().toString(),
+                    String.valueOf(huespedModificado.getNum_documento()),
+                    String.valueOf(huespedModificado.getCuit()),
+                    huespedModificado.getFecha_nacimiento().format(formatter),
+                    huespedModificado.getDireccion().getCalle(),
+                    String.valueOf(huespedModificado.getDireccion().getNumero()),
+                    String.valueOf(huespedModificado.getDireccion().getPiso()),
+                    String.valueOf(huespedModificado.getDireccion().getDepartamento()),
+                    String.valueOf(huespedModificado.getDireccion().getCodigoPostal()),
+                    huespedModificado.getDireccion().getLocalidad(),
+                    huespedModificado.getDireccion().getProvincia(),
+                    huespedModificado.getDireccion().getPais(),
+                    huespedModificado.getNacionalidad()
+                );
+                writer.write(nuevaLinea);
+            } else {
+                writer.write(linea);
+            }
+            writer.newLine();
+        }
+
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+
+    // Reemplazo seguro con NIO
+    try {
+        Files.deleteIfExists(archivoOriginal.toPath());
+        Files.move(archivoTmp.toPath(), archivoOriginal.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+    
     public void registrar_huesped(HuespedDTO huesped){
         String archivo = "src/main/java/tp/desarrollo/db/huespedes.csv";
         //Lógica para registrar un nuevo huésped en el archivo CSV
@@ -34,8 +96,8 @@ public class HuespedDaoArchivos implements HuespedDAO{
                 huesped.getOcupacion(),
                 huesped.getApellido(),
                 huesped.getNombre(),
-                huesped.getTipoDocumento().toString(),
-                String.valueOf(huesped.getNumeroDocumento()),
+                huesped.getTipo_documento().toString(),
+                String.valueOf(huesped.getNum_documento()),
                 String.valueOf(huesped.getCuit()),
                 fechaNacimiento,
                 direccion.getCalle(),
@@ -54,6 +116,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
             e.printStackTrace();
         }
     }
+    
     public boolean existe_documento(TipoDocumento tipoDocumento, int numeroDocumento){
         String archivo = "src/main/java/tp/desarrollo/db/huespedes.csv";
         String linea;
@@ -75,13 +138,14 @@ public class HuespedDaoArchivos implements HuespedDAO{
         }
         return existe;
     }
+    
     public List<Huesped> buscar_huespedes(HuespedDTO huesped){
         String archivo = "src/main/java/tp/desarrollo/db/huespedes.csv";
 
         String linea;
         List<Huesped> resultado = new ArrayList<>();
         //Lógica para buscar huéspedes en el archivo CSV
-        System.out.println("Directorio actual: " + System.getProperty("user.dir"));
+        //System.out.println("Directorio actual: " + System.getProperty("user.dir"));
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             linea = br.readLine(); // salta el encabezado
             while ((linea = br.readLine()) != null) {
@@ -99,11 +163,11 @@ public class HuespedDaoArchivos implements HuespedDAO{
                     if (huesped.getApellido() != null && !huesped.getApellido().isBlank()) {
                         coincide &= huesped.getApellido().equalsIgnoreCase(apellido);
                     }
-                    if (huesped.getTipoDocumento() != null) {
-                        coincide &= huesped.getTipoDocumento().toString().equalsIgnoreCase(tipoDoc);
+                    if (huesped.getTipo_documento() != null) {
+                        coincide &= huesped.getTipo_documento().toString().equalsIgnoreCase(tipoDoc);
                     }
-                    if (huesped.getNumeroDocumento() > 0) {
-                        coincide &= huesped.getNumeroDocumento() == numDoc;
+                    if (huesped.getNum_documento() > 0) {
+                        coincide &= huesped.getNum_documento() == numDoc;
                     }
                     if(coincide){
                         // Si coincide, crear un objeto Huesped y agregarlo a la lista de resultados
@@ -139,6 +203,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
         return resultado;
     }
     
