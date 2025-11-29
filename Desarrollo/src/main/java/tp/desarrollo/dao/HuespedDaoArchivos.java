@@ -1,5 +1,6 @@
 package tp.desarrollo.dao;
 import tp.desarrollo.interfaces.HuespedDAO;
+import tp.desarrollo.enums.CondicionIVA;
 import tp.desarrollo.enums.TipoDocumento;
 
 import java.io.BufferedReader;
@@ -84,7 +85,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
 }
     
     public void registrar_huesped(HuespedDTO huesped){
-        String archivo = "src/main/java/tp/desarrollo/db/huespedes.csv";
+        String archivo = "Desarrollo/src/main/java/tp/desarrollo/db/huespedes.csv";
         //Lógica para registrar un nuevo huésped en el archivo CSV
         try (java.io.FileWriter fw = new java.io.FileWriter(archivo, true)) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -117,8 +118,8 @@ public class HuespedDaoArchivos implements HuespedDAO{
         }
     }
     
-    public boolean existe_documento(TipoDocumento tipoDocumento, int numeroDocumento){
-        String archivo = "src/main/java/tp/desarrollo/db/huespedes.csv";
+    public boolean existe_documento(TipoDocumento tipoDocumento, long numeroDocumento){
+        String archivo = "Desarrollo/src/main/java/tp/desarrollo/db/huespedes.csv";
         String linea;
         boolean existe = false;
         //Lógica para buscar huéspedes en el archivo CSV
@@ -140,7 +141,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
     }
     
     public List<Huesped> buscar_huespedes(HuespedDTO huesped){
-        String archivo = "src/main/java/tp/desarrollo/db/huespedes.csv";
+        String archivo = "Desarrollo/src/main/java/tp/desarrollo/db/huespedes.csv";
 
         String linea;
         List<Huesped> resultado = new ArrayList<>();
@@ -188,6 +189,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
                         Huesped huespedEncontrado = new Huesped(datos[0], // telefono
                             datos[1], // email
                             datos[2], // ocupacion
+                            CondicionIVA.CONSUMIDOR_FINAL, // condicionIVA (valor por defecto)
                             datos[3], // apellido
                             datos[4], // nombre
                             tipo, // tipo_documento
@@ -208,7 +210,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
     }
     
     public void eliminar(Huesped huespedAEliminar) {
-        String archivo = "src/main/java/tp/desarrollo/db/huespedes.csv";
+        String archivo = "Desarrollo/src/main/java/tp/desarrollo/db/huespedes.csv";
         File archivoOriginal = new File(archivo);
         // Creamos un archivo temporal en el mismo directorio que el original.
         File archivoTemporal = new File(archivoOriginal.getParent(), "temp_huespedes.csv");

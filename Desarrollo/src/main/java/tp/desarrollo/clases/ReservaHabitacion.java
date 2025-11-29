@@ -1,6 +1,6 @@
 package tp.desarrollo.clases;
 
-import java.util.List;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,19 +8,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
 @Data
-public class Reserva {
+public class ReservaHabitacion {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @OneToMany
-    private List<ReservaHabitacion> listaHabitacionesRerservadas;
+    long id;
+    @ManyToOne 
+    @JoinColumn(name = "habitacion_fk", nullable = false)
+    private Habitacion habitacion;
+    private LocalDate fecha_inicio;
+    private LocalDate fecha_fin;
     @ManyToOne
-    @JoinColumn(name = "huesped_id", nullable = false)
-    private Huesped huespedPrincipal;
+    @JoinColumn(name = "id_reserva")
+    private Reserva reserva;
 
 }

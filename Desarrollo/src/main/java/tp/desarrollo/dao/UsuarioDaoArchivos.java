@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class UsuarioDaoArchivos {
 
-    private final String archivo = "src/main/java/tp/desarrollo/db/usuarios.csv";
+    private final String archivo = "Desarrollo/src/main/java/tp/desarrollo/db/usuarios.csv";
 
     public boolean validarCredenciales(String usuarioBuscado, String contraseniaBuscada) {
 

@@ -17,5 +17,5 @@ import tp.desarrollo.enums.*;
 public interface HuespedDAO {
     void modificar_huesped(HuespedDTO huespedOriginal, HuespedDTO huespedModificado);
     List<Huesped> buscar_huespedes(HuespedDTO huesped);
-    boolean existe_documento(TipoDocumento tipoDocumento, int numeroDocumento);
+    boolean existe_documento(TipoDocumento tipoDocumento, long numeroDocumento);
 }

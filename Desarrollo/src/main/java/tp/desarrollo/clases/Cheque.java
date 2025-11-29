@@ -1,13 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package tp.desarrollo.clases;
 
-/**
- *
- * @author juanc
- */
+package tp.desarrollo.clases;
+import java.time.LocalDate;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import jakarta.persistence.Entity;
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Entity
 public class Cheque extends Pago {
-    
+    private Long numeroCheque;
+    private String bancoEmisor;
+    private String tipo;
+    private LocalDate fechaCobro;
 }

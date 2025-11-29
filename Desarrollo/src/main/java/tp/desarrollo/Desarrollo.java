@@ -36,8 +36,6 @@ public class Desarrollo {
 
         // --- Autenticación primero ---
         boolean autenticado = false;
-        gestorUsuario.buscar_huespedes("Cesa", null, null, null);
-        gestorUsuario.dar_alta_huesped();
         while (!autenticado) {
             autenticado = gestorUsuario.autenticar_conserje();
 

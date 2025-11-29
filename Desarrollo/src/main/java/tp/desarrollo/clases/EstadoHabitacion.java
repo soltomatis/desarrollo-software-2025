@@ -1,18 +1,21 @@
 package tp.desarrollo.clases;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
+import tp.desarrollo.enums.Estado;
 
 @Entity
 @Data
-public class Consumo {
+public class EstadoHabitacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String tipo;
-    private String estado;
-    private double valor;
+    private Estado estado;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
 }

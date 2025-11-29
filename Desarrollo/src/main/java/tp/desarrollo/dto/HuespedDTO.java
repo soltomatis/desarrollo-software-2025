@@ -9,10 +9,7 @@ import tp.desarrollo.clases.Direccion;
 import tp.desarrollo.clases.Huesped;
 import tp.desarrollo.enums.TipoDocumento;
 
-/**
- *
- * @author juanc
- */
+
 public class HuespedDTO extends PersonaDTO{
     
     private String telefono;
