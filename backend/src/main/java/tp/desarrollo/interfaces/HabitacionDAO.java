@@ -1,13 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package tp.desarrollo.interfaces;
 
-/**
- *
- * @author juanc
- */
+import java.util.List;
+
+import tp.desarrollo.clases.Habitacion;
+
 public interface HabitacionDAO {
-    
+    public List<Habitacion> listarHabitaciones();
 }
