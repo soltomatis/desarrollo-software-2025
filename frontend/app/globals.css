@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+/* Estilos para el contenedor */
+.container {
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Estilos base del "Botón/Enlace" */
+.nav-option {
+  display: block; /* Importante para que padding y border funcionen bien */
+  text-align: center; /* Centrar el texto */
+  padding: 15px 25px; /* Relleno grande para que parezca un botón */
+  border-radius: 8px; /* Esquinas redondeadas */
+  text-decoration: none; /* Quitar el subrayado */
+  font-weight: 600; /* Texto semigrueso */
+  cursor: pointer; /* Indicar que es clickable */
+  transition: all 0.3s ease; /* Transición suave */
+  border: 2px solid transparent; /* Borde base transparente */
+}
+
+/* Estilo para el botón principal (Estado de Habitaciones) */
+.nav-option-main {
+  background-color: #007bff; /* Color azul primario */
+  color: white; /* Texto blanco */
+  border-color: #007bff;
+}
+
+/* Efecto al pasar el ratón (Hover) */
+.nav-option-main:hover {
+  background-color: #0056b3; /* Azul más oscuro */
+  border-color: #0056b3;
+}
+
+/* Estilo para los botones secundarios */
+.nav-option-secondary {
+  background-color: #f8f9fa; /* Fondo gris claro */
+  color: #333;
+  border-color: #ced4da;
+}
+
+/* Efecto al pasar el ratón (Hover) */
+.nav-option-secondary:hover {
+  background-color: #e2e6ea;
+  border-color: #dae0e5;
+}
