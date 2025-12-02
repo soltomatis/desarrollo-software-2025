@@ -2,10 +2,13 @@
 package tp.desarrollo.dto;
 
 import java.time.LocalDate;
-import tp.desarrollo.clases.Direccion;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import tp.desarrollo.enums.TipoDocumento;
 
-
+@NoArgsConstructor
+@Data
 public class PersonaDTO {
     private String apellido;
     private String nombre;
@@ -13,7 +16,7 @@ public class PersonaDTO {
     private long num_documento;
     private long cuit;
     private LocalDate fecha_nacimiento;
-    private Direccion direccion;
+    private DireccionDTO direccion;
     private String nacionalidad;
 
     public PersonaDTO(String apellido, String nombre, TipoDocumento tipo_documento, String num_documento) {
@@ -22,7 +25,7 @@ public class PersonaDTO {
         this.tipo_documento = tipo_documento;
         this.num_documento = Integer.parseInt(num_documento);
     }
-    public PersonaDTO(String apellido, String nombre, TipoDocumento tipo_documento, long num_documento, long cuit, LocalDate fecha_nacimiento, Direccion direccion, String nacionalidad) {
+    public PersonaDTO(String apellido, String nombre, TipoDocumento tipo_documento, long num_documento, long cuit, LocalDate fecha_nacimiento, DireccionDTO direccion, String nacionalidad) {
         this.apellido = apellido;
         this.nombre = nombre;
         this.tipo_documento = tipo_documento;
@@ -50,7 +53,7 @@ public class PersonaDTO {
     public LocalDate getFecha_nacimiento() {
         return fecha_nacimiento;
     }
-    public Direccion getDireccion() {
+    public DireccionDTO getDireccion() {
         return direccion;
     }
     public String getNacionalidad() {
@@ -75,7 +78,7 @@ public class PersonaDTO {
     public void setFecha_nacimiento(LocalDate fecha) {
         this.fecha_nacimiento = fecha;
     }
-    public void setDireccion(Direccion direccion) {
+    public void setDireccion(DireccionDTO direccion) {
         this.direccion = direccion;
     }
     public void setNacionalidad(String nacionalidad) {

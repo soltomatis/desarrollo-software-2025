@@ -22,4 +22,12 @@ public class HabitacionDaoDB implements HabitacionDAO {
         
         return habitaciones;
     }
+
+    public Habitacion buscarId(Long idHabitacion) {
+        return entityManager.find(Habitacion.class, idHabitacion);
+    }
+
+    public void actualizarHabitacion(Habitacion habitacion) {
+        entityManager.merge(habitacion);
+    }
 }

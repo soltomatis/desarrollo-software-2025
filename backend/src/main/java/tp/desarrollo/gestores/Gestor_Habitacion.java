@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Service;
 
 import tp.desarrollo.clases.EstadoHabitacion;
@@ -12,14 +14,13 @@ import tp.desarrollo.clases.Habitacion;
 import tp.desarrollo.dao.HabitacionDaoDB;
 import tp.desarrollo.dto.EstadoHabitacionDTO;
 import tp.desarrollo.dto.HabitacionDTO;
+import tp.desarrollo.enums.Estado;
 
 @Service
 public class Gestor_Habitacion {
-    private final HabitacionDaoDB habitacionDAO;
+    @Autowired
+    HabitacionDaoDB habitacionDAO;
 
-    public Gestor_Habitacion(HabitacionDaoDB habitacionDAO) {
-        this.habitacionDAO = habitacionDAO;
-    }
     public List<HabitacionDTO> mostrarEstadoHabitaciones(LocalDate fechaDesde, LocalDate fechaHasta) {
         List<Habitacion> habitaciones = habitacionDAO.listarHabitaciones();
         List<HabitacionDTO> habitacionesDTO = new ArrayList<>();
@@ -54,5 +55,20 @@ public class Gestor_Habitacion {
         }
 
         return habitacionesDTO;
+    }
+    public void crearEstadoHabitacion(Habitacion habitacion, LocalDate fecha_inicio, LocalDate fecha_fin) {
+        EstadoHabitacion nuevoEstado = new EstadoHabitacion();
+        nuevoEstado.setEstado(Estado.RESERVADA); 
+        nuevoEstado.setFechaInicio(fecha_inicio);
+        nuevoEstado.setFechaFin(fecha_fin);
+
+        List<EstadoHabitacion> historiaEstados = habitacion.getHistoriaEstados();
+        if (historiaEstados == null) {
+            historiaEstados = new ArrayList<>();
+            habitacion.setHistoriaEstados(historiaEstados);
+        }
+        historiaEstados.add(nuevoEstado);
+
+        habitacionDAO.actualizarHabitacion(habitacion);
     }
 }

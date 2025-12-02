@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tp.desarrollo.clases.Huesped;
+import tp.desarrollo.dto.DireccionDTO;
 import tp.desarrollo.dto.HuespedDTO;
 
 public class HuespedDaoArchivos implements HuespedDAO{
@@ -90,7 +91,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
         try (java.io.FileWriter fw = new java.io.FileWriter(archivo, true)) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String fechaNacimiento = huesped.getFecha_nacimiento().format(formatter);
-            tp.desarrollo.clases.Direccion direccion = huesped.getDireccion();
+            DireccionDTO direccion = huesped.getDireccion();
             String nuevaLinea = String.join(",",
                 huesped.getTelefono(),
                 huesped.getEmail(),

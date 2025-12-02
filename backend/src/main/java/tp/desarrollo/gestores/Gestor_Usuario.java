@@ -202,7 +202,7 @@ public class Gestor_Usuario{
     }
 
     // Dirección
-    Direccion dir = new Direccion();
+    DireccionDTO dir = new DireccionDTO();
 
     System.out.print("Ingresar nueva Calle (" + huespedOriginal.getDireccion().getCalle() + "): ");
     input = scanner.hasNextLine() ? scanner.nextLine() : "";
@@ -453,7 +453,7 @@ public class Gestor_Usuario{
         nacionalidad = scanner.nextLine();
         }
 
-        HuespedDTO nuevoHuesped = new HuespedDTO(telefono, email, ocupacion, apellido, nombre, tipoDocumento, Integer.parseInt(numeroDocumento), cuit, fechaNacimiento, new Direccion(calle, numero, departamento, piso, codigoPostal, localidad, provincia, pais), nacionalidad);
+        HuespedDTO nuevoHuesped = new HuespedDTO(telefono, email, ocupacion, apellido, nombre, tipoDocumento, Integer.parseInt(numeroDocumento), cuit, fechaNacimiento, new DireccionDTO(calle, numero, departamento, piso, codigoPostal, localidad, provincia, pais), nacionalidad);
         return nuevoHuesped;
     }
     

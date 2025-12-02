@@ -1,0 +1,56 @@
+package tp.desarrollo.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
+import tp.desarrollo.clases.Huesped;
+import tp.desarrollo.dto.HuespedDTO;
+import tp.desarrollo.enums.TipoDocumento;
+import tp.desarrollo.interfaces.HuespedDAO;
+
+@Repository
+public class HuespedDaoDB implements HuespedDAO {
+    @PersistenceContext
+    private EntityManager em;
+    public void modificar_huesped(HuespedDTO huespedOriginal, HuespedDTO huespedModificado){
+    
+    }
+    public List<Huesped> buscar_huespedes(HuespedDTO huesped){
+        return null;
+    }
+
+    public boolean existe_documento(TipoDocumento tipoDocumento, long numeroDocumento){
+        return false;
+    }
+public Huesped buscarHuespedPorDatos(String nombre, String apellido, String telefono) {
+        String jpql = "SELECT h FROM Huesped h WHERE h.nombre = :nombre AND h.apellido = :apellido AND h.telefono = :telefono";
+    
+        TypedQuery<Huesped> query = em.createQuery(jpql, Huesped.class);
+        
+
+        query.setParameter("nombre", nombre);
+        query.setParameter("apellido", apellido);
+        query.setParameter("telefono", telefono);
+
+        query.setMaxResults(1); 
+        
+        List<Huesped> results = query.getResultList();
+        
+        if (results.isEmpty()) {
+            return null;
+        } else {
+            return results.get(0);
+        }
+
+    }
+    @Transactional
+    public Huesped saveHuesped(Huesped huespedNuevo) {
+    em.persist(huespedNuevo);
+    return huespedNuevo;
+}
+}

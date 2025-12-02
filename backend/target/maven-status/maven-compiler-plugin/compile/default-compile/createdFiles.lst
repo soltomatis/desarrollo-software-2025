@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 tp\desarrollo\clases\Estadia.class
 tp\desarrollo\clases\Cheque.class
 tp\desarrollo\clases\Efectivo.class
@@ -53,4 +51,3 @@ tp\desarrollo\dto\PersonaDTO.class
 tp\desarrollo\interfaces\FacturaDAO.class
 tp\desarrollo\gestores\Gestor_Reserva.class
 tp\desarrollo\gestores\Gestor_Usuario.class
->>>>>>> 37d5adcf3ba6511ba3d315a5ca494df87626275d

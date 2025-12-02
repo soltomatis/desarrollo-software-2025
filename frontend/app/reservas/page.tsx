@@ -6,12 +6,29 @@ import MostrarEstado from '@/components/MostrarEstado';
 import GrillaSeleccionReserva, { BloqueSeleccionado } from '@/components/GrillaSeleccionReserva'; 
 import Link from 'next/link';
 interface HuespedDTO {
+
     nombre: string;
     apellido: string;
-    email: string;
     telefono: string;
-    tipo_documento: 'DNI'; 
-    num_documento: number; 
+    email: string;
+    ocupacion: string;
+    condicionIVA: string;
+    tipo_documento: string; 
+    num_documento: number;
+    cuit: number;
+    fecha_nacimiento: string;
+    direccion: DireccionDTO;
+    nacionalidad: string;
+}
+interface DireccionDTO {
+    calle: string;
+    numero: number; 
+    departamento: string;
+    piso: number;    
+    codigoPostal: number | null; 
+    localidad: string;
+    provincia: string;
+    pais: string;
 }
 interface HuespedModalProps {
     huespedData: HuespedDTO;
@@ -34,13 +51,29 @@ export default function PaginaNuevaReserva() {
     const [mostrarBotonReserva, setMostrarBotonReserva] = useState(false);
 
 const [huespedData, setHuespedData] = useState<HuespedDTO>({ 
-        nombre: '',
-        apellido: '',
-        telefono: '',
-        email: 'default@mail.com', 
-        tipo_documento: 'DNI',
-        num_documento: 99999999,
-    });
+    nombre: '',
+    apellido: '',
+    telefono: '',
+
+    email: 'huesped_temp@hotel.com',
+    ocupacion: 'Sin especificar',
+    condicionIVA: 'CONSUMIDOR_FINAL', 
+    tipo_documento: 'DNI', 
+    num_documento: 99999999,
+    cuit: 20999999990,      
+    fecha_nacimiento: '2000-01-01', 
+    nacionalidad: 'Argentina',
+    direccion: { 
+        calle: 'Av. Temporal', 
+        numero: 1, 
+        departamento: '', 
+        piso: 0,          
+        codigoPostal: null, 
+        localidad: 'Ciudad Temporal', 
+        provincia: 'Provincia Temporal',
+        pais: 'Argentina'
+    }, 
+});
     const [seleccion, setSeleccion] = useState<any>({ 
       habitaciones: [], 
       fechaInicio: null, 
