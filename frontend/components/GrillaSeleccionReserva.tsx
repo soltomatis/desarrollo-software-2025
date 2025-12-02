@@ -1,8 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useImperativeHandle, forwardRef } from 'react';
 import { Habitacion } from '@/interfaces/Habitacion';
- 
+export interface GrillaRef {
+    limpiarSeleccion: () => void;
+}
 export interface BloqueSeleccionado {
     habitaciones: number[];
     fechaInicio: string;
@@ -15,10 +17,13 @@ interface GrillaProps {
   onSelect: (bloques: BloqueSeleccionado[]) => void; 
 }
 
-export default function GrillaSeleccionReserva({ habitaciones, fechaDesde, fechaHasta, onSelect }: GrillaProps) {
-    const [celdaInicioTemporal, setCeldaInicioTemporal] = React.useState<{ hab: number, dia: string } | null>(null);
+const GrillaSeleccionReserva: React.ForwardRefRenderFunction<GrillaRef, GrillaProps> = (
+    { habitaciones, fechaDesde, fechaHasta, onSelect }, 
+    ref // Recibimos la referencia
+) => {
+     const [celdaInicioTemporal, setCeldaInicioTemporal] = React.useState<{ hab: number, dia: string } | null>(null);
     const [seleccionesAcumuladas, setSeleccionesAcumuladas] = React.useState<
-        { habitaciones: number[], fechaInicio: string, fechaFin: string }[]
+     { habitaciones: number[], fechaInicio: string, fechaFin: string }[]
     >([]);
   
   const generarDias = (inicio: string, fin: string) => {
@@ -114,10 +119,15 @@ const handleClick = (habNum: number, dia: string) => {
     }
 };
 const limpiarSeleccion = () => {
-        setSeleccionesAcumuladas([]);
-        setCeldaInicioTemporal(null);
-        onSelect([]); // Notificamos al padre que no hay selecciones
-    };  
+      setSeleccionesAcumuladas([]);
+      setCeldaInicioTemporal(null);
+      onSelect([]); // Notificamos al padre que no hay selecciones
+}; 
+
+// 💡 3. Exponer la función de limpieza al ref
+React.useImperativeHandle(ref, () => ({
+    limpiarSeleccion,
+}));
 
   // ------------------------- Lógica de Procesamiento --------------------------
 
@@ -151,28 +161,13 @@ const limpiarSeleccion = () => {
     };
   };
 
-  /**
-   * Determina si una celda individual está dentro del rango de selección actual.
-   */
- const isSelected = (habNum: number, dia: string) => {
-    
-    // 1. Verificar si está en las selecciones ya finalizadas
+const isSelected = (habNum: number, dia: string) => {
     const estaEnAcumuladas = seleccionesAcumuladas.some(rango => {
         const habSeleccionada = rango.habitaciones.includes(habNum);
         const diaSeleccionado = dia >= rango.fechaInicio && dia <= rango.fechaFin;
         return habSeleccionada && diaSeleccionado;
     });
-    
-    if (estaEnAcumuladas) return true;
-
-    // 2. Verificar si está en el rango TEMPORAL que se está dibujando (entre el primer clic y el mouse)
-    if (celdaInicioTemporal) {
-        // En esta nueva lógica de dos clics, solo dibujamos la celda de inicio temporal
-        // hasta que se hace el segundo clic.
-        return celdaInicioTemporal.hab === habNum && celdaInicioTemporal.dia === dia;
-    }
-
-    return false;
+    return estaEnAcumuladas; 
 };
 
   // --------------------------------- Renderizado ---------------------------------
@@ -180,14 +175,6 @@ const limpiarSeleccion = () => {
   return (
     // Agregamos onMouseUp al div contenedor para que la selección termine incluso si el mouse sale de la celda
     <div style={{ overflowX: 'auto', marginTop: '20px' }}>
-      {seleccionesAcumuladas.length > 0 && (
-                <button 
-                    onClick={limpiarSeleccion}
-                    style={{ marginBottom: '15px', padding: '5px 10px', backgroundColor: '#f0ad4e', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer' }}
-                >
-                    🗑️ Limpiar {seleccionesAcumuladas.length} Bloque(s) Seleccionado(s)
-                </button>
-            )}
       <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: '600px', userSelect: 'none' }}>
         
         <thead>
@@ -214,22 +201,30 @@ const limpiarSeleccion = () => {
 
               {habitaciones.map((hab) => {
                 const habNum = hab.numeroHabitacion;
-                const colorFondo = obtenerColor(hab, dia);
                 const estaSeleccionada = isSelected(habNum, dia); 
+                const colorOriginal = obtenerColor(hab, dia);
+                const estaEnAcumuladas = seleccionesAcumuladas.some(rango => {
+                  const habSeleccionada = rango.habitaciones.includes(habNum);
+                  const diaSeleccionado = dia >= rango.fechaInicio && dia <= rango.fechaFin;
+                  return habSeleccionada && diaSeleccionado;
+              });
+                const esCeldaTemporal = !estaEnAcumuladas && (celdaInicioTemporal?.hab === habNum && celdaInicioTemporal?.dia === dia);
+
+                const colorFondoFinal = estaEnAcumuladas ? '#fd7e14' : colorOriginal;
+
                 
                 return (
                   <td key={`${habNum}-${dia}`} style={{ border: '1px solid #ddd', textAlign: 'center', padding: 0 }}>
                     <div 
                       onClick={() => handleClick(habNum, dia)} 
                       title={`Hab: ${habNum} - Fecha: ${dia}`}
-                      // Aplicamos el estilo de selección si está dentro del rango temporal de arrastre
                       style={{ 
-                        backgroundColor: colorFondo, 
+                        backgroundColor: colorFondoFinal,
                         width: '100%', 
                         height: '40px', 
                         cursor: 'pointer',
-                        outline: estaSeleccionada ? '3px solid blue' : 'none', 
-                        opacity: estaSeleccionada ? 0.8 : 1, // Menor opacidad para resaltar
+                        outline: esCeldaTemporal ? '3px solid blue' : 'none', 
+                        opacity: esCeldaTemporal ? 0.8 : 1, 
                         transition: 'opacity 0.2s, outline 0.1s'
                       }} 
                     />
@@ -253,3 +248,4 @@ const limpiarSeleccion = () => {
     </div>
   );
 }
+export default React.forwardRef<GrillaRef, GrillaProps>(GrillaSeleccionReserva);

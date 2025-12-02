@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Habitacion } from '@/interfaces/Habitacion';
 import MostrarEstado from '@/components/MostrarEstado';
-import GrillaSeleccionReserva, { BloqueSeleccionado } from '@/components/GrillaSeleccionReserva'; 
+import GrillaSeleccionReserva, { BloqueSeleccionado, GrillaRef } from '@/components/GrillaSeleccionReserva';
+import HabitacionCard, { ReservaHabitacionInfo } from '@/components/HabitacionCard';
+import ToastNotification from '@/components/ToastNotification';
 import Link from 'next/link';
 interface HuespedDTO {
-
     nombre: string;
     apellido: string;
     telefono: string;
@@ -44,13 +46,31 @@ async function traerHabitaciones(desde: string, hasta: string) {
 
 export default function PaginaNuevaReserva() {
     const [habitaciones, setHabitaciones] = useState<Habitacion[]>([]);
+    const router = useRouter();
     const [cargando, setCargando] = useState(false);
     const [fechasBusqueda, setFechasBusqueda] = useState<{ desde: string, hasta: string } | null>(null);
     const [mostrarModalHuesped, setMostrarModalHuesped] = useState(false);
     const [bloquesSeleccionados, setBloquesSeleccionados] = useState<BloqueSeleccionado[]>([]); 
     const [mostrarBotonReserva, setMostrarBotonReserva] = useState(false);
+    const grillaRef = useRef<GrillaRef>(null);
+    const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null);
+    const closeToast = () => setToast(null);
 
-const [huespedData, setHuespedData] = useState<HuespedDTO>({ 
+    const cancelarSeleccion = () => {
+    if (grillaRef.current) {
+        grillaRef.current.limpiarSeleccion();
+    } else {
+        setBloquesSeleccionados([]); 
+    }
+    
+    setMostrarBotonReserva(false);
+    setToast({
+        message: "Selección de reserva rechazada. Seleccione un nuevo rango.",
+        type: 'info'
+    });
+};
+
+    const [huespedData, setHuespedData] = useState<HuespedDTO>({ 
     nombre: '',
     apellido: '',
     telefono: '',
@@ -104,31 +124,25 @@ const realizarReserva = async () => {
             return;
         }
 
-        // 1. CONSTRUCCIÓN DEL LISTADO DE RESERVAS INDIVIDUALES (listaHabitacionesReservadas)
         const listaHabitacionesReservadas: any[] = [];
         let totalBloques = 0;
         
-        // Iteramos sobre CADA bloque rectangular seleccionado (ej: Bloque 1, Bloque 2)
         bloquesSeleccionados.forEach(bloque => {
-            // Iteramos sobre CADA habitación dentro de ese bloque
             bloque.habitaciones.forEach(habNum => {
                 totalBloques++;
-                
-                // Buscamos la info completa de la habitación en nuestro estado inicial
+            
                 const habCompleta = habitaciones.find(h => h.numeroHabitacion === habNum);
 
                 if (habCompleta) {
                     listaHabitacionesReservadas.push({
-                        // Mapeamos a ReservaHabitacionDTO
                         habitacion: {
-                            // Mapeamos a HabitacionDTO (con los datos que tenemos)
                             numeroHabitacion: habCompleta.numeroHabitacion,
                             tipo: habCompleta.tipo,
                             cantidadHuespedes: habCompleta.cantidadHuespedes,
                             cantidadCamaI: habCompleta.cantidadCamaI,
                             cantidadCamaD: habCompleta.cantidadCamaD,
                             cantidadCamaKS: habCompleta.cantidadCamaKS,
-                            historiaEstados: habCompleta.historiaEstados, // El backend puede ignorar esto
+                            historiaEstados: habCompleta.historiaEstados,
                         },
                         fecha_inicio: bloque.fechaInicio,
                         fecha_fin: bloque.fechaFin,
@@ -137,7 +151,6 @@ const realizarReserva = async () => {
             });
         });
 
-        // 2. CONSTRUCCIÓN DEL RESERVADTO FINAL
         const reservaDTO = {
             listaHabitacionesReservadas: listaHabitacionesReservadas,
             huespedPrincipal: huespedData 
@@ -160,16 +173,19 @@ const realizarReserva = async () => {
                 const errorData = await res.json();
                 throw new Error(errorData.message || 'Error desconocido al crear reserva.');
             }
+            setToast({
+                message: "¡Reserva realizada con éxito! Redirigiendo al inicio...",
+                type: 'success'
+            });
 
-            alert("¡Reserva realizada con éxito! Recargando disponibilidad...");
-            
-            // Recargar la grilla con los nuevos estados
-            if (fechasBusqueda) {
-                buscar(fechasBusqueda.desde, fechasBusqueda.hasta);
-            }
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            router.push('/');
 
         } catch (error: any) {
-            alert(`Fallo en la reserva: ${error.message}`);
+        setToast({
+            message: `Fallo en la reserva: ${error.message}`,
+            type: 'error'
+        });
             console.error(error);
         }
     };
@@ -183,6 +199,25 @@ const realizarReserva = async () => {
         }));
     };
 
+    const listaHabitacionesParaMostrar: ReservaHabitacionInfo[] = [];
+
+    // Sólo calculamos esto si hay bloques seleccionados
+    if (bloquesSeleccionados.length > 0) {
+        bloquesSeleccionados.forEach(bloque => {
+            bloque.habitaciones.forEach(habNum => {
+                const habCompleta = habitaciones.find(h => h.numeroHabitacion === habNum);
+
+                if (habCompleta) {
+                    // Mapeamos al tipo de dato que espera la tarjeta
+                    listaHabitacionesParaMostrar.push({
+                        habitacion: habCompleta,
+                        fecha_inicio: bloque.fechaInicio,
+                        fecha_fin: bloque.fechaFin,
+                    });
+                }
+            });
+        });
+    }
 
     return (
         <div className="container" style={{ padding: '40px', color: '#333' }}>
@@ -195,16 +230,47 @@ const realizarReserva = async () => {
 
           {habitaciones.length > 0 && fechasBusqueda && (
               <>
-                  <GrillaSeleccionReserva 
-                      habitaciones={habitaciones} 
-                      fechaDesde={fechasBusqueda.desde} 
-                      fechaHasta={fechasBusqueda.hasta} 
-                      onSelect={manejarSeleccion}
-                  />
+                  <GrillaSeleccionReserva
+                    habitaciones={habitaciones}
+                    fechaDesde={fechasBusqueda.desde}
+                    fechaHasta={fechasBusqueda.hasta}
+                    onSelect={manejarSeleccion}
+                    ref={grillaRef} // 💡 PASAR LA REFERENCIA
+                />
                   
-                  {mostrarBotonReserva && (
+                    {mostrarBotonReserva && (
+                    <>
+                    <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginTop: '30px', marginBottom: '15px' }}>
+                        Resumen de Habitaciones Seleccionadas
+                    </h2>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+                        {listaHabitacionesParaMostrar.map((reserva, index) => (
+                            <HabitacionCard 
+                                key={`${reserva.habitacion.numeroHabitacion}-${reserva.fecha_inicio}-${index}`}
+                                reservaInfo={reserva}
+                            />
+                        ))}
+                    </div>
+                    
+                    <div style={{ marginTop: '30px', display: 'flex', gap: '20px', justifyContent: 'flex-end' }}>
+                        
                         <button 
-                            onClick={() => setMostrarModalHuesped(true)} // ABRIR MODAL
+                            onClick={cancelarSeleccion} 
+                            style={{ 
+                                padding: '15px 30px', 
+                                backgroundColor: '#dc3545', 
+                                color: 'white', 
+                                border: 'none', 
+                                borderRadius: '5px', 
+                                cursor: 'pointer', 
+                                fontWeight: 'bold' 
+                            }}
+                        >
+                            RECHAZAR
+                        </button>
+                        
+                        <button 
+                            onClick={() => setMostrarModalHuesped(true)} 
                             style={{ 
                                 padding: '15px 30px', 
                                 backgroundColor: 'green', 
@@ -212,13 +278,14 @@ const realizarReserva = async () => {
                                 border: 'none', 
                                 borderRadius: '5px', 
                                 cursor: 'pointer', 
-                                marginTop: '20px', 
                                 fontWeight: 'bold' 
                             }}
                         >
-                            ✅ Cargar Huésped y Finalizar Reserva
+                            ACEPTAR
                         </button>
-                    )}
+                    </div>
+                </>
+            )}
          </>
       )}
             {mostrarModalHuesped && (
@@ -232,6 +299,13 @@ const realizarReserva = async () => {
           {habitaciones.length === 0 && fechasBusqueda && !cargando && (
             <p>No se encontraron habitaciones en el rango seleccionado.</p>
           )}
+          {toast && (
+            <ToastNotification
+                message={toast.message}
+                type={toast.type}
+                onClose={closeToast} // Pasa la función para cerrar
+            />
+            )}
         </div>
     ); 
 }
