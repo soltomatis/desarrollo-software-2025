@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\Cesar\Desktop\UTN 2025\DESARROLLO\TP\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Cheque.java
 C:\Users\Cesar\Desktop\UTN 2025\DESARROLLO\TP\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Consumo.java
 C:\Users\Cesar\Desktop\UTN 2025\DESARROLLO\TP\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Direccion.java
@@ -53,3 +54,58 @@ C:\Users\Cesar\Desktop\UTN 2025\DESARROLLO\TP\desarrollo-software-2025\backend\s
 C:\Users\Cesar\Desktop\UTN 2025\DESARROLLO\TP\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\PersonaDAO.java
 C:\Users\Cesar\Desktop\UTN 2025\DESARROLLO\TP\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\ReservaDAO.java
 C:\Users\Cesar\Desktop\UTN 2025\DESARROLLO\TP\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\Responsable_de_pagoDAO.java
+=======
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Cheque.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Consumo.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Direccion.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Divisa.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Efectivo.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Estadia.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\EstadoHabitacion.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Factura.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Habitacion.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Huesped.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Nota_De_Credito.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Pago.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Persona.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Reserva.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\ReservaHabitacion.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Responsable_de_pago.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Servicio_Especial.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Tarjeta.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Tarjeta_Credito.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\clases\Tarjeta_Debito.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\controller\HabitacionController.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\dao\HabitacionDaoDB.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\dao\HuespedDaoArchivos.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\dao\ReservaDaoArchivos.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\dao\UsuarioDaoArchivos.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\Desarrollo.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\dto\EstadoHabitacionDTO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\dto\HabitacionDTO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\dto\HuespedDTO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\dto\PersonaDTO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\enums\CondicionIVA.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\enums\Estado.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\enums\TipoDocumento.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\excepciones\HuespedConReservasExcepcion.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\gestores\Gestor_Estadia.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\gestores\Gestor_Factura.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\gestores\Gestor_Habitacion.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\gestores\Gestor_Pago.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\gestores\Gestor_Reserva.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\gestores\Gestor_Usuario.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\ConsumoDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\DireccionDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\DivisaDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\EstadiaDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\Estado_HabitacionDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\FacturaDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\HabitacionDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\HuespedDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\Nota_De_CreditoDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\PagoDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\PersonaDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\ReservaDAO.java
+C:\Users\juanc\Documents\proyectos\desarrollo-software-2025\backend\src\main\java\tp\desarrollo\interfaces\Responsable_de_pagoDAO.java
+>>>>>>> 37d5adcf3ba6511ba3d315a5ca494df87626275d

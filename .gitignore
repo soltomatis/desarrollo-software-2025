@@ -21,7 +21,12 @@
 /nbactions.xml
 /nb-configuration.xml
 
+# Carpetas VS
+/.vscode
+/.vs
+
 # Archivos del sistema operativo
 .DS_Store
 Thumbs.db
 /Desarrollo/target/
+/frontend/nbproject/private/

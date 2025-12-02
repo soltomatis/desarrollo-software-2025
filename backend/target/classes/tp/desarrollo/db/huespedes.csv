@@ -1,6 +1,0 @@
-telefono,email,ocupacion,apellido,nombre,tipo_documento,num_documento,cuit,fecha_nacimiento,calle,numero,departamento,piso,codigo_postal,localidad,provincia,pais,nacionalidad
-3425123456,lucia.garcia@email.com,Estudiante,García,Lucía,DNI,44123987,204412398,1999-05-17,San Martín,1234,B,3,3000,Santa Fe,Santa Fe,Argentina,Argentina
-1134567890,juan.perez@email.com,Ingeniero,alvarez,Juan,PASAPORTE,9876543,209876543,1987-08-25,Belgrano,890,0,0,1428,CABA,null,Argentina,Argentina
-3412345678,maria.lopez@email.com,Doctora,López,María,LE,1234567,271234567,1975-12-09,San Juan,456,A,1,5000,Rosario,Santa Fe,Argentina,Argentina
-2215678901,carlos.fernandez@email.com,Abogado,fajandez,jose,OTRO,9999999,202345678,1965-03-22,rovadiva,789,0,0,1000,La Plata,null,Argentina,Argentina
-2215678901,carlos.fernandez@email.com,Abogado,fajandez,pepe,OTRO,9999999,202345678,1965-03-22,Rivadavia,789,0,0,1000,La Plata,null,Argentina,Argentina
