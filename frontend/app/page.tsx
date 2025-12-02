@@ -14,7 +14,7 @@ export default function Home() {
         
         {/* Otros enlaces */}
         <Link href="/reservas" className="nav-option nav-option-secondary">
-          Gestión de Reservas
+          Reservar Habitaciones
         </Link>
         <Link href="/check-in" className="nav-option nav-option-secondary">
           Realizar Check-In
