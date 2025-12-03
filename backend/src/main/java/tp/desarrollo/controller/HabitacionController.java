@@ -17,12 +17,15 @@ import java.util.List;
 @RequestMapping("/api/habitaciones")
 @CrossOrigin(origins = "http://localhost:3000") 
 public class HabitacionController {
+
     private final Gestor_Habitacion gestorHabitacion;
+
     public HabitacionController(Gestor_Habitacion gestorHabitacion) {
         this.gestorHabitacion = gestorHabitacion;
     }
+
     @GetMapping("/estado") 
-    public List<HabitacionDTO> getEstadoHabitacionesPorRango( 
+    public List<HabitacionDTO> getEstadoHabitacionesPorRango(
         @RequestParam("desde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
         @RequestParam("hasta") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {  
 
