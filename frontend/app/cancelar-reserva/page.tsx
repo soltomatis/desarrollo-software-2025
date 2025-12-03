@@ -192,7 +192,7 @@ export default function CancelarReservaPage() {
             }
           }}
         >
-          {cargando ? '⏳ Cancelando reserva...' : '🗑️ Cancelar Reserva'}
+          {cargando ? 'Cancelando reserva...' : 'Cancelar Reserva'}
         </button>
 
         <div style={{
