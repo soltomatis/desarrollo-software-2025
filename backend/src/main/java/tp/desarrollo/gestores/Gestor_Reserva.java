@@ -1,16 +1,13 @@
 package tp.desarrollo.gestores;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import tp.desarrollo.clases.Direccion;
-import tp.desarrollo.clases.Habitacion;
-import tp.desarrollo.clases.Huesped;
-import tp.desarrollo.clases.Reserva;
-import tp.desarrollo.clases.ReservaHabitacion;
+import tp.desarrollo.clases.*;
 import tp.desarrollo.dao.HabitacionDaoDB;
 import tp.desarrollo.dao.HuespedDaoDB;
 import tp.desarrollo.dao.ReservaDaoDB;
@@ -18,19 +15,26 @@ import tp.desarrollo.dao.ReservaHabitacionDaoDB;
 import tp.desarrollo.dto.HuespedDTO;
 import tp.desarrollo.dto.ReservaDTO;
 import tp.desarrollo.dto.ReservaHabitacionDTO;
+import tp.desarrollo.enums.Estado;
 
 @Service
 public class Gestor_Reserva {
+
     @Autowired
     ReservaDaoDB reservaDao;
+
     @Autowired
     HuespedDaoDB huespedDaoDB;
+
     @Autowired
     ReservaDaoDB reservaDaoDB;
+
     @Autowired
     HabitacionDaoDB habitacionDaoDB;
+
     @Autowired
     Gestor_Habitacion gestorHabitacion;
+
     @Autowired
     ReservaHabitacionDaoDB reservaHabitacionDaoDB;
 
@@ -96,5 +100,43 @@ public class Gestor_Reserva {
             reservaHabitacionDaoDB.save(item);
         }
         return Long.valueOf(reservaPersistida.getId());
+    }
+
+    @Transactional
+    public void cancelarReserva(int idReserva) throws Exception {
+
+        Reserva reserva = reservaDaoDB.buscarReservaPorId(idReserva);
+
+        if (reserva == null) {
+            throw new Exception("No se encontró la reserva con ID: " + idReserva);
+        }
+
+        List<ReservaHabitacion> habitacionesReservadas = reserva.getListaHabitacionesRerservadas();
+
+        if (habitacionesReservadas != null && !habitacionesReservadas.isEmpty()) {
+            for (ReservaHabitacion reservaHab : habitacionesReservadas) {
+                Habitacion habitacion = reservaHab.getHabitacion();
+                LocalDate fechaInicio = reservaHab.getFecha_inicio();
+                LocalDate fechaFin = reservaHab.getFecha_fin();
+
+                eliminarEstadoReservada(habitacion, fechaInicio, fechaFin);
+            }
+        }
+
+        reservaDaoDB.eliminarReserva(reserva);
+    }
+
+    private void eliminarEstadoReservada(Habitacion habitacion, LocalDate fechaInicio, LocalDate fechaFin) {
+        List<EstadoHabitacion> historiaEstados = habitacion.getHistoriaEstados();
+
+        if (historiaEstados != null) {
+            historiaEstados.removeIf(estado ->
+                    estado.getEstado() == Estado.RESERVADA &&
+                            estado.getFechaInicio().equals(fechaInicio) &&
+                            estado.getFechaFin().equals(fechaFin)
+            );
+
+            habitacionDaoDB.actualizarHabitacion(habitacion);
+        }
     }
 }

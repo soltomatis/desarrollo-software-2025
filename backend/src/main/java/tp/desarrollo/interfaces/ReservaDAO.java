@@ -4,10 +4,15 @@
  */
 package tp.desarrollo.interfaces;
 
+import tp.desarrollo.clases.Reserva;
+
 /**
  *
  * @author juanc
  */
 public interface ReservaDAO {
-    
+
+    Reserva guardarReserva(Reserva reserva);
+    Reserva buscarReservaPorId(int id);
+    void eliminarReserva(Reserva reserva);
 }
