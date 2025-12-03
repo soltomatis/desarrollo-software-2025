@@ -13,14 +13,19 @@ import lombok.Data;
 @Entity
 @Data
 public class ReservaHabitacion {
+
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+
     @ManyToOne 
     @JoinColumn(name = "habitacion_fk", nullable = false)
     private Habitacion habitacion;
+
     private LocalDate fecha_inicio;
+
     private LocalDate fecha_fin;
+
     @ManyToOne
     @JoinColumn(name = "id_reserva")
     private Reserva reserva;

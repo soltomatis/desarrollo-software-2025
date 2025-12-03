@@ -14,11 +14,14 @@ import lombok.Data;
 @Entity
 @Data
 public class Reserva {
+
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @OneToMany
     private List<ReservaHabitacion> listaHabitacionesRerservadas;
+
     @ManyToOne
     @JoinColumn(name = "huesped_id", nullable = false)
     private Huesped huespedPrincipal;
