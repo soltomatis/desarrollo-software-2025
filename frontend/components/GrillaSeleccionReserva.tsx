@@ -15,11 +15,12 @@ interface GrillaProps {
   fechaDesde: string;
   fechaHasta: string;
   onSelect: (bloques: BloqueSeleccionado[]) => void; 
+  onConflict: (message: string) => void;
 }
 
 const GrillaSeleccionReserva: React.ForwardRefRenderFunction<GrillaRef, GrillaProps> = (
-    { habitaciones, fechaDesde, fechaHasta, onSelect }, 
-    ref // Recibimos la referencia
+    { habitaciones, fechaDesde, fechaHasta, onSelect, onConflict }, 
+    ref 
 ) => {
      const [celdaInicioTemporal, setCeldaInicioTemporal] = React.useState<{ hab: number, dia: string } | null>(null);
     const [seleccionesAcumuladas, setSeleccionesAcumuladas] = React.useState<
@@ -32,7 +33,6 @@ const GrillaSeleccionReserva: React.ForwardRefRenderFunction<GrillaRef, GrillaPr
     const final = new Date(fin + 'T00:00:00'); 
 
     while (actual <= final) {
-      // El toISOString() genera YYYY-MM-DDT... por lo que tomamos solo la parte de la fecha
       lista.push(actual.toISOString().split('T')[0]);
       actual.setDate(actual.getDate() + 1);
     }
@@ -41,27 +41,33 @@ const GrillaSeleccionReserva: React.ForwardRefRenderFunction<GrillaRef, GrillaPr
   
   const dias = generarDias(fechaDesde, fechaHasta);
 
-  const obtenerColor = (habitacion: Habitacion, fechaActual: string) => {
-    // Busca si la fecha actual cae dentro de algún estado reportado por el backend
-    const estadoEncontrado = habitacion.historiaEstados.find((estado) => {
-      // Usamos >= y <= para incluir los días de inicio y fin
-      return fechaActual >= estado.fechaInicio && fechaActual <= estado.fechaFin;
+const obtenerColor = (habitacion: Habitacion, fechaActual: string) => {
+
+    const estadosAplicables = habitacion.historiaEstados.filter((estado) => {
+        return fechaActual >= estado.fechaInicio && fechaActual <= estado.fechaFin;
     });
 
-    if (!estadoEncontrado) {
-      return '#28a745'; // VERDE: Libre (por defecto)
+    if (estadosAplicables.length === 0) {
+        return '#28a745'; 
     }
+
+    estadosAplicables.sort((a, b) => {
+        if (a.fechaInicio < b.fechaInicio) return 1;
+        if (a.fechaInicio > b.fechaInicio) return -1; 
+        return 0;
+    });
+    const estadoEncontrado = estadosAplicables[0];
 
     const tipoEstado = estadoEncontrado.estado.toUpperCase();
 
     switch (tipoEstado) {
-      case 'RESERVADA': return '#fd7e14'; // Naranja
-      case 'OCUPADA':   return '#dc3545'; // Rojo
-      case 'FUERA_SERVICIO': // Usamos el nombre del enum de Java
-      case 'FUERA_DE_SERVICIO': return '#000000'; // Negro
-      default: return '#28a745'; // Verde por si acaso
+        case 'RESERVADA': return '#fd7e14';
+        case 'OCUPADA':   return '#dc3545'; 
+        case 'FUERA_SERVICIO': 
+        case 'FUERA_DE_SERVICIO': return '#000000'; 
+        default: return '#28a745'; 
     }
-  };
+};
 const combinarMultiplesSelecciones = (
     selecciones: { habitaciones: number[], fechaInicio: string, fechaFin: string }[]
 ) => {
@@ -69,12 +75,10 @@ const combinarMultiplesSelecciones = (
         return { habitaciones: [], fechaInicio: null, fechaFin: null };
     }
 
-    // Aplanar y obtener habitaciones únicas
     const todasHabsSet = new Set<number>();
     selecciones.forEach(s => s.habitaciones.forEach(h => todasHabsSet.add(h)));
     const habitacionesUnicas = Array.from(todasHabsSet);
 
-    // Encontrar el rango de fechas MÍNIMO y MÁXIMO
     let minFecha = selecciones[0].fechaInicio;
     let maxFecha = selecciones[0].fechaFin;
     
@@ -89,69 +93,91 @@ const combinarMultiplesSelecciones = (
         fechaFin: maxFecha
     };
 };
-  // ------------------------- Lógica de Selección (Manejo del Mouse) --------------------------
+const esLibre = (habitacion: Habitacion, dia: string) => {
+    return obtenerColor(habitacion, dia) === '#28a745'; 
+};
+
+
 const handleClick = (habNum: number, dia: string) => {
     const celdaActual = { hab: habNum, dia };
 
     if (!celdaInicioTemporal) {
-        // 1. PRIMER CLIC: Inicia un nuevo bloque
         setCeldaInicioTemporal(celdaActual);
-        // Reseteamos las selecciones acumuladas solo si quieres que el primer clic borre todo.
-        // Si quieres permitir añadir a una selección existente, omite la línea siguiente.
-        // setSeleccionesAcumuladas([]); // <--- Opción para borrar todo
         
     } else {
-        // 2. SEGUNDO CLIC: Finaliza el bloque y lo acumula
-        
-        // El punto final es la celda actual
         const celdaFinTemporal = celdaActual;
         
-        // Calcula el rango rectangular final
         const nuevoRango = procesarSeleccion(celdaInicioTemporal, celdaFinTemporal);
 
-        // 💡 3. Guarda el nuevo rango en la lista acumulada
+        const hayConflicto = habitaciones.some(hab => {
+            if (nuevoRango.habitaciones.includes(hab.numeroHabitacion)) {
+                const diasRango = generarDias(nuevoRango.fechaInicio, nuevoRango.fechaFin);
+                
+                return diasRango.some(fecha => {
+                    return !esLibre(hab, fecha); 
+                });
+            }
+          });
+            const hayConflictoAcumulado = seleccionesAcumuladas.some(rangoAcumulado => {
+            // 1. Verificar si hay al menos una habitación en común
+            const habitacionesEnComun = rangoAcumulado.habitaciones.some(hab => 
+                nuevoRango.habitaciones.includes(hab)
+            );
+            
+            // Si hay habitaciones en común Y los rangos de fechas se superponen, hay conflicto.
+            if (habitacionesEnComun) {
+                return seSuperponenRangosFechas(
+                    nuevoRango.fechaInicio, nuevoRango.fechaFin,
+                    rangoAcumulado.fechaInicio, rangoAcumulado.fechaFin
+                );
+            }
+            return false;
+        });
+
+        if (hayConflicto) {
+            onConflict("El rango seleccionado contiene habitaciones no disponibles.");
+            setCeldaInicioTemporal(null); 
+            return; 
+        }
+        if (hayConflictoAcumulado) {
+            onConflict("El nuevo rango se superpone con una reserva ya seleccionada. Limpia la selección para empezar de nuevo.");
+            setCeldaInicioTemporal(null);
+            return; 
+        }
+
         const nuevaLista = [...seleccionesAcumuladas, nuevoRango];
         setSeleccionesAcumuladas(nuevaLista);
         setCeldaInicioTemporal(null);
         
-        // 💡 CAMBIO CLAVE: Enviamos la lista completa de bloques
         onSelect(nuevaLista);
     }
 };
 const limpiarSeleccion = () => {
       setSeleccionesAcumuladas([]);
       setCeldaInicioTemporal(null);
-      onSelect([]); // Notificamos al padre que no hay selecciones
+      onSelect([]); 
 }; 
-
-// 💡 3. Exponer la función de limpieza al ref
+const seSuperponenRangosFechas = (inicioA: string, finA: string, inicioB: string, finB: string) => {
+    return !((inicioA > finB) || (inicioB > finA));
+};
 React.useImperativeHandle(ref, () => ({
     limpiarSeleccion,
 }));
 
-  // ------------------------- Lógica de Procesamiento --------------------------
-
-  /**
-   * Normaliza la selección (maneja la dirección del arrastre) y 
-   * retorna los números de habitación y las fechas mínima/máxima.
-   */
   const procesarSeleccion = (inicio: { hab: number, dia: string }, fin: { hab: number, dia: string }) => {
     const todosDias = generarDias(fechaDesde, fechaHasta);
     const indicesHabitaciones = habitaciones.map(h => h.numeroHabitacion);
 
-    // Determinar el rango de fechas (Min y Max)
     const idxInicioDia = todosDias.indexOf(inicio.dia);
     const idxFinDia = todosDias.indexOf(fin.dia);
     const fechaMin = todosDias[Math.min(idxInicioDia, idxFinDia)];
     const fechaMax = todosDias[Math.max(idxInicioDia, idxFinDia)];
 
-    // Determinar el rango de habitaciones (Min y Max)
     const idxInicioHab = indicesHabitaciones.indexOf(inicio.hab);
     const idxFinHab = indicesHabitaciones.indexOf(fin.hab);
     const numHabMin = Math.min(idxInicioHab, idxFinHab);
     const numHabMax = Math.max(idxInicioHab, idxFinHab);
 
-    // Slice es exclusivo en el final, por eso se usa + 1
     const habsSeleccionadas = indicesHabitaciones.slice(numHabMin, numHabMax + 1);
 
     return {
@@ -170,10 +196,8 @@ const isSelected = (habNum: number, dia: string) => {
     return estaEnAcumuladas; 
 };
 
-  // --------------------------------- Renderizado ---------------------------------
 
   return (
-    // Agregamos onMouseUp al div contenedor para que la selección termine incluso si el mouse sale de la celda
     <div style={{ overflowX: 'auto', marginTop: '20px' }}>
       <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: '600px', userSelect: 'none' }}>
         
@@ -236,7 +260,6 @@ const isSelected = (habNum: number, dia: string) => {
         </tbody>
       </table>
 
-      {/* Leyenda de Colores */}
       <div style={{ marginTop: '15px', display: 'flex', gap: '15px', fontSize: '0.9rem' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}><div style={{ width: 15, height: 15, backgroundColor: '#28a745', marginRight: 5, borderRadius: '3px' }}></div> Libre</div>
         <div style={{ display: 'flex', alignItems: 'center' }}><div style={{ width: 15, height: 15, backgroundColor: '#fd7e14', marginRight: 5, borderRadius: '3px' }}></div> Reservada</div>

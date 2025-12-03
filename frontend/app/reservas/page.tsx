@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Habitacion } from '@/interfaces/Habitacion';
 import MostrarEstado from '@/components/MostrarEstado';
@@ -62,13 +62,28 @@ export default function PaginaNuevaReserva() {
     } else {
         setBloquesSeleccionados([]); 
     }
-    
+
+    useEffect(() => {
+        if (toast) {
+            const timer = setTimeout(() => {
+                setToast(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [toast]);
+
     setMostrarBotonReserva(false);
     setToast({
         message: "Selección de reserva rechazada. Seleccione un nuevo rango.",
         type: 'info'
     });
-};
+    };
+    const handleConflict = (message: string) => {
+    setToast({
+        message: message,
+        type: 'error'
+    });
+    };
 
     const [huespedData, setHuespedData] = useState<HuespedDTO>({ 
     nombre: '',
@@ -94,25 +109,140 @@ export default function PaginaNuevaReserva() {
         pais: 'Argentina'
     }, 
 });
-    const [seleccion, setSeleccion] = useState<any>({ 
+
+const [seleccion, setSeleccion] = useState<any>({ 
       habitaciones: [], 
       fechaInicio: null, 
       fechaFin: null 
-    }); 
-    const buscar = async (desde: string, hasta: string) => {
-        setCargando(true);
-        setFechasBusqueda({ desde, hasta });
-        try {
-          const datos = await traerHabitaciones(desde, hasta);
-          setHabitaciones(datos);
-        } catch (error) {
-          alert("Error al buscar habitaciones");
-          console.error(error);
-        } finally {
-          setCargando(false);
+}); 
+
+const parseFecha = (s: string): Date => {
+  if (!s) return new Date(NaN);
+  if (s.includes('T')) {
+    const d = new Date(s);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+  }
+
+  let sep = '-';
+  if (s.includes('/')) sep = '/';
+  const parts = s.split(sep).map(p => p.trim());
+  if (parts.length !== 3) {
+    return new Date(s);
+  }
+
+
+  if (parts[0].length === 4) {
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const day = parseInt(parts[2], 10);
+    return new Date(year, month - 1, day, 0, 0, 0, 0);
+  } else {
+
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+    return new Date(year, month - 1, day, 0, 0, 0, 0);
+  }
+};
+
+const generarDias = (inicio: string, fin: string) => {
+  const lista: string[] = [];
+  const fechaIni = parseFecha(inicio);
+  const fechaFin = parseFecha(fin);
+
+  if (isNaN(fechaIni.getTime()) || isNaN(fechaFin.getTime())) {
+    console.error('generarDias: formato de fecha inválido', inicio, fin);
+    return lista;
+  }
+
+  const actual = new Date(fechaIni.getTime());
+  while (actual <= fechaFin) {
+    lista.push(actual.toISOString().split('T')[0]);
+    actual.setDate(actual.getDate() + 1);
+  }
+  return lista;
+};
+
+const existeAlgunDiaLibre = (datos: Habitacion[], desde: string, hasta: string) => {
+  const diasRango = generarDias(desde, hasta);
+  if (diasRango.length === 0) return false;
+
+  const diasTimestamps = diasRango.map(d => parseFecha(d).getTime());
+
+  console.log('DEBUG: diasRango', diasRango);
+
+  for (const tsDia of diasTimestamps) {
+    const diaISO = new Date(tsDia).toISOString().split('T')[0];
+    for (const hab of datos) {
+      if (!hab.historiaEstados || hab.historiaEstados.length === 0) {
+        console.log(`DEBUG: hab ${hab.numeroHabitacion} libre por ausencia de historia en ${diaISO}`);
+        return true;
+      }
+
+      let cubreEseDia = false;
+      for (const est of hab.historiaEstados) {
+        if (!est.fechaInicio) continue;
+
+        const inicioTs = parseFecha(est.fechaInicio).getTime();
+        const finTs = (est.fechaFin ? parseFecha(est.fechaFin) : parseFecha(est.fechaInicio)).getTime();
+        const desdeTs = Math.min(inicioTs, finTs);
+        const hastaTs = Math.max(inicioTs, finTs);
+
+        if (tsDia >= desdeTs && tsDia <= hastaTs) {
+          cubreEseDia = true;
+          break;
         }
-    };
-    
+      }
+
+      if (!cubreEseDia) {
+        console.log(`DEBUG: hab ${hab.numeroHabitacion} libre en ${diaISO} (ningún estado lo cubre)`);
+        return true;
+      } else {
+        console.log(`DEBUG: hab ${hab.numeroHabitacion} ocupada en ${diaISO}`);
+      }
+    }
+  }
+
+  console.log('DEBUG: No existe ningun dia libre en ninguna habitacion para el rango');
+  return false;
+};
+
+const buscar = async (desde: string, hasta: string) => {
+  setCargando(true);
+  setHabitaciones([]);
+  setFechasBusqueda({ desde, hasta });
+
+  try {
+    const datos: Habitacion[] = await traerHabitaciones(desde, hasta);
+    if (!existeAlgunDiaLibre(datos, desde, hasta)) {
+        setHabitaciones([]);
+        setToast({
+            message: "No hay por lo menos un día libre en ninguna habitación dentro del rango seleccionado.",
+            type: 'error'
+        });
+        return;
+        }
+
+    if (!datos || datos.length === 0) {
+      setToast({
+        message: "No hay habitaciones en el sistema para las fechas solicitadas.",
+        type: 'error'
+      });
+      return;
+    }
+
+    setHabitaciones(datos);
+
+  } catch (error) {
+    console.error("Error al buscar habitaciones:", error);
+    setToast({
+      message: "Error al obtener la disponibilidad. Revisa la conexión con el servidor.",
+      type: 'error'
+    });
+  } finally {
+    setCargando(false);
+  }
+};
     const manejarSeleccion = (bloques: BloqueSeleccionado[]) => {
         setBloquesSeleccionados(bloques);
         setMostrarBotonReserva(bloques.length > 0);
@@ -166,7 +296,7 @@ const realizarReserva = async () => {
             const res = await fetch('http://localhost:8080/api/reservas/crear', { 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(reservaDTO) // 💡 Enviamos el DTO final
+                body: JSON.stringify(reservaDTO)
             });
             
             if (!res.ok) {
@@ -190,7 +320,6 @@ const realizarReserva = async () => {
         }
     };
     
-    // Función auxiliar para manejar cambios en el formulario del Huésped
     const handleChangeHuesped = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setHuespedData(prev => ({ 
@@ -201,14 +330,12 @@ const realizarReserva = async () => {
 
     const listaHabitacionesParaMostrar: ReservaHabitacionInfo[] = [];
 
-    // Sólo calculamos esto si hay bloques seleccionados
     if (bloquesSeleccionados.length > 0) {
         bloquesSeleccionados.forEach(bloque => {
             bloque.habitaciones.forEach(habNum => {
                 const habCompleta = habitaciones.find(h => h.numeroHabitacion === habNum);
 
                 if (habCompleta) {
-                    // Mapeamos al tipo de dato que espera la tarjeta
                     listaHabitacionesParaMostrar.push({
                         habitacion: habCompleta,
                         fecha_inicio: bloque.fechaInicio,
@@ -235,7 +362,8 @@ const realizarReserva = async () => {
                     fechaDesde={fechasBusqueda.desde}
                     fechaHasta={fechasBusqueda.hasta}
                     onSelect={manejarSeleccion}
-                    ref={grillaRef} // 💡 PASAR LA REFERENCIA
+                    ref={grillaRef}
+                    onConflict={handleConflict}
                 />
                   
                     {mostrarBotonReserva && (
@@ -293,7 +421,7 @@ const realizarReserva = async () => {
                     huespedData={huespedData}
                     onChange={handleChangeHuesped}
                     onClose={() => setMostrarModalHuesped(false)}
-                    onSave={realizarReserva} // La función de reserva se pasa al modal
+                    onSave={realizarReserva}
                 />
             )}
           {habitaciones.length === 0 && fechasBusqueda && !cargando && (
@@ -303,7 +431,7 @@ const realizarReserva = async () => {
             <ToastNotification
                 message={toast.message}
                 type={toast.type}
-                onClose={closeToast} // Pasa la función para cerrar
+                onClose={closeToast}
             />
             )}
         </div>
@@ -312,18 +440,14 @@ const realizarReserva = async () => {
 
 const HuespedModal: React.FC<HuespedModalProps> = ({ huespedData, onChange, onClose, onSave }) => {
     
-    // Verifica si los campos requeridos están llenos
     const isFormValid = huespedData.apellido && huespedData.nombre && huespedData.telefono;
 
     return (
-        // Fondo Oscuro del Modal
         <div style={{
             position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
             backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', 
             justifyContent: 'center', alignItems: 'center', zIndex: 1000
         }}>
-            
-            {/* Contenido del Modal */}
             <div style={{ 
                 backgroundColor: 'white', padding: '30px', borderRadius: '8px', 
                 width: '400px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
@@ -331,7 +455,6 @@ const HuespedModal: React.FC<HuespedModalProps> = ({ huespedData, onChange, onCl
                 <h2>Datos del Huésped Principal</h2>
                 <p>Por favor, complete los datos para finalizar la reserva.</p>
                 
-                {/* Formulario */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
                     <input 
                         name="apellido" 
@@ -357,10 +480,7 @@ const HuespedModal: React.FC<HuespedModalProps> = ({ huespedData, onChange, onCl
                         required 
                         style={{ padding: '10px', border: '1px solid #ccc' }}
                     />
-                    {/* NOTA: Asegúrate de inicializar 'email' y 'num_documento' en el estado huespedData, incluso si no se muestran */}
                 </div>
-
-                {/* Botones de Acción */}
                 <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                     <button 
                         onClick={onClose}
