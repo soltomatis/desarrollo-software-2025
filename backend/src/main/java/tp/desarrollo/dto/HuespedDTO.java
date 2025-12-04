@@ -6,18 +6,25 @@ package tp.desarrollo.dto;
 
 import java.time.LocalDate;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import tp.desarrollo.clases.Huesped;
 import tp.desarrollo.enums.CondicionIVA;
 import tp.desarrollo.enums.TipoDocumento;
+
 @NoArgsConstructor
 @Data
+@Setter
+@Getter
 public class HuespedDTO extends PersonaDTO{
+
     private Long id;
+
     private String telefono;
+
     private String email;
+
     private String ocupacion;
+
     private CondicionIVA condicionIVA;
     
     //Constructores
@@ -54,28 +61,8 @@ public class HuespedDTO extends PersonaDTO{
         this.email = huesped.getEmail();
         this.ocupacion = huesped.getOcupacion();
     }
-    
-    //GETTERS
-    public String getTelefono(){
-        return  this.telefono;
-    }
-    public String getEmail(){
-        return  this.email;
-    }
-    public String getOcupacion(){
-        return  this.ocupacion;
-    }
-    
-    //SETTERS
-    public void setTelefono(String telefono){
-        this.telefono = telefono;
-    }
-    public void setEmail(String email){
-        this.email = email;
-    }
-    public void setOcupacion(String ocupacion){
-        this.ocupacion = ocupacion;
-    }
+
+
     public HuespedDTO(String apellido, String nombre, TipoDocumento tipo_documento, long num_documento, long cuit,
             LocalDate fecha_nacimiento, DireccionDTO direccionDTO, String nacionalidad) {
         //TODO Auto-generated constructor stub
