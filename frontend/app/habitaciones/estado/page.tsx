@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Habitacion } from '@/interfaces/Habitacion';
 import MostrarEstado from '@/components/MostrarEstado';
-import GrillaDisponibilidad from '@/components/GrillaDisponibilidad'; 
+import GrillaDisponibilidad from '@/components/GrillaDisponibilidad';
 import Link from 'next/link';
 
 async function traerHabitaciones(desde: string, hasta: string) {
@@ -43,10 +43,10 @@ export default function PaginaEstado() {
 
       {/* Si hay habitaciones Y tenemos rango de fechas, mostramos la Grilla */}
       {habitaciones.length > 0 && fechasBusqueda && (
-        <GrillaDisponibilidad 
-          habitaciones={habitaciones} 
-          fechaDesde={fechasBusqueda.desde} 
-          fechaHasta={fechasBusqueda.hasta} 
+        <GrillaDisponibilidad
+          habitaciones={habitaciones}
+          fechaDesde={fechasBusqueda.desde}
+          fechaHasta={fechasBusqueda.hasta}
         />
       )}
 
