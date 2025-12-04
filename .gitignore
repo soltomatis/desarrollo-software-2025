@@ -8,6 +8,7 @@
 *.log
 *.tmp
 *.swp
+*~
 
 # Carpetas de build y distribución
 /build/
@@ -29,4 +30,40 @@
 .DS_Store
 Thumbs.db
 /Desarrollo/target/
-/frontend/nbproject/private/
+/frontend/nbproject/
+/backend/nbproject/
+
+# Variables Maven
+${project.build.directory}/
+**/\${project.build.directory}/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Maven target folder y archivos generados
+**/target/
+backend/target/
+Desarrollo/target/
+
+# Archivos específicos de Maven
+createdFiles.lst
+inputFiles.lst
+**/createdFiles.lst
+**/inputFiles.lst
