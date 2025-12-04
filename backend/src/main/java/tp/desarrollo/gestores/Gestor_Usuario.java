@@ -7,7 +7,9 @@ package tp.desarrollo.gestores;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import tp.desarrollo.clases.*;
+import tp.desarrollo.dao.EstadiaDaoDB;
 import tp.desarrollo.dao.HuespedDaoArchivos;
 import tp.desarrollo.dao.HuespedDaoDB;
 import tp.desarrollo.dao.UsuarioDaoArchivos;
@@ -38,6 +41,8 @@ public class Gestor_Usuario{
     ReservaDaoDB reservaDaoDB;
     @Autowired
     Gestor_Habitacion gestorHabitacion;
+    @Autowired
+    EstadiaDaoDB estadiaDaoDB;
     private final Scanner scanner = new Scanner(System.in);
 
     public Gestor_Usuario(HuespedDaoArchivos huespedDao, UsuarioDaoArchivos usuarioDao, ReservaDaoArchivos reservaDao) {
@@ -652,41 +657,64 @@ private DireccionDTO mapearDireccionADTO(Direccion direccion) {
     }
     @Transactional
     public void borrarHuesped(Long id) {
-    Huesped huesped = huespedDaoDB.buscarPorId(id);
-    
-    if (huesped != null) {
-        try { // ⭐ Bloque TRY-CATCH temporal ⭐
-            List<Reserva> reservas = reservaDaoDB.buscarPorHuespedPrincipalId(id);
-            
-            for (Reserva reserva : reservas) {
-                // ... Tu lógica de bucles sigue aquí ...
-                for (ReservaHabitacion detalle : reserva.getListaHabitacionesRerservadas()) {
-                    
-                    // Solo intenta acceder si no es nulo
-                    if (detalle != null && detalle.getHabitacion() != null) { 
-                        gestorHabitacion.eliminarEstadoHabitacion(
-                            detalle.getHabitacion().getNumeroHabitacion(), 
-                            detalle.getFecha_inicio(), 
-                            detalle.getFecha_fin()
-                        );
+        Huesped huesped = huespedDaoDB.buscarPorId(id);
+        
+        if (huesped != null) {
+            try { 
+                List<Reserva> reservas = reservaDaoDB.buscarPorHuespedPrincipalId(id);
+                
+                for (Reserva reserva : reservas) {
+                    if (reserva.getListaHabitacionesRerservadas() != null) {
+                        for (ReservaHabitacion detalle : reserva.getListaHabitacionesRerservadas()) {
+
+                            if (detalle != null && detalle.getHabitacion() != null) { 
+                                gestorHabitacion.eliminarEstadoHabitacion(
+                                    detalle.getHabitacion().getNumeroHabitacion(), 
+                                    detalle.getFecha_inicio(), 
+                                    detalle.getFecha_fin()
+                                );
+                            }
+                        }
                     }
                 }
+                huespedDaoDB.eliminar(huesped);
+
+            } catch (Exception e) {
+                System.err.println("------ EXCEPCIÓN DETECTADA EN GESTOR ------");
+                e.printStackTrace(); 
+                System.err.println("------------------------------------------");
+                throw new RuntimeException("Fallo al procesar eliminación de huésped.", e);
             }
-            huespedDaoDB.eliminar(huesped);
-
-        } catch (Exception e) {
-            // ⭐ Muestra la excepción ANTES de que salga del Gestor ⭐
-            System.err.println("------ EXCEPCIÓN DETECTADA EN GESTOR ------");
-            e.printStackTrace(); 
-            System.err.println("------------------------------------------");
-            // Relanza el error para que el Controller lo capture y devuelva el 500
-            throw new RuntimeException("Fallo al procesar eliminación de huésped.", e);
+        } else {
+            System.out.println("No se encontró ningún huésped con ID " + id + ".");
         }
-    } else {
-        System.out.println("No se encontró ningún huésped con ID " + id + ".");
     }
+    
+    public Map<String, Object> verificarHistorial(Long id) {
+    
+    Map<String, Object> respuesta = new HashMap<>();
+    
+    boolean seAlojado = estadiaDaoDB.elHuespedSeHaAlojado(id);
+    
+    respuesta.put("tieneHistorial", seAlojado);
+    
+    if (seAlojado) {
+        respuesta.put("mensaje", "El huésped no puede ser eliminado pues se ha alojado en el Hotel en alguna oportunidad.");
+    } else {
+        Huesped huesped = huespedDaoDB.buscarPorId(id);
+        if (huesped != null) {
+            String datos = String.format("Los datos del huésped %s %s, %s y %s serán eliminados del sistema", 
+                                        huesped.getNombre(), 
+                                        huesped.getApellido(), 
+                                        huesped.getTipoDocumento(), 
+                                        huesped.getNumDocumento());
+            respuesta.put("mensaje", datos);
+        } else {
+            respuesta.put("mensaje", "Huésped no encontrado.");
+        }
+    }
+    return respuesta;
 }
-
     
     
 }

@@ -1,7 +1,9 @@
 package tp.desarrollo.controller;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,12 +60,27 @@ public class HuespedController {
         try {
             gestorHuesped.borrarHuesped(id);
             return ResponseEntity.noContent().build(); 
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
             System.err.println("------ ERROR CRÍTICO EN EL BACK-END ------");
-            e.printStackTrace(); // ¡FUERZA LA IMPRESIÓN DEL STACK TRACE!
+            e.printStackTrace();
             System.err.println("------------------------------------------");
             
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor al intentar borrar.");
+        }
+    }
+
+    @GetMapping("/verificar-historial")
+    public ResponseEntity<Map<String, Object>> verificarHistorial(@RequestParam(value = "id") Long id) {
+        try {
+            Map<String, Object> dto = gestorHuesped.verificarHistorial(id);
+            return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            Map<String, Object> errorMap = new HashMap<>();
+            errorMap.put("mensaje", "Error al verificar historial: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMap);
         }
     }
 }

@@ -14,7 +14,11 @@ export default function PaginaBorrarHuesped() {
     const [huesped, setHuesped] = useState<Huesped | null>(null);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
+    
+    interface HistorialCheck {
+        tieneHistorial: boolean;
+        mensaje: string;
+    }
     useEffect(() => {
         if (!huespedId) {
             setError("ID de huésped no encontrado en la URL.");
@@ -62,29 +66,56 @@ export default function PaginaBorrarHuesped() {
         fetchHuesped();
     }, [huespedId]);
 
-    const manejarBorrar = async () => {
-        if (!huesped || !window.confirm(`¿Confirmas la eliminación de ${huesped.nombre} ${huesped.apellido}?`)) {
-            return;
-        }
+const manejarBorrar = async () => {
+        if (!huesped || !huesped.id) return;
+
+        setError(null);
 
         try {
-            const url = `${URL_BASE_API}/api/huespedes/borrar?id=${huesped.id}`;
-            const respuesta = await fetch(url, {
-                method: 'DELETE',
-            });
+            const urlVerificar = `${URL_BASE_API}/api/huespedes/verificar-historial?id=${huesped.id}`;
+            const resVerificar = await fetch(urlVerificar, { method: 'GET' });
 
-            if (!respuesta.ok) {
-                throw new Error(`Error al intentar borrar huésped: ${respuesta.statusText}`);
+            if (!resVerificar.ok) {
+                const errText = await resVerificar.text();
+                throw new Error(`Fallo al consultar historial: ${errText}`);
             }
 
-            alert(`Huésped ${huesped.apellido} eliminado exitosamente.`);
-            
+            const historialCheck: HistorialCheck = await resVerificar.json();
 
-            router.push('/'); 
+            
+            if (historialCheck.tieneHistorial) {
+                alert(historialCheck.mensaje + "\nPRESIONE ACEPTAR PARA CONTINUAR…");
+                
+                router.push('/'); 
+                return;
+            } else {
+                
+                const confirmacion = window.confirm(
+                    `${historialCheck.mensaje}\n\nPRESIONE ACEPTAR PARA ELIMINAR O CANCELAR PARA MANTENER.`
+                );
+
+                if (!confirmacion) {
+                    return;
+                }
+                
+                const urlBorrar = `${URL_BASE_API}/api/huespedes/borrar?id=${huesped.id}`;
+                const resBorrar = await fetch(urlBorrar, { method: 'DELETE' });
+                
+                const mensajeBorrar = await resBorrar.text();
+
+                if (!resBorrar.ok) {
+                    setError(`Error al intentar borrar: ${mensajeBorrar || resBorrar.statusText}`);
+                    return;
+                }
+                
+                // Éxito
+                alert("✅ Huésped eliminado exitosamente.");
+                router.push('/');
+            }
 
         } catch (err: any) {
-            console.error("Error en la eliminación:", err);
-            alert(`Fallo en la eliminación: ${err.message}. Revisa el Back-end.`);
+            console.error("Error en el proceso de borrado:", err);
+            setError(`Ocurrió un error inesperado: ${err.message}`);
         }
     };
 
@@ -102,7 +133,7 @@ export default function PaginaBorrarHuesped() {
 
     return (
         <div style={containerStyle}>
-            <h1>⚠️ Confirmar Eliminación de Huésped</h1>
+            <h1>Confirmar Eliminación de Huésped</h1>
             <p>Por favor, revisa los detalles antes de confirmar la eliminación de la base de datos.</p>
 
             <div style={detailsBoxStyle}>
