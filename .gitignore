@@ -29,4 +29,5 @@
 .DS_Store
 Thumbs.db
 /Desarrollo/target/
-/frontend/nbproject/private/
+/frontend/nbproject/
+/backend/nbproject/
