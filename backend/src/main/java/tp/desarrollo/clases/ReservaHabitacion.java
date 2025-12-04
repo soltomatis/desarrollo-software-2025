@@ -2,6 +2,9 @@ package tp.desarrollo.clases;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +31,7 @@ public class ReservaHabitacion {
 
     @ManyToOne
     @JoinColumn(name = "id_reserva")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Reserva reserva;
 
 }

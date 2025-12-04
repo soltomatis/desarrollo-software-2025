@@ -30,4 +30,12 @@ public class HabitacionDaoDB implements HabitacionDAO {
     public void actualizarHabitacion(Habitacion habitacion) {
         entityManager.merge(habitacion);
     }
+
+    public Habitacion buscarPorNumero(Long numeroHabitacion) {
+        String jpql = "SELECT h FROM Habitacion h LEFT JOIN FETCH h.historiaEstados WHERE h.numeroHabitacion = :numero";
+        List<Habitacion> resultados = entityManager.createQuery(jpql, Habitacion.class)
+                                                  .setParameter("numero", numeroHabitacion)
+                                                  .getResultList();
+        return resultados.isEmpty() ? null : resultados.get(0);
+    }
 }

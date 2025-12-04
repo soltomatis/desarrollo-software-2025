@@ -16,10 +16,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import tp.desarrollo.clases.Huesped;
 import tp.desarrollo.dto.DireccionDTO;
 import tp.desarrollo.dto.HuespedDTO;
-
+@Repository
 public class HuespedDaoArchivos implements HuespedDAO{
     @Override
     public void modificar_huesped(HuespedDTO huespedOriginal, HuespedDTO huespedModificado) {

@@ -6,37 +6,119 @@ package tp.desarrollo.gestores;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 import tp.desarrollo.clases.*;
 import tp.desarrollo.dao.HuespedDaoArchivos;
+import tp.desarrollo.dao.HuespedDaoDB;
 import tp.desarrollo.dao.UsuarioDaoArchivos;
 import tp.desarrollo.dto.*;
 import tp.desarrollo.enums.TipoDocumento;
 import tp.desarrollo.dao.ReservaDaoArchivos;
+import tp.desarrollo.dao.ReservaDaoDB;
 import tp.desarrollo.excepciones.HuespedConReservasExcepcion;
 
-/**
- *
- * @author juanc
- */
 
+@Service
 public class Gestor_Usuario{
 
     private HuespedDaoArchivos huespedDao;
     private UsuarioDaoArchivos usuarioDao;
     private ReservaDaoArchivos reservaDao;
 
+    @Autowired
+    HuespedDaoDB huespedDaoDB;
+    @Autowired
+    ReservaDaoDB reservaDaoDB;
+    @Autowired
+    Gestor_Habitacion gestorHabitacion;
     private final Scanner scanner = new Scanner(System.in);
 
-    // --- CAMBIO: Constructor actualizado para recibir todas las dependencias necesarias ---
     public Gestor_Usuario(HuespedDaoArchivos huespedDao, UsuarioDaoArchivos usuarioDao, ReservaDaoArchivos reservaDao) {
         this.huespedDao = huespedDao;
         this.usuarioDao = usuarioDao;
         this.reservaDao = reservaDao;
     }
+    public HuespedDTO buscarHuespedPorId(Long id) {
+        Huesped huesped = huespedDaoDB.buscarPorId(id);
+        return mapearHuespedADTO(huesped);
+    }
+    public List<HuespedDTO> buscarHuespedes(String nombre, String apellido, String tipoDocumentoStr, String numDocumentoStr) {
+        TipoDocumento tipoDocumento = null;
+        if (tipoDocumentoStr != null && !tipoDocumentoStr.isEmpty()) {
+            try {
+                tipoDocumento = TipoDocumento.valueOf(tipoDocumentoStr.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Tipo de documento inválido: " + tipoDocumentoStr);
+                return List.of();
+            }
+        }
 
+        String numeroDocumento = (numDocumentoStr != null && !numDocumentoStr.isEmpty()) ? numDocumentoStr : "-1";
+
+        HuespedDTO huespedBusqueda = new HuespedDTO(
+            (nombre != null) ? nombre : "",
+            (apellido != null) ? apellido : "",
+            tipoDocumento,
+            numeroDocumento
+        );
+
+        List<Huesped> huespedes = huespedDaoDB.buscar_huespedes(huespedBusqueda);
+
+       List<HuespedDTO> resultados = new ArrayList<>();
+    
+        for (Huesped huesped : huespedes) {
+            resultados.add(mapearHuespedADTO(huesped));
+        }
+        
+        return resultados;
+    }
+private HuespedDTO mapearHuespedADTO(Huesped huesped) {
+    if (huesped == null) {
+        return null;
+    }
+    
+    HuespedDTO dto = new HuespedDTO();
+    
+    dto.setId(huesped.getId()); 
+    dto.setApellido(huesped.getApellido());
+    dto.setNombre(huesped.getNombre());
+    dto.setTipo_documento(huesped.getTipo_documento());
+    dto.setNum_documento(huesped.getNum_documento());
+    dto.setCuit(huesped.getCUIT());
+    dto.setFecha_nacimiento(huesped.getFecha_nacimiento());
+    dto.setNacionalidad(huesped.getNacionalidad());
+    
+    dto.setDireccion(mapearDireccionADTO(huesped.getDIRECCION()));
+
+    dto.setTelefono(huesped.getTelefono());
+    dto.setEmail(huesped.getEmail());
+    dto.setOcupacion(huesped.getOcupacion());
+    dto.setCondicionIVA(huesped.getCondicionIVA());
+    
+    return dto;
+}
+private DireccionDTO mapearDireccionADTO(Direccion direccion) {
+    if (direccion == null) {
+        return null;
+    }
+    DireccionDTO dto = new DireccionDTO();
+    dto.setCalle(direccion.getCalle());
+    dto.setNumero(direccion.getNumero());
+    dto.setDepartamento(direccion.getDepartamento());
+    dto.setPiso(direccion.getPiso());
+    dto.setCodigoPostal(direccion.getCodigoPostal());
+    dto.setLocalidad(direccion.getLocalidad());
+    dto.setProvincia(direccion.getProvincia());
+    dto.setPais(direccion.getPais());
+    return dto;
+}
     public void modificar_huesped(Huesped huesped) {
         while (true) {
             System.out.println("\n¿Qué desea hacer con " + huesped.getNombre() + " " + huesped.getApellido() + "?");
@@ -568,6 +650,43 @@ public class Gestor_Usuario{
             return false;
         }
     }
+    @Transactional
+    public void borrarHuesped(Long id) {
+    Huesped huesped = huespedDaoDB.buscarPorId(id);
+    
+    if (huesped != null) {
+        try { // ⭐ Bloque TRY-CATCH temporal ⭐
+            List<Reserva> reservas = reservaDaoDB.buscarPorHuespedPrincipalId(id);
+            
+            for (Reserva reserva : reservas) {
+                // ... Tu lógica de bucles sigue aquí ...
+                for (ReservaHabitacion detalle : reserva.getListaHabitacionesRerservadas()) {
+                    
+                    // Solo intenta acceder si no es nulo
+                    if (detalle != null && detalle.getHabitacion() != null) { 
+                        gestorHabitacion.eliminarEstadoHabitacion(
+                            detalle.getHabitacion().getNumeroHabitacion(), 
+                            detalle.getFecha_inicio(), 
+                            detalle.getFecha_fin()
+                        );
+                    }
+                }
+            }
+            huespedDaoDB.eliminar(huesped);
+
+        } catch (Exception e) {
+            // ⭐ Muestra la excepción ANTES de que salga del Gestor ⭐
+            System.err.println("------ EXCEPCIÓN DETECTADA EN GESTOR ------");
+            e.printStackTrace(); 
+            System.err.println("------------------------------------------");
+            // Relanza el error para que el Controller lo capture y devuelva el 500
+            throw new RuntimeException("Fallo al procesar eliminación de huésped.", e);
+        }
+    } else {
+        System.out.println("No se encontró ningún huésped con ID " + id + ".");
+    }
+}
+
     
     
 }

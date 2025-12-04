@@ -21,7 +21,37 @@ public class HuespedDaoDB implements HuespedDAO {
     
     }
     public List<Huesped> buscar_huespedes(HuespedDTO huesped){
-        return null;
+        StringBuilder jpql = new StringBuilder("SELECT h FROM Huesped h WHERE 1=1");
+        
+        if (huesped.getNombre() != null && !huesped.getNombre().isEmpty()) {
+            jpql.append(" AND LOWER(h.nombre) LIKE LOWER(:nombre)");
+        }
+        if (huesped.getApellido() != null && !huesped.getApellido().isEmpty()) {
+            jpql.append(" AND LOWER(h.apellido) LIKE LOWER(:apellido)");
+        }
+        if (huesped.getTipo_documento() != null) {
+            jpql.append(" AND h.tipoDocumento = :tipoDocumento");
+        }
+        if (huesped.getNum_documento() > 0) {
+            jpql.append(" AND h.numDocumento = :numDocumento");
+        }
+
+        TypedQuery<Huesped> query = em.createQuery(jpql.toString(), Huesped.class);
+        
+        if (huesped.getNombre() != null && !huesped.getNombre().isEmpty()) {
+            query.setParameter("nombre", "%" + huesped.getNombre() + "%");
+        }
+        if (huesped.getApellido() != null && !huesped.getApellido().isEmpty()) {
+            query.setParameter("apellido", "%" + huesped.getApellido() + "%");
+        }
+        if (huesped.getTipo_documento() != null) {
+            query.setParameter("tipoDocumento", huesped.getTipo_documento());
+        }
+        if (huesped.getNum_documento() > 0) {
+            query.setParameter("numDocumento", huesped.getNum_documento());
+        }
+
+        return query.getResultList();
     }
 
     public boolean existe_documento(TipoDocumento tipoDocumento, long numeroDocumento){
@@ -53,4 +83,11 @@ public Huesped buscarHuespedPorDatos(String nombre, String apellido, String tele
     em.persist(huespedNuevo);
     return huespedNuevo;
 }
+    public Huesped buscarPorId(Long id) {
+        return em.find(Huesped.class, id);
+    }
+    @Transactional
+    public void eliminar(Huesped huesped) {
+        em.remove(em.contains(huesped) ? huesped : em.merge(huesped));
+    }
 }

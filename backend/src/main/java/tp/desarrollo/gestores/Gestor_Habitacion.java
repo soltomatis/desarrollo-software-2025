@@ -71,4 +71,18 @@ public class Gestor_Habitacion {
 
         habitacionDAO.actualizarHabitacion(habitacion);
     }
+    public void eliminarEstadoHabitacion(Long numeroHabitacion, LocalDate fecha_inicio, LocalDate fecha_fin) {
+        Habitacion habitacion = habitacionDAO.buscarPorNumero(numeroHabitacion);
+        if (habitacion != null) {
+            List<EstadoHabitacion> historiaEstados = habitacion.getHistoriaEstados();
+            if (historiaEstados != null) {
+                historiaEstados.removeIf(estado -> 
+                    estado.getFechaInicio().equals(fecha_inicio) && 
+                    estado.getFechaFin().equals(fecha_fin) && 
+                    estado.getEstado() == Estado.RESERVADA
+                );
+                habitacionDAO.actualizarHabitacion(habitacion);
+            }
+        }
+    }
 }

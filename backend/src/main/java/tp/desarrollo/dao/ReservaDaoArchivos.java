@@ -3,8 +3,11 @@ package tp.desarrollo.dao;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import tp.desarrollo.clases.Huesped;
 
+import org.springframework.stereotype.Repository;
+
+import tp.desarrollo.clases.Huesped;
+@Repository
 public class ReservaDaoArchivos {
     private static final String RUTA_ARCHIVO_RESERVAS = "C:\\Users\\Maria Sol\\Desarrollo\\reservas_ejemplo.csv";
 

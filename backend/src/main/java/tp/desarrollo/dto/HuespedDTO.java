@@ -14,7 +14,7 @@ import tp.desarrollo.enums.TipoDocumento;
 @NoArgsConstructor
 @Data
 public class HuespedDTO extends PersonaDTO{
-    
+    private Long id;
     private String telefono;
     private String email;
     private String ocupacion;
@@ -75,5 +75,9 @@ public class HuespedDTO extends PersonaDTO{
     }
     public void setOcupacion(String ocupacion){
         this.ocupacion = ocupacion;
+    }
+    public HuespedDTO(String apellido, String nombre, TipoDocumento tipo_documento, long num_documento, long cuit,
+            LocalDate fecha_nacimiento, DireccionDTO direccionDTO, String nacionalidad) {
+        //TODO Auto-generated constructor stub
     }
 }

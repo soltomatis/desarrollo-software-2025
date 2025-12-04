@@ -1,5 +1,7 @@
 package tp.desarrollo.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -31,5 +33,17 @@ public class ReservaDaoDB implements ReservaDAO {
         }
         em.remove(reserva);
     }
+
+    public List<Reserva> buscarPorHuespedPrincipalId(Long id) {
+
+    String jpql = "SELECT DISTINCT r FROM Reserva r " +
+                  "LEFT JOIN FETCH r.listaHabitacionesRerservadas det " + 
+                  "LEFT JOIN FETCH det.habitacion " + 
+                  "WHERE r.huespedPrincipal.id = :huespedId";
+
+    return em.createQuery(jpql, Reserva.class)
+             .setParameter("huespedId", id)
+             .getResultList();
+}
     
 }

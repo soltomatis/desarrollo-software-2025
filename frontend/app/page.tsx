@@ -20,8 +20,8 @@ export default function Home() {
           ❌ Cancelar Reserva
         </Link>
 
-        <Link href="/check-in" className="nav-option nav-option-secondary">
-          🏨 Realizar Check-In
+        <Link href="/huespedes/busqueda" className="nav-option nav-option-secondary">
+          ❌Borrar Huesped
         </Link>
       </nav>
     </div>
