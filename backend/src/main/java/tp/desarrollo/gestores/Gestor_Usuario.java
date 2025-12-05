@@ -84,7 +84,7 @@ public class Gestor_Usuario{
         
         return resultados;
     }
-private HuespedDTO mapearHuespedADTO(Huesped huesped) {
+    private HuespedDTO mapearHuespedADTO(Huesped huesped) {
     if (huesped == null) {
         return null;
     }
@@ -109,7 +109,7 @@ private HuespedDTO mapearHuespedADTO(Huesped huesped) {
     
     return dto;
 }
-private DireccionDTO mapearDireccionADTO(Direccion direccion) {
+    private DireccionDTO mapearDireccionADTO(Direccion direccion) {
     if (direccion == null) {
         return null;
     }
@@ -177,7 +177,7 @@ private DireccionDTO mapearDireccionADTO(Direccion direccion) {
     System.out.println("Para modificar un campo del Huesped ingrese el nuevo valor cuando se le pida");
     System.out.println("Si no quiere modificar algun valor, simplemente oprima (Enter) y se conservara el valor anterior:\n");
 
-    Scanner scanner = new Scanner(System.in); // local, no se cierra
+    Scanner scanner = new Scanner(System.in);
     String input;
 
     // Nombre
