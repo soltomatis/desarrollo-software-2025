@@ -54,6 +54,8 @@ public class Gestor_Usuario{
         Huesped huesped = huespedDaoDB.buscarPorId(id);
         return mapearHuespedADTO(huesped);
     }
+    
+    //Funciones ENTREGA 2
     public List<HuespedDTO> buscarHuespedes(String nombre, String apellido, String tipoDocumentoStr, String numDocumentoStr) {
         TipoDocumento tipoDocumento = null;
         if (tipoDocumentoStr != null && !tipoDocumentoStr.isEmpty()) {
@@ -124,6 +126,68 @@ public class Gestor_Usuario{
     dto.setPais(direccion.getPais());
     return dto;
 }
+    @Transactional
+    public void borrarHuesped(Long id) {
+        Huesped huesped = huespedDaoDB.buscarPorId(id);
+        
+        if (huesped != null) {
+            try { 
+                List<Reserva> reservas = reservaDaoDB.buscarPorHuespedPrincipalId(id);
+                
+                for (Reserva reserva : reservas) {
+                    if (reserva.getListaHabitacionesRerservadas() != null) {
+                        for (ReservaHabitacion detalle : reserva.getListaHabitacionesRerservadas()) {
+
+                            if (detalle != null && detalle.getHabitacion() != null) { 
+                                gestorHabitacion.eliminarEstadoHabitacion(
+                                    detalle.getHabitacion().getNumeroHabitacion(), 
+                                    detalle.getFecha_inicio(), 
+                                    detalle.getFecha_fin()
+                                );
+                            }
+                        }
+                    }
+                }
+                huespedDaoDB.eliminar(huesped);
+
+            } catch (Exception e) {
+                System.err.println("------ EXCEPCIÓN DETECTADA EN GESTOR ------");
+                e.printStackTrace(); 
+                System.err.println("------------------------------------------");
+                throw new RuntimeException("Fallo al procesar eliminación de huésped.", e);
+            }
+        } else {
+            System.out.println("No se encontró ningún huésped con ID " + id + ".");
+        }
+    }
+    
+    public Map<String, Object> verificarHistorial(Long id) {
+    
+    Map<String, Object> respuesta = new HashMap<>();
+    
+    boolean seAlojado = estadiaDaoDB.elHuespedSeHaAlojado(id);
+    
+    respuesta.put("tieneHistorial", seAlojado);
+    
+    if (seAlojado) {
+        respuesta.put("mensaje", "El huésped no puede ser eliminado pues se ha alojado en el Hotel en alguna oportunidad.");
+    } else {
+        Huesped huesped = huespedDaoDB.buscarPorId(id);
+        if (huesped != null) {
+            String datos = String.format("Los datos del huésped %s %s, %s y %s serán eliminados del sistema", 
+                                        huesped.getNombre(), 
+                                        huesped.getApellido(), 
+                                        huesped.getTipoDocumento(), 
+                                        huesped.getNumDocumento());
+            respuesta.put("mensaje", datos);
+        } else {
+            respuesta.put("mensaje", "Huésped no encontrado.");
+        }
+    }
+    return respuesta;
+}
+
+//Funciones ENTREGA 1
     public void modificar_huesped(Huesped huesped) {
         while (true) {
             System.out.println("\n¿Qué desea hacer con " + huesped.getNombre() + " " + huesped.getApellido() + "?");
@@ -161,207 +225,23 @@ public class Gestor_Usuario{
             }
         }
     }
-    
-    public void darBajaHuesped(Huesped huespedAEliminar) throws HuespedConReservasExcepcion {
-        if (reservaDao.tieneReservas(huespedAEliminar)) {
-            throw new HuespedConReservasExcepcion("El huésped no puede ser eliminado pues tiene reservas asociadas.");
-        }
-        huespedDao.eliminar(huespedAEliminar);
-    }
-    
-    public void modificar_atributos(Huesped huesped) {
-    HuespedDTO huespedOriginal = new HuespedDTO(huesped);
-    HuespedDTO huespedModificado = new HuespedDTO(huesped);
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public boolean autenticar_conserje() {
+    System.out.print("Usuario (CONSERJE): ");
+    String user = scanner.nextLine().trim();
 
-    System.out.println("Para modificar un campo del Huesped ingrese el nuevo valor cuando se le pida");
-    System.out.println("Si no quiere modificar algun valor, simplemente oprima (Enter) y se conservara el valor anterior:\n");
+    System.out.print("Contraseña: ");
+    String pass = scanner.nextLine().trim();
 
-    Scanner scanner = new Scanner(System.in);
-    String input;
+        boolean valido = usuarioDao.validarCredenciales(user, pass);
 
-    // Nombre
-    System.out.print("Ingresar nuevo Nombre (" + huespedOriginal.getNombre() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    huespedModificado.setNombre(input.isEmpty() ? huespedOriginal.getNombre() : input);
-
-    // Apellido
-    System.out.print("Ingresar nuevo Apellido (" + huespedOriginal.getApellido() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    huespedModificado.setApellido(input.isEmpty() ? huespedOriginal.getApellido() : input);
-
-    // Teléfono
-    System.out.print("Ingresar nuevo Telefono (" + huespedOriginal.getTelefono() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    huespedModificado.setTelefono(input.isEmpty() ? huespedOriginal.getTelefono() : input);
-
-    // Email
-    System.out.print("Ingresar nuevo Email (" + huespedOriginal.getEmail() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    huespedModificado.setEmail(input.isEmpty() ? huespedOriginal.getEmail() : input);
-
-    // Ocupación
-    System.out.print("Ingresar nueva Ocupacion (" + huespedOriginal.getOcupacion() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    huespedModificado.setOcupacion(input.isEmpty() ? huespedOriginal.getOcupacion() : input);
-
-    // --- Tipo Documento y Número Documento con validación de duplicados ---
-    boolean repetir;
-    do {
-        repetir = false;
-
-        // Tipo Documento
-        System.out.print("Ingresar nuevo Tipo Documento (" + huespedOriginal.getTipo_documento() + "): ");
-        input = scanner.hasNextLine() ? scanner.nextLine() : "";
-        if (input.isEmpty()) {
-            huespedModificado.setTipo_documento(huespedOriginal.getTipo_documento());
+        if (valido) {
+            System.out.println("Conserje autenticado correctamente.");
+            return true;
         } else {
-            try {
-                huespedModificado.setTipo_documento(TipoDocumento.valueOf(input.toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                System.out.println("Valor inválido, se conserva el original.");
-                huespedModificado.setTipo_documento(huespedOriginal.getTipo_documento());
-            }
-        }
-
-        // Número Documento
-        System.out.print("Ingresar nuevo Numero Documento (" + huespedOriginal.getNum_documento() + "): ");
-        input = scanner.hasNextLine() ? scanner.nextLine() : "";
-        if (input.isEmpty()) {
-            huespedModificado.setNum_documento(huespedOriginal.getNum_documento());
-        } else {
-            try {
-                huespedModificado.setNum_documento(Integer.parseInt(input));
-            } catch (NumberFormatException e) {
-                System.out.println("Valor inválido, se conserva el original.");
-                huespedModificado.setNum_documento(huespedOriginal.getNum_documento());
-            }
-        }
-
-        // --- Validación de duplicados SOLO si cambió tipo o número ---
-        if (!(huespedOriginal.getTipo_documento().equals(huespedModificado.getTipo_documento()) &&
-            huespedOriginal.getNum_documento() == huespedModificado.getNum_documento())) {
-
-            // Usamos tu función de búsqueda
-            HuespedDTO busqueda = new HuespedDTO("", "", huespedModificado.getTipo_documento(),
-                                                 String.valueOf(huespedModificado.getNum_documento()));
-            List<Huesped> duplicados = huespedDao.buscar_huespedes(busqueda);
-
-            if (!duplicados.isEmpty()) {
-                System.out.println("¡CUIDADO! El tipo y número de documento ya existen en el sistema");
-                System.out.println("1- ACEPTAR IGUALMENTE");
-                System.out.println("2- CORREGIR");
-
-                String opcion = scanner.hasNextLine() ? scanner.nextLine() : "2";
-                if (opcion.equals("2")) {
-                    repetir = true; // vuelve a pedir tipo y número
-                }
-            }
-        }
-    } while (repetir);
-
-    // CUIT
-    System.out.print("Ingresar nuevo CUIT (" + huespedOriginal.getCuit() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    if (input.isEmpty()) {
-        huespedModificado.setCuit(huespedOriginal.getCuit());
-    } else {
-        try {
-            huespedModificado.setCuit(Long.parseLong(input));
-        } catch (NumberFormatException e) {
-            System.out.println("Valor inválido, se conserva el original.");
-            huespedModificado.setCuit(huespedOriginal.getCuit());
+            System.out.println("Usuario o contraseña incorrectos o inactivo.");
+            return false;
         }
     }
-
-    // Fecha de nacimiento
-    System.out.print("Ingresar nueva Fecha Nacimiento (" + huespedOriginal.getFecha_nacimiento() + ") [yyyy-MM-dd]: ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    if (input.isEmpty()) {
-        huespedModificado.setFecha_nacimiento(huespedOriginal.getFecha_nacimiento());
-    } else {
-        try {
-            huespedModificado.setFecha_nacimiento(LocalDate.parse(input, formatter));
-        } catch (Exception e) {
-            System.out.println("Formato inválido, se conserva el original.");
-            huespedModificado.setFecha_nacimiento(huespedOriginal.getFecha_nacimiento());
-        }
-    }
-
-    // Dirección
-    DireccionDTO dir = new DireccionDTO();
-
-    System.out.print("Ingresar nueva Calle (" + huespedOriginal.getDireccion().getCalle() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    dir.setCalle(input.isEmpty() ? huespedOriginal.getDireccion().getCalle() : input);
-
-    System.out.print("Ingresar nuevo Numero (" + huespedOriginal.getDireccion().getNumero() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    if (input.isEmpty()) {
-        dir.setNumero(huespedOriginal.getDireccion().getNumero());
-    } else {
-        try {
-            dir.setNumero(Integer.parseInt(input));
-        } catch (NumberFormatException e) {
-            System.out.println("Valor inválido, se conserva el original.");
-            dir.setNumero(huespedOriginal.getDireccion().getNumero());
-        }
-    }
-
-    System.out.print("Ingresar nuevo Departamento (" + huespedOriginal.getDireccion().getDepartamento() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    dir.setDepartamento(input.isEmpty() ? huespedOriginal.getDireccion().getDepartamento() : input);
-
-    System.out.print("Ingresar nuevo Piso (" + huespedOriginal.getDireccion().getPiso() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    if (input.isEmpty()) {
-        dir.setPiso(huespedOriginal.getDireccion().getPiso());
-    } else {
-        try {
-            dir.setPiso(Integer.parseInt(input));
-        } catch (NumberFormatException e) {
-            System.out.println("Valor inválido, se conserva el original.");
-            dir.setPiso(huespedOriginal.getDireccion().getPiso());
-        }
-    }
-
-    System.out.print("Ingresar nuevo Codigo Postal (" + huespedOriginal.getDireccion().getCodigoPostal() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    if (input.isEmpty()) {
-        dir.setCodigoPostal(huespedOriginal.getDireccion().getCodigoPostal());
-    } else {
-        try {
-            dir.setCodigoPostal(Integer.parseInt(input));
-        } catch (NumberFormatException e) {
-            System.out.println("Valor inválido, se conserva el original.");
-            dir.setCodigoPostal(huespedOriginal.getDireccion().getCodigoPostal());
-        }
-    }
-
-    System.out.print("Ingresar nueva Localidad (" + huespedOriginal.getDireccion().getLocalidad() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    dir.setLocalidad(input.isEmpty() ? huespedOriginal.getDireccion().getLocalidad() : input);
-
-    System.out.print("Ingresar nueva Provincia (" + huespedOriginal.getDireccion().getProvincia() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    dir.setProvincia(input.isEmpty() ? huespedOriginal.getDireccion().getProvincia() : input);
-
-    System.out.print("Ingresar nuevo Pais (" + huespedOriginal.getDireccion().getPais() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    dir.setPais(input.isEmpty() ? huespedOriginal.getDireccion().getPais() : input);
-
-    huespedModificado.setDireccion(dir);
-
-        // Nacionalidad
-    System.out.print("Ingresar nueva Nacionalidad (" + huespedOriginal.getNacionalidad() + "): ");
-    input = scanner.hasNextLine() ? scanner.nextLine() : "";
-    huespedModificado.setNacionalidad(input.isEmpty() ? huespedOriginal.getNacionalidad() : input);
-
-    // --- Guardar cambios ---
-    huespedDao.modificar_huesped(huespedOriginal, huespedModificado);
-    System.out.println("La operación ha culminado con éxito");
-}
-
     private HuespedDTO ingresar_datos_huesped(){
         String apellido;
         String nombre;
@@ -543,52 +423,12 @@ public class Gestor_Usuario{
         HuespedDTO nuevoHuesped = new HuespedDTO(telefono, email, ocupacion, apellido, nombre, tipoDocumento, Integer.parseInt(numeroDocumento), cuit, fechaNacimiento, new DireccionDTO(calle, numero, departamento, piso, codigoPostal, localidad, provincia, pais), nacionalidad);
         return nuevoHuesped;
     }
-    
-    public void dar_alta_huesped(){
-        while(true){
-        System.out.println("Ingrese los datos del nuevo huésped:");
-        HuespedDTO nuevoHuesped = ingresar_datos_huesped();
-        while(huespedDao.existe_documento(nuevoHuesped.getTipo_documento(), nuevoHuesped.getNum_documento())){
-            System.out.println("¡CUIDADO! El tipo y número de documento ya existen en el sistema");
-            System.out.println("Aceptar igualmente o Corregir (S/N):");
-            String decision;
-            decision = scanner.nextLine();
-            if(decision.equalsIgnoreCase("S")){
-                break;
-            }
-            else{
-                System.out.println("Corrija los datos del huésped.");
-                        System.out.println("Ingrese el tipo de documento del huésped (DNI, LE, LC, PASAPORTE, OTRO):");
-                        while(true) {
-                            String tipoDocInput = scanner.nextLine().toUpperCase();
-                            try {
-                                nuevoHuesped.setTipo_documento(TipoDocumento.valueOf(tipoDocInput));
-                                break; // Salir del bucle si la conversión es exitosa
-                            } catch (IllegalArgumentException e) {
-                                System.out.print("Tipo de documento inválido. Ingrese un tipo válido (DNI, LE, LC, PASAPORTE, OTRO): ");
-                            }
-                        }
-                        
-                        System.out.println("Ingrese el número de documento del huésped:");
-                        String numeroDocumento = scanner.nextLine();
-                            while(numeroDocumento.isBlank()) {
-                                System.out.print("Número de documento no puede estar vacío. Ingrese número de documento: ");
-                                numeroDocumento = scanner.nextLine(); 
-                            }
-                        nuevoHuesped.setNum_documento(Integer.parseInt(numeroDocumento));
-
-            }
+    public void darBajaHuesped(Huesped huespedAEliminar) throws HuespedConReservasExcepcion {
+        if (reservaDao.tieneReservas(huespedAEliminar)) {
+            throw new HuespedConReservasExcepcion("El huésped no puede ser eliminado pues tiene reservas asociadas.");
         }
-        huespedDao.registrar_huesped(nuevoHuesped);
-        System.out.println("Huésped "+ nuevoHuesped.getNombre() + nuevoHuesped.getApellido() +" ha sido satisfactoriamente cargado al sistema. ¿Desea cargar otro? (S/N)");
-        String decision1;
-        decision1 = scanner.nextLine().trim();
-        if(decision1.equalsIgnoreCase("N") ){
-            break;
-        }
-    }    
+        huespedDao.eliminar(huespedAEliminar);
     }
-    
     public void buscar_huespedes(String nombre, String apellido, TipoDocumento tipoDocumento, String numeroDocumento){
         if(nombre == null){
             nombre = "";
@@ -637,85 +477,243 @@ public class Gestor_Usuario{
         }
         }
     }
-    
-    public boolean autenticar_conserje() {
-    System.out.print("Usuario (CONSERJE): ");
-    String user = scanner.nextLine().trim();
-
-    System.out.print("Contraseña: ");
-    String pass = scanner.nextLine().trim();
-
-        boolean valido = usuarioDao.validarCredenciales(user, pass);
-
-        if (valido) {
-            System.out.println("Conserje autenticado correctamente.");
-            return true;
-        } else {
-            System.out.println("Usuario o contraseña incorrectos o inactivo.");
-            return false;
-        }
-    }
-    @Transactional
-    public void borrarHuesped(Long id) {
-        Huesped huesped = huespedDaoDB.buscarPorId(id);
-        
-        if (huesped != null) {
-            try { 
-                List<Reserva> reservas = reservaDaoDB.buscarPorHuespedPrincipalId(id);
-                
-                for (Reserva reserva : reservas) {
-                    if (reserva.getListaHabitacionesRerservadas() != null) {
-                        for (ReservaHabitacion detalle : reserva.getListaHabitacionesRerservadas()) {
-
-                            if (detalle != null && detalle.getHabitacion() != null) { 
-                                gestorHabitacion.eliminarEstadoHabitacion(
-                                    detalle.getHabitacion().getNumeroHabitacion(), 
-                                    detalle.getFecha_inicio(), 
-                                    detalle.getFecha_fin()
-                                );
+    public void dar_alta_huesped(){
+        while(true){
+        System.out.println("Ingrese los datos del nuevo huésped:");
+        HuespedDTO nuevoHuesped = ingresar_datos_huesped();
+        while(huespedDao.existe_documento(nuevoHuesped.getTipo_documento(), nuevoHuesped.getNum_documento())){
+            System.out.println("¡CUIDADO! El tipo y número de documento ya existen en el sistema");
+            System.out.println("Aceptar igualmente o Corregir (S/N):");
+            String decision;
+            decision = scanner.nextLine();
+            if(decision.equalsIgnoreCase("S")){
+                break;
+            }
+            else{
+                System.out.println("Corrija los datos del huésped.");
+                        System.out.println("Ingrese el tipo de documento del huésped (DNI, LE, LC, PASAPORTE, OTRO):");
+                        while(true) {
+                            String tipoDocInput = scanner.nextLine().toUpperCase();
+                            try {
+                                nuevoHuesped.setTipo_documento(TipoDocumento.valueOf(tipoDocInput));
+                                break; // Salir del bucle si la conversión es exitosa
+                            } catch (IllegalArgumentException e) {
+                                System.out.print("Tipo de documento inválido. Ingrese un tipo válido (DNI, LE, LC, PASAPORTE, OTRO): ");
                             }
                         }
+                        
+                        System.out.println("Ingrese el número de documento del huésped:");
+                        String numeroDocumento = scanner.nextLine();
+                            while(numeroDocumento.isBlank()) {
+                                System.out.print("Número de documento no puede estar vacío. Ingrese número de documento: ");
+                                numeroDocumento = scanner.nextLine(); 
+                            }
+                        nuevoHuesped.setNum_documento(Integer.parseInt(numeroDocumento));
+
+            }
+        }
+        huespedDao.registrar_huesped(nuevoHuesped);
+        System.out.println("Huésped "+ nuevoHuesped.getNombre() + nuevoHuesped.getApellido() +" ha sido satisfactoriamente cargado al sistema. ¿Desea cargar otro? (S/N)");
+        String decision1;
+        decision1 = scanner.nextLine().trim();
+        if(decision1.equalsIgnoreCase("N") ){
+            break;
+        }
+    }    
+    }
+    public void modificar_atributos(Huesped huesped) {
+        HuespedDTO huespedOriginal = new HuespedDTO(huesped);
+        HuespedDTO huespedModificado = new HuespedDTO(huesped);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        System.out.println("Para modificar un campo del Huesped ingrese el nuevo valor cuando se le pida");
+        System.out.println("Si no quiere modificar algun valor, simplemente oprima (Enter) y se conservara el valor anterior:\n");
+
+        Scanner scanner = new Scanner(System.in);
+        String input;
+
+        // Nombre
+        System.out.print("Ingresar nuevo Nombre (" + huespedOriginal.getNombre() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        huespedModificado.setNombre(input.isEmpty() ? huespedOriginal.getNombre() : input);
+
+        // Apellido
+        System.out.print("Ingresar nuevo Apellido (" + huespedOriginal.getApellido() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        huespedModificado.setApellido(input.isEmpty() ? huespedOriginal.getApellido() : input);
+
+        // Teléfono
+        System.out.print("Ingresar nuevo Telefono (" + huespedOriginal.getTelefono() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        huespedModificado.setTelefono(input.isEmpty() ? huespedOriginal.getTelefono() : input);
+
+        // Email
+        System.out.print("Ingresar nuevo Email (" + huespedOriginal.getEmail() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        huespedModificado.setEmail(input.isEmpty() ? huespedOriginal.getEmail() : input);
+
+        // Ocupación
+        System.out.print("Ingresar nueva Ocupacion (" + huespedOriginal.getOcupacion() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        huespedModificado.setOcupacion(input.isEmpty() ? huespedOriginal.getOcupacion() : input);
+
+        // --- Tipo Documento y Número Documento con validación de duplicados ---
+        boolean repetir;
+        do {
+            repetir = false;
+
+            // Tipo Documento
+            System.out.print("Ingresar nuevo Tipo Documento (" + huespedOriginal.getTipo_documento() + "): ");
+            input = scanner.hasNextLine() ? scanner.nextLine() : "";
+            if (input.isEmpty()) {
+                huespedModificado.setTipo_documento(huespedOriginal.getTipo_documento());
+            } else {
+                try {
+                    huespedModificado.setTipo_documento(TipoDocumento.valueOf(input.toUpperCase()));
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Valor inválido, se conserva el original.");
+                    huespedModificado.setTipo_documento(huespedOriginal.getTipo_documento());
+                }
+            }
+
+            // Número Documento
+            System.out.print("Ingresar nuevo Numero Documento (" + huespedOriginal.getNum_documento() + "): ");
+            input = scanner.hasNextLine() ? scanner.nextLine() : "";
+            if (input.isEmpty()) {
+                huespedModificado.setNum_documento(huespedOriginal.getNum_documento());
+            } else {
+                try {
+                    huespedModificado.setNum_documento(Integer.parseInt(input));
+                } catch (NumberFormatException e) {
+                    System.out.println("Valor inválido, se conserva el original.");
+                    huespedModificado.setNum_documento(huespedOriginal.getNum_documento());
+                }
+            }
+
+            // --- Validación de duplicados SOLO si cambió tipo o número ---
+            if (!(huespedOriginal.getTipo_documento().equals(huespedModificado.getTipo_documento()) &&
+                huespedOriginal.getNum_documento() == huespedModificado.getNum_documento())) {
+
+                // Usamos tu función de búsqueda
+                HuespedDTO busqueda = new HuespedDTO("", "", huespedModificado.getTipo_documento(),
+                                                    String.valueOf(huespedModificado.getNum_documento()));
+                List<Huesped> duplicados = huespedDao.buscar_huespedes(busqueda);
+
+                if (!duplicados.isEmpty()) {
+                    System.out.println("¡CUIDADO! El tipo y número de documento ya existen en el sistema");
+                    System.out.println("1- ACEPTAR IGUALMENTE");
+                    System.out.println("2- CORREGIR");
+
+                    String opcion = scanner.hasNextLine() ? scanner.nextLine() : "2";
+                    if (opcion.equals("2")) {
+                        repetir = true; // vuelve a pedir tipo y número
                     }
                 }
-                huespedDaoDB.eliminar(huesped);
-
-            } catch (Exception e) {
-                System.err.println("------ EXCEPCIÓN DETECTADA EN GESTOR ------");
-                e.printStackTrace(); 
-                System.err.println("------------------------------------------");
-                throw new RuntimeException("Fallo al procesar eliminación de huésped.", e);
             }
+        } while (repetir);
+
+        // CUIT
+        System.out.print("Ingresar nuevo CUIT (" + huespedOriginal.getCuit() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        if (input.isEmpty()) {
+            huespedModificado.setCuit(huespedOriginal.getCuit());
         } else {
-            System.out.println("No se encontró ningún huésped con ID " + id + ".");
+            try {
+                huespedModificado.setCuit(Long.parseLong(input));
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido, se conserva el original.");
+                huespedModificado.setCuit(huespedOriginal.getCuit());
+            }
         }
-    }
-    
-    public Map<String, Object> verificarHistorial(Long id) {
-    
-    Map<String, Object> respuesta = new HashMap<>();
-    
-    boolean seAlojado = estadiaDaoDB.elHuespedSeHaAlojado(id);
-    
-    respuesta.put("tieneHistorial", seAlojado);
-    
-    if (seAlojado) {
-        respuesta.put("mensaje", "El huésped no puede ser eliminado pues se ha alojado en el Hotel en alguna oportunidad.");
-    } else {
-        Huesped huesped = huespedDaoDB.buscarPorId(id);
-        if (huesped != null) {
-            String datos = String.format("Los datos del huésped %s %s, %s y %s serán eliminados del sistema", 
-                                        huesped.getNombre(), 
-                                        huesped.getApellido(), 
-                                        huesped.getTipoDocumento(), 
-                                        huesped.getNumDocumento());
-            respuesta.put("mensaje", datos);
+
+        // Fecha de nacimiento
+        System.out.print("Ingresar nueva Fecha Nacimiento (" + huespedOriginal.getFecha_nacimiento() + ") [yyyy-MM-dd]: ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        if (input.isEmpty()) {
+            huespedModificado.setFecha_nacimiento(huespedOriginal.getFecha_nacimiento());
         } else {
-            respuesta.put("mensaje", "Huésped no encontrado.");
+            try {
+                huespedModificado.setFecha_nacimiento(LocalDate.parse(input, formatter));
+            } catch (Exception e) {
+                System.out.println("Formato inválido, se conserva el original.");
+                huespedModificado.setFecha_nacimiento(huespedOriginal.getFecha_nacimiento());
+            }
         }
+
+        // Dirección
+        DireccionDTO dir = new DireccionDTO();
+
+        System.out.print("Ingresar nueva Calle (" + huespedOriginal.getDireccion().getCalle() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        dir.setCalle(input.isEmpty() ? huespedOriginal.getDireccion().getCalle() : input);
+
+        System.out.print("Ingresar nuevo Numero (" + huespedOriginal.getDireccion().getNumero() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        if (input.isEmpty()) {
+            dir.setNumero(huespedOriginal.getDireccion().getNumero());
+        } else {
+            try {
+                dir.setNumero(Integer.parseInt(input));
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido, se conserva el original.");
+                dir.setNumero(huespedOriginal.getDireccion().getNumero());
+            }
+        }
+
+        System.out.print("Ingresar nuevo Departamento (" + huespedOriginal.getDireccion().getDepartamento() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        dir.setDepartamento(input.isEmpty() ? huespedOriginal.getDireccion().getDepartamento() : input);
+
+        System.out.print("Ingresar nuevo Piso (" + huespedOriginal.getDireccion().getPiso() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        if (input.isEmpty()) {
+            dir.setPiso(huespedOriginal.getDireccion().getPiso());
+        } else {
+            try {
+                dir.setPiso(Integer.parseInt(input));
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido, se conserva el original.");
+                dir.setPiso(huespedOriginal.getDireccion().getPiso());
+            }
+        }
+
+        System.out.print("Ingresar nuevo Codigo Postal (" + huespedOriginal.getDireccion().getCodigoPostal() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        if (input.isEmpty()) {
+            dir.setCodigoPostal(huespedOriginal.getDireccion().getCodigoPostal());
+        } else {
+            try {
+                dir.setCodigoPostal(Integer.parseInt(input));
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido, se conserva el original.");
+                dir.setCodigoPostal(huespedOriginal.getDireccion().getCodigoPostal());
+            }
+        }
+
+        System.out.print("Ingresar nueva Localidad (" + huespedOriginal.getDireccion().getLocalidad() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        dir.setLocalidad(input.isEmpty() ? huespedOriginal.getDireccion().getLocalidad() : input);
+
+        System.out.print("Ingresar nueva Provincia (" + huespedOriginal.getDireccion().getProvincia() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        dir.setProvincia(input.isEmpty() ? huespedOriginal.getDireccion().getProvincia() : input);
+
+        System.out.print("Ingresar nuevo Pais (" + huespedOriginal.getDireccion().getPais() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        dir.setPais(input.isEmpty() ? huespedOriginal.getDireccion().getPais() : input);
+
+        huespedModificado.setDireccion(dir);
+
+            // Nacionalidad
+        System.out.print("Ingresar nueva Nacionalidad (" + huespedOriginal.getNacionalidad() + "): ");
+        input = scanner.hasNextLine() ? scanner.nextLine() : "";
+        huespedModificado.setNacionalidad(input.isEmpty() ? huespedOriginal.getNacionalidad() : input);
+
+        // --- Guardar cambios ---
+        huespedDao.modificar_huesped(huespedOriginal, huespedModificado);
+        System.out.println("La operación ha culminado con éxito");
     }
-    return respuesta;
-}
-    
+
     
 }
 
