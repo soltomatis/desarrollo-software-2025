@@ -199,7 +199,7 @@ export default function CancelarReservaPage() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          idReservas: Array.from(reservasSeleccionadas)
+          idsReservas: Array.from(reservasSeleccionadas)
         })
       });
 
@@ -277,10 +277,10 @@ export default function CancelarReservaPage() {
         marginBottom: '30px'
       }}>
         <h2 style={{ fontSize: '1.3rem', marginBottom: '15px', color: '#555' }}>
-          Paso 1-3: Buscar Reservas
+          Buscar Reservas
         </h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
 
           <div>
             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>
@@ -511,7 +511,14 @@ export default function CancelarReservaPage() {
                     <td style={{ padding: '12px', fontWeight: 'bold' }}>{reserva.huespedPrincipal.apellido}</td>
                     <td style={{ padding: '12px' }}>{reserva.huespedPrincipal.nombre}</td>
                     <td style={{ padding: '12px' }}>
-                      {reserva.listaHabitacionesReservadas.map(rh => rh.habitacion.numeroHabitacion).join(', ')}
+                      {reserva.listaHabitacionesReservadas
+                        .map((rh, index) => (
+                          <span key={index}>
+                            {rh.habitacion.numeroHabitacion}
+                            {index < reserva.listaHabitacionesReservadas.length - 1 ? ', ' : ''}
+                          </span>
+                        ))
+                      }
                     </td>
                     <td style={{ padding: '12px' }}>
                       {reserva.listaHabitacionesReservadas.map(rh => rh.habitacion.tipo).join(', ')}
@@ -545,7 +552,7 @@ export default function CancelarReservaPage() {
                 transition: 'background-color 0.2s'
               }}
             >
-              {cargando ? 'Cancelando...' : `✓ ACEPTAR (${reservasSeleccionadas.size})`}
+              {cargando ? 'Cancelando...' : `ACEPTAR (${reservasSeleccionadas.size})`}
             </button>
 
             <button
@@ -564,21 +571,11 @@ export default function CancelarReservaPage() {
                 transition: 'background-color 0.2s'
               }}
             >
-              ✗ CANCELAR
+              CANCELAR
             </button>
           </div>
 
-          <div style={{
-            marginTop: '20px',
-            padding: '12px',
-            backgroundColor: '#fff3cd',
-            border: '1px solid #ffc107',
-            borderRadius: '5px',
-            fontSize: '0.9rem',
-            color: '#856404'
-          }}>
-            <strong>Postcondición:</strong> Al cancelar, las reservas serán eliminadas y las habitaciones quedarán disponibles.
-          </div>
+
         </div>
       )}
 

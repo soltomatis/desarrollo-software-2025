@@ -105,11 +105,6 @@ public class Gestor_Reserva {
         return Long.valueOf(reservaPersistida.getId());
     }
 
-    /**
-     * CU: Cancelar Reserva
-     * Paso 4: Buscar reservas según criterios
-     * @return Lista de ReservaDTO que coinciden con los criterios
-     */
     public List<ReservaDTO> buscarReservas(String apellido, String nombre,
                                            Long numeroHabitacion, String tipoHabitacion,
                                            String fechaInicio, String fechaFin) {
@@ -117,7 +112,6 @@ public class Gestor_Reserva {
         List<Reserva> reservasEncontradas = reservaDaoDB.buscarReservasPorCriterios(
                 apellido, nombre, numeroHabitacion, tipoHabitacion, fechaInicio, fechaFin);
 
-        // Convertir entidades a DTOs
         List<ReservaDTO> reservasDTO = new ArrayList<>();
         for (Reserva reserva : reservasEncontradas) {
             ReservaDTO dto = convertirReservaADTO(reserva);
@@ -189,6 +183,8 @@ public class Gestor_Reserva {
 
     private ReservaDTO convertirReservaADTO(Reserva reserva) {
         ReservaDTO dto = new ReservaDTO();
+
+        dto.setId(reserva.getId());
 
         if (reserva.getHuespedPrincipal() != null) {
             HuespedDTO huespedDTO = new HuespedDTO(reserva.getHuespedPrincipal());

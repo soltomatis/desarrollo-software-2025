@@ -11,6 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CancelarReservaDTO {
 
-    private List<Integer> idReservas;
+    private List<Integer> idsReservas;
 
 }

@@ -68,7 +68,7 @@ public class ReservaController {
 
         try {
 
-            List<Integer> reservasCanceladas = gestorReserva.cancelarReservas(request.getIdReservas());
+            List<Integer> reservasCanceladas = gestorReserva.cancelarReservas(request.getIdsReservas());
 
             Map<String, Object> respuesta = new HashMap<>();
             respuesta.put("mensaje", "Reservas canceladas PRESIONE UNA TECLA PARA CONTINUAR...");
