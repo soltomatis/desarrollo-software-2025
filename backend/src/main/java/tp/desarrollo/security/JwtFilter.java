@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import tp.desarrollo.clases.Usuario; // importamos tu entidad
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtil jwtUtil; // 👈 usamos la clase utilitaria
+    private JwtUtil jwtUtil; // 👈 clase utilitaria para validar y extraer datos del token
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -35,15 +36,16 @@ public class JwtFilter extends OncePerRequestFilter {
                 String username = jwtUtil.getUsername(token);
                 String role = jwtUtil.getRole(token);
 
-                // Crear objeto Authentication con el rol
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                username,
-                                null,
-                                List.of(new SimpleGrantedAuthority(role))
-                        );
+                AppUserDetails principal = new AppUserDetails(username, role);
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        principal,
+                        null,
+                        principal.getAuthorities()
+                );
+
+SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (Exception e) {
                 // Token inválido → limpiar contexto y devolver 401

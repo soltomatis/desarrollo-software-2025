@@ -14,6 +14,7 @@ import tp.desarrollo.dto.LoginResponse;
 import tp.desarrollo.dto.UserInfoResponse;
 import tp.desarrollo.clases.Usuario;
 import tp.desarrollo.repositorio.UserRepository;
+import tp.desarrollo.security.AppUserDetails;
 import tp.desarrollo.security.JwtUtil;
 
 @RestController
@@ -59,14 +60,13 @@ public class AuthController {
         }
     }
 
-    //  Endpoint para obtener info del usuario autenticado
     @GetMapping("/me")
     public ResponseEntity<UserInfoResponse> me(Authentication authentication) {
-        if (authentication == null || !(authentication.getPrincipal() instanceof Usuario usuario)) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof AppUserDetails principal)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        UserInfoResponse response = new UserInfoResponse(usuario.getUsername(), usuario.getRole());
+        UserInfoResponse response = new UserInfoResponse(principal.getUsername(), principal.getRole());
         return ResponseEntity.ok(response);
     }
 }
