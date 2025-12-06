@@ -5,38 +5,32 @@ import { Habitacion } from "@/interfaces/Habitacion";
 import GrillaDisponibilidad from "@/components/GrillaDisponibilidad";
 import Link from "next/link";
 import { AuthGate } from "@/components/AuthGate";
+import MostrarEstado from "@/components/MostrarEstado";
 
 export default function ConsultarEstadoHabitaciones() {
-  const [fechaDesde, setFechaDesde] = useState("");
-  const [fechaHasta, setFechaHasta] = useState("");
   const [habitaciones, setHabitaciones] = useState<Habitacion[]>([]);
-  const [mostrarResultados, setMostrarResultados] = useState(false);
-  const [errorValidacion, setErrorValidacion] = useState("");
+  const [fechasBusqueda, setFechasBusqueda] = useState<{ desde: string; hasta: string } | null>(null);
   const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  const consultarEstado = async () => {
-    if (!fechaDesde || !fechaHasta) {
-      setErrorValidacion("Debe ingresar ambas fechas");
-      return;
-    }
-
+  const buscar = async (desde: string, hasta: string) => {
     setCargando(true);
-    setMostrarResultados(false);
+    setError(null);
+    setFechasBusqueda({ desde, hasta });
     setHabitaciones([]);
 
     try {
-      const res = await fetch(`/api/habitaciones/estado?desde=${fechaDesde}&hasta=${fechaHasta}`, {
+      const res = await fetch(`/api/habitaciones/estado?desde=${desde}&hasta=${hasta}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) throw new Error("Error al conectar con el servidor");
       const datos = await res.json();
       setHabitaciones(datos);
-      setMostrarResultados(true);
-    } catch (error: any) {
-      setErrorValidacion(error.message || "Error al conectar con el servidor");
+    } catch (err: any) {
+      setError(err.message || "Error al conectar con el servidor");
     } finally {
       setCargando(false);
     }
@@ -44,14 +38,31 @@ export default function ConsultarEstadoHabitaciones() {
 
   return (
     <AuthGate>
-      <div style={{ padding: "40px" }}>
+      <div className="container" style={{ padding: "40px", color: "#333" }}>
         <h1>Estado de Habitaciones</h1>
-        <Link href="/">← Volver al inicio</Link>
+        <Link href="/" style={{ display: "block", marginBottom: "20px", color: "blue" }}>
+          ← Volver al inicio
+        </Link>
 
-        {/* Formulario de fechas */}
-        {/* ... resto igual, usando consultarEstado ... */}
+        {/* 🔹 Usamos el componente MostrarEstado para el formulario */}
+        <MostrarEstado onSearch={buscar} />
 
-        {mostrarResultados && <GrillaDisponibilidad habitaciones={habitaciones} fechaDesde={fechaDesde} fechaHasta={fechaHasta} />}
+        {cargando && <p>Cargando datos...</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        {/* 🔹 Si hay habitaciones y fechas, mostramos la grilla */}
+        {habitaciones.length > 0 && fechasBusqueda && (
+          <GrillaDisponibilidad
+            habitaciones={habitaciones}
+            fechaDesde={fechasBusqueda.desde}
+            fechaHasta={fechasBusqueda.hasta}
+          />
+        )}
+
+        {/* 🔹 Si no hay resultados */}
+        {habitaciones.length === 0 && fechasBusqueda && !cargando && !error && (
+          <p>No se encontraron resultados.</p>
+        )}
       </div>
     </AuthGate>
   );
