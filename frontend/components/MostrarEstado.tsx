@@ -1,14 +1,14 @@
-'use client'; 
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface MostrarEstadoProps {
-  onSearch: (fechaDesde: string, fechaHasta: string) => void; 
+  onSearch: (fechaDesde: string, fechaHasta: string) => void;
 }
 
 export default function MostrarEstado({ onSearch }: MostrarEstadoProps) {
-  const [desde, setDesde] = useState('');
-  const [hasta, setHasta] = useState('');
+  const [desde, setDesde] = useState("");
+  const [hasta, setHasta] = useState("");
 
   const manejarClick = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,34 +20,62 @@ export default function MostrarEstado({ onSearch }: MostrarEstadoProps) {
   };
 
   return (
-    <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '10px', marginBottom: '20px', backgroundColor: '#f9f9f9' }}>
-      <h3>Filtrar por Fecha</h3>
-      <form onSubmit={manejarClick} style={{ display: 'flex', gap: '15px', alignItems: 'flex-end' }}>
-        
-        <div>
-          <label style={{ display: 'block', fontSize: '0.9rem' }}>Fecha Desde:</label>
-          <input 
-            type="date" 
+    <div
+      className="container"
+      style={{
+        padding: "20px",
+        marginBottom: "20px",
+        backgroundColor: "#f9f9f9",
+        borderRadius: "8px",
+        width: "100%", // 🔹 ocupa todo el ancho disponible
+      }}
+    >
+      <h3 style={{ marginBottom: "15px" }}>Filtrar por Fecha</h3>
+      <form
+        onSubmit={manejarClick}
+        style={{
+          display: "flex",
+          flexWrap: "wrap", // 🔹 permite que se apilen en pantallas pequeñas
+          gap: "15px",
+          alignItems: "flex-end",
+          width: "100%",
+        }}
+      >
+        <div style={{ flex: "1 1 200px" }}>
+          <label style={{ display: "block", fontSize: "0.9rem", marginBottom: "5px" }}>
+            Fecha Desde:
+          </label>
+          <input
+            type="date"
             value={desde}
             onChange={(e) => setDesde(e.target.value)}
-            style={{ padding: '5px' }}
+            className="nav-option"
+            style={{ width: "100%" }} // 🔹 input ocupa todo el ancho
           />
         </div>
 
-        <div>
-          <label style={{ display: 'block', fontSize: '0.9rem' }}>Fecha Hasta:</label>
-          <input 
-            type="date" 
+        <div style={{ flex: "1 1 200px" }}>
+          <label style={{ display: "block", fontSize: "0.9rem", marginBottom: "5px" }}>
+            Fecha Hasta:
+          </label>
+          <input
+            type="date"
             value={hasta}
             onChange={(e) => setHasta(e.target.value)}
-            style={{ padding: '5px' }}
+            className="nav-option"
+            style={{ width: "100%" }}
           />
         </div>
 
-        <button type="submit" style={{ padding: '8px 15px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-          Buscar
-        </button>
-
+        <div style={{ flex: "0 0 auto" }}>
+          <button
+            type="submit"
+            className="nav-option nav-option-secondary"
+            style={{ width: "100%", minWidth: "120px" }} // 🔹 botón más adaptable
+          >
+            Buscar
+          </button>
+        </div>
       </form>
     </div>
   );
