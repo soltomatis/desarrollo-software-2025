@@ -3,6 +3,7 @@ package tp.desarrollo.clases;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,10 @@ public class Estadia {
     private List<Consumo> lista_consumos = new ArrayList<>();
 
     private LocalDate fecha_check_in;
-    private LocalDate fecha_check_out;
+    private LocalDateTime fecha_check_out;
+
+    public void agregarConsumo(Consumo alojamiento) {
+        lista_consumos.add(alojamiento);
+    }
 }
 
