@@ -11,14 +11,14 @@ const optionsByRole: Record<string, { href: string; label: string }[]> = {
     { href: "/reservas", label: "📅 Reservar Habitaciones" },
     { href: "/cancelar-reserva", label: "❌ Cancelar Reserva" },
     { href: "/huespedes/busqueda", label: "️Dar de baja Huésped" },
-    { href: "/reportes", label: "📑 Reportes de Gestión" },
+    { href: "/facturar", label: "📑 Facturar" },
   ],
   ROLE_CONSERJE: [
     { href: "/habitaciones/estado", label: "📊 Visualizar Estado de Habitaciones" },
     { href: "/reservas", label: "📅 Reservar Habitaciones" },
     { href: "/cancelar-reserva", label: "❌ Cancelar Reserva" },
     { href: "/huespedes/busqueda", label: "️Dar de baja Huésped" },
-    { href: "/huespedes/checkin", label: "🛎️ Check-in de Huésped" },
+    { href: "/facturar", label: "📑 Facturar" },
   ],
 };
 

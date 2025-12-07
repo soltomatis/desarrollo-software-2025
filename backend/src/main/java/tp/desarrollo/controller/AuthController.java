@@ -19,6 +19,7 @@ import tp.desarrollo.security.JwtUtil;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     @Autowired

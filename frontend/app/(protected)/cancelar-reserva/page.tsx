@@ -108,7 +108,7 @@ export default function CancelarReservaPage() {
       if (criterios.fechaInicio) params.append('fechaInicio', criterios.fechaInicio);
       if (criterios.fechaFin) params.append('fechaFin', criterios.fechaFin);
 
-      const response = await fetch(`/api/reservas/buscar?${params.toString()}`, {
+      const response = await fetch(`http://localhost:8080/api/reservas/buscar?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -162,7 +162,7 @@ export default function CancelarReservaPage() {
 
     setCargando(true);
     try {
-      const response = await fetch(`/api/reservas/cancelar`, {
+      const response = await fetch(`http://localhost:8080/api/reservas/cancelar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

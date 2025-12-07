@@ -28,7 +28,7 @@ const FacturacionPage = () => {
     const [terceroEncontrado, setTerceroEncontrado] = useState<any>(null);
     const [mostrarFormularioAlta, setMostrarFormularioAlta] = useState(false);
     const [responsableTerceroId, setResponsableTerceroId] = useState<number | null>(null);
-
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const getItemsSeleccionados = () => {
         if (!resumenFactura || !resumenFactura.items) return [];
         return resumenFactura.items.filter(item => 
@@ -71,7 +71,9 @@ const FacturacionPage = () => {
         if (!cuitTercero) return;
         
         try {
-            const response = await fetch(`http://localhost:8080/api/factura/buscar-cuit?cuit=${cuitTercero}`);
+            const response = await fetch(`http://localhost:8080/api/factura/buscar-cuit?cuit=${cuitTercero}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
             
             if (response.ok) {
                 const data = await response.json();
@@ -123,7 +125,8 @@ const FacturacionPage = () => {
 
             const respuesta = await fetch(url, {
                 method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}` },
             });
             
             if (respuesta.ok) {
@@ -160,7 +163,8 @@ const FacturacionPage = () => {
 
             const respuesta = await fetch(urlCalculo, {
                 method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` },
                 body: JSON.stringify(datosCalculo),
             });
 
@@ -228,7 +232,8 @@ const FacturacionPage = () => {
 
             const respuestaFinal = await fetch(urlGenerar, { 
                 method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` },
                 body: JSON.stringify(datosFacturacion),
             });
             

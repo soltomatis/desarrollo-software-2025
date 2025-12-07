@@ -45,7 +45,7 @@ export default function PaginaBorrarHuesped() {
 
     const fetchHuesped = async () => {
       try {
-        const url = `/api/huespedes/buscarPorId?id=${huespedId}`;
+        const url = `http://localhost:8080/api/huespedes/buscarPorId?id=${huespedId}`;
         const respuesta = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
         if (!respuesta.ok) throw new Error(`Error al cargar huésped: ${respuesta.status}`);
         const datos: Huesped = await respuesta.json();
@@ -65,7 +65,7 @@ export default function PaginaBorrarHuesped() {
     setError(null);
 
     try {
-      const urlVerificar = `/api/huespedes/verificar-historial?id=${huesped.id}`;
+      const urlVerificar = `http://localhost:8080/api/huespedes/verificar-historial?id=${huesped.id}`;
       const resVerificar = await fetch(urlVerificar, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -83,7 +83,7 @@ export default function PaginaBorrarHuesped() {
         );
         if (!confirmacion) return;
 
-        const urlBorrar = `/api/huespedes/borrar?id=${huesped.id}`;
+        const urlBorrar = `http://localhost:8080/api/huespedes/borrar?id=${huesped.id}`;
         const resBorrar = await fetch(urlBorrar, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

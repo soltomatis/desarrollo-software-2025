@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 // Todo lo demás bajo /api/** requiere autenticación
                 .requestMatchers("/api/**").authenticated()
+                
                 // Resto libre
                 .anyRequest().permitAll()
             )

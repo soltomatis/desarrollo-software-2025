@@ -10,9 +10,36 @@ import ToastNotification from '@/components/ToastNotification';
 import Link from 'next/link';
 import { AuthGate } from '@/components/AuthGate';
 
-interface HuespedDTO { /* igual que antes */ }
-interface DireccionDTO { /* igual que antes */ }
-interface HuespedModalProps { /* igual que antes */ }
+interface HuespedDTO {
+    nombre: string;
+    apellido: string;
+    telefono: string;
+    email: string;
+    ocupacion: string;
+    condicionIVA: string;
+    tipo_documento: string; 
+    num_documento: number;
+    cuit: number;
+    fecha_nacimiento: string;
+    direccion: DireccionDTO;
+    nacionalidad: string;
+}
+interface DireccionDTO {
+    calle: string;
+    numero: number; 
+    departamento: string;
+    piso: number;    
+    codigoPostal: number | null; 
+    localidad: string;
+    provincia: string;
+    pais: string;
+}
+interface HuespedModalProps {
+    huespedData: HuespedDTO;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onClose: () => void;
+    onSave: () => void;
+}
 
 export default function PaginaNuevaReserva() {
   const [habitaciones, setHabitaciones] = useState<Habitacion[]>([]);
@@ -41,7 +68,7 @@ export default function PaginaNuevaReserva() {
     setHabitaciones([]);
     setFechasBusqueda({ desde, hasta });
     try {
-      const res = await fetch(`/api/habitaciones/estado?desde=${desde}&hasta=${hasta}`, {
+      const res = await fetch(`http://localhost:8080/api/habitaciones/estado?desde=${desde}&hasta=${hasta}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Error al conectar con el servidor');
@@ -82,7 +109,7 @@ export default function PaginaNuevaReserva() {
     if (!confirmacion) return;
 
     try {
-      const res = await fetch(`/api/reservas/crear`, {
+      const res = await fetch(`http://localhost:8080/api/reservas/crear`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +126,30 @@ export default function PaginaNuevaReserva() {
     }
   };
 
-  const [huespedData, setHuespedData] = useState<HuespedDTO>({ /* valores iniciales */ });
+ const [huespedData, setHuespedData] = useState<HuespedDTO>({ 
+    nombre: '',
+    apellido: '',
+    telefono: '',
+
+    email: 'huesped_temp@hotel.com',
+    ocupacion: 'Sin especificar',
+    condicionIVA: 'CONSUMIDOR_FINAL', 
+    tipo_documento: 'DNI', 
+    num_documento: 99999999,
+    cuit: 20999999990,      
+    fecha_nacimiento: '2000-01-01', 
+    nacionalidad: 'Argentina',
+    direccion: { 
+        calle: 'Av. Temporal', 
+        numero: 1, 
+        departamento: '', 
+        piso: 0,          
+        codigoPostal: null, 
+        localidad: 'Ciudad Temporal', 
+        provincia: 'Provincia Temporal',
+        pais: 'Argentina'
+    }, 
+});
 
   const handleChangeHuesped = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -110,7 +160,7 @@ export default function PaginaNuevaReserva() {
     bloque.habitaciones.map(habNum => {
       const habCompleta = habitaciones.find(h => h.numeroHabitacion === habNum);
       return habCompleta ? { habitacion: habCompleta, fecha_inicio: bloque.fechaInicio, fecha_fin: bloque.fechaFin } : null;
-    }).filter(Boolean)
+    }).filter(Boolean) as ReservaHabitacionInfo[]
   );
 
   return (

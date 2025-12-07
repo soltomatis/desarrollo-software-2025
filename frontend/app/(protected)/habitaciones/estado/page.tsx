@@ -22,7 +22,7 @@ export default function ConsultarEstadoHabitaciones() {
     setHabitaciones([]);
 
     try {
-      const res = await fetch(`/api/habitaciones/estado?desde=${desde}&hasta=${hasta}`, {
+      const res = await fetch(`http://localhost:8080/api/habitaciones/estado?desde=${desde}&hasta=${hasta}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
