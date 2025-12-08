@@ -23,9 +23,14 @@ import tp.desarrollo.dao.ResponsableDaoDB;
 import tp.desarrollo.dto.ConsumoDTO;
 import tp.desarrollo.dto.FacturaResumenDTO;
 import tp.desarrollo.enums.CondicionIVA;
+import tp.desarrollo.repositorio.EstrategiaFacturacion;
+import tp.desarrollo.repositorio.Impl.FacturaATipoA;
+import tp.desarrollo.repositorio.Impl.FacturaBTipoB;
+import tp.desarrollo.repositorio.Impl.FacturaCMonotributista;
 
 @Service
 public class Gestor_Factura {
+
     @Autowired
     ConsumoDaoDB consumoDaoDB;
     @Autowired
@@ -166,10 +171,26 @@ public class Gestor_Factura {
         return alojamiento;
     }
 
+    private EstrategiaFacturacion seleccionarEstrategia(CondicionIVA condicion) {
+        switch (condicion) {
+            case RESPONSABLE_INSCRIPTO:
+                return new FacturaATipoA();
+            case MONOTRIBUTO:
+                return new FacturaCMonotributista();
+            case CONSUMIDOR_FINAL:
+            default:
+                return new FacturaBTipoB();
+        }
+    }
+
+
     public FacturaResumenDTO generarResumenConConsumos(
         List<Consumo> consumosAFacturar, Long idResponsable, boolean esHuesped) {
         
         Responsable_de_pago responsable = obtenerResponsablePago(idResponsable, esHuesped);
+
+        // Seleccionar estrategia
+        EstrategiaFacturacion estrategia = seleccionarEstrategia(responsable.getCondicionIVA());
 
         List<ConsumoDTO> items = new ArrayList<>();
         double subtotalBruto = 0.0;
@@ -192,7 +213,8 @@ public class Gestor_Factura {
         resumen.setNombreResponsable(responsable.getRazonSocial());
         resumen.setItems(items);
         resumen.setTipoFactura(tipoFactura);
-        
+
+        /* Es lo mismo que lo proximo
         if (tipoFactura.equals("A")) {
             resumen.setSubtotalNeto(subtotalNeto);
             resumen.setMontoIVA(montoIVA);
@@ -202,33 +224,39 @@ public class Gestor_Factura {
             resumen.setMontoIVA(0.00); 
             resumen.setTotalAPagar(subtotalBruto); 
         }
-        
+         */
+
+        //Realizado con patrón STRATEGY PATTERN
+        resumen.setTotalAPagar(estrategia.calcularTotal(subtotalBruto));
+        resumen.setMontoIVA(estrategia.calcularIVA(subtotalBruto));
+        resumen.setSubtotalNeto(subtotalBruto - resumen.getMontoIVA());
+
         return resumen;
     }
 
     private Responsable_de_pago obtenerResponsablePago(Long id, boolean esHuesped) {
-    if (esHuesped) {
-        Huesped huesped = huespedDaoDB.buscarPorId(id);
-        if (huesped == null) {
-            throw new RuntimeException("Huésped responsable con ID " + id + " no encontrado.");
-        }
+        if (esHuesped) {
+            Huesped huesped = huespedDaoDB.buscarPorId(id);
+            if (huesped == null) {
+                throw new RuntimeException("Huésped responsable con ID " + id + " no encontrado.");
+            }
 
-        String razonSocial = huesped.getNombre() + " " + huesped.getApellido();
-        Responsable_de_pago responsable = responsableDaoDB.findByFullIdentity(razonSocial); 
+            String razonSocial = huesped.getNombre() + " " + huesped.getApellido();
+            Responsable_de_pago responsable = responsableDaoDB.findByFullIdentity(razonSocial);
 
-        if (responsable == null) {
-            Responsable_de_pago nuevoResponsable = new Responsable_de_pago(huesped);
-            responsable = responsableDaoDB.save(nuevoResponsable);
-        }
-        return responsable;
+            if (responsable == null) {
+                Responsable_de_pago nuevoResponsable = new Responsable_de_pago(huesped);
+                responsable = responsableDaoDB.save(nuevoResponsable);
+            }
+            return responsable;
 
-    } else {
-        Responsable_de_pago responsable = responsableDaoDB.findById(id);
-        if (responsable == null) {
-            throw new RuntimeException("Responsable de pago externo con ID " + id + " no encontrado.");
+        } else {
+            Responsable_de_pago responsable = responsableDaoDB.findById(id);
+            if (responsable == null) {
+                throw new RuntimeException("Responsable de pago externo con ID " + id + " no encontrado.");
+            }
+            return responsable;
         }
-        return responsable;
     }
-}
-        
+
 }

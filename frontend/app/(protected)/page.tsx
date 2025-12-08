@@ -4,7 +4,6 @@ import Link from "next/link";
 import { AuthGate } from "@/components/AuthGate";
 import { useAuth } from "@/hooks/useAuth";
 
-// 🔹 Definimos las opciones de navegación por rol
 const optionsByRole: Record<string, { href: string; label: string }[]> = {
   ROLE_ADMIN: [
     { href: "/habitaciones/estado", label: "📊 Visualizar Estado de Habitaciones" },
@@ -35,7 +34,6 @@ export default function Home() {
           Selecciona una funcionalidad para continuar:
         </p>
 
-        {/* 🔹 Renderizamos las opciones según el rol del usuario */}
         <nav
           style={{
             display: "flex",
