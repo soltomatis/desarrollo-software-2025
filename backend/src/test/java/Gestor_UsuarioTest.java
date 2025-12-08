@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +34,6 @@ public class Gestor_UsuarioTest {
     @Mock private Gestor_Habitacion gestorHabitacion;
     @Mock private EstadiaDaoDB estadiaDaoDB;
 
-    // Aunque no se usan en los métodos probados, se deben inyectar o ignorar
     @Mock private HuespedDaoArchivos huespedDaoArchivos; 
     @Mock private UsuarioDaoArchivos usuarioDaoArchivos;
     @Mock private ReservaDaoArchivos reservaDaoArchivos;
@@ -48,7 +46,6 @@ public class Gestor_UsuarioTest {
 
     @BeforeEach
     void configurar() {
-        // Inicializar DTOs y Entidades de ejemplo
         direccionEjemplo = new Direccion("Calle Falsa", 123, "A", 1, 2000, "Rosario", "Santa Fe", "Argentina");
 
         huespedEjemplo = new Huesped();

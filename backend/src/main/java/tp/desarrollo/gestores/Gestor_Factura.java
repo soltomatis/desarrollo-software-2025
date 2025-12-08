@@ -23,7 +23,6 @@ import tp.desarrollo.dao.ResponsableDaoDB;
 import tp.desarrollo.dto.ConsumoDTO;
 import tp.desarrollo.dto.FacturaResumenDTO;
 import tp.desarrollo.enums.CondicionIVA;
-import tp.desarrollo.enums.TipoDocumento;
 
 @Service
 public class Gestor_Factura {
@@ -167,7 +166,7 @@ public class Gestor_Factura {
         return alojamiento;
     }
 
-    private FacturaResumenDTO generarResumenConConsumos(
+    public FacturaResumenDTO generarResumenConConsumos(
         List<Consumo> consumosAFacturar, Long idResponsable, boolean esHuesped) {
         
         Responsable_de_pago responsable = obtenerResponsablePago(idResponsable, esHuesped);
