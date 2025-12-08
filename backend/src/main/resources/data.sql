@@ -387,3 +387,42 @@ VALUES ('admin', '$2a$10$K.tLAxeHKCstrXTglWmI0epLn6Roib1K88Ir9DQLKctHlQwmBXpjK',
 
 INSERT INTO usuario (username, password, role)
 VALUES ('Mario', '$2a$10$Wk3hkuq7XAceYDxVvhIjNuc43JG3YTo9Mioh4IyAW06iq.68n1boa', 'ROLE_CONSERJE');
+
+-- RESPONSABLES
+INSERT INTO direccion (calle, numero, departamento, piso, codigo_postal, localidad, provincia, pais)
+VALUES ('Maipú', 1200, 'Oficina 3', 8, 1006, 'CABA', 'Buenos Aires', 'Argentina');
+
+INSERT INTO persona (
+    apellido, nombre, tipo_documento, num_documento, cuit, fecha_nacimiento, direccion_id, nacionalidad
+)
+VALUES (
+    'TechSolutions', 'S.A.', 0,
+    0, 30712345679, NULL,
+    (SELECT MAX(id) FROM direccion),
+    NULL
+);
+INSERT INTO responsable_de_pago (id, razon_social,condicionIva)
+VALUES (
+    (SELECT MAX(id) FROM persona),
+    'TechSolutions S.A.',
+	0
+);
+
+INSERT INTO direccion (calle, numero, departamento, piso, codigo_postal, localidad, provincia, pais)
+VALUES ('Maipú', 1300, 'Oficina 3', 8, 1006, 'CABA', 'Buenos Aires', 'Argentina');
+
+INSERT INTO persona (
+    apellido, nombre, tipo_documento, num_documento, cuit, fecha_nacimiento, direccion_id, nacionalidad
+)
+VALUES (
+    'Agro', 'S.A.', 0,
+    0, 30453889644, NULL,
+    (SELECT MAX(id) FROM direccion),
+    NULL
+);
+INSERT INTO responsable_de_pago (id, razon_social,condicionIva)
+VALUES (
+    (SELECT MAX(id) FROM persona),
+    'Agro S.A.',
+	0
+);
