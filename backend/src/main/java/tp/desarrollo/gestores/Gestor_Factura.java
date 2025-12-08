@@ -214,7 +214,7 @@ public class Gestor_Factura {
         resumen.setItems(items);
         resumen.setTipoFactura(tipoFactura);
 
-        /* Es lo mismo que lo proximo
+        /* Es lo mismo que el próximo codigo
         if (tipoFactura.equals("A")) {
             resumen.setSubtotalNeto(subtotalNeto);
             resumen.setMontoIVA(montoIVA);
