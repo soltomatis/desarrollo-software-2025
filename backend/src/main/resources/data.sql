@@ -379,3 +379,11 @@ VALUES (11000.00, 5, 'Consumo', NULL, 'PENDIENTE', 'RESTAURANTE');
 
 INSERT INTO public.consumo (valor, estadia_id, dtype, descripcion, estado, tipo)
 VALUES (5500.00, 5, 'Consumo', NULL, 'PENDIENTE', 'BAR');
+
+-- Inserción de usuarios iniciales con contraseñas encriptadas (BCrypt)
+
+INSERT INTO usuario (username, password, role)
+VALUES ('admin', '$2a$10$K.tLAxeHKCstrXTglWmI0epLn6Roib1K88Ir9DQLKctHlQwmBXpjK', 'ROLE_ADMIN');
+
+INSERT INTO usuario (username, password, role)
+VALUES ('Mario', '$2a$10$Wk3hkuq7XAceYDxVvhIjNuc43JG3YTo9Mioh4IyAW06iq.68n1boa', 'ROLE_CONSERJE');
