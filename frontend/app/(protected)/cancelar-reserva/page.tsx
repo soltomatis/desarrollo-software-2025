@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import ToastNotification from '@/components/ToastNotification';
-import { AuthGate } from '@/components/AuthGate';
 
 interface Direccion {
   calle: string;
@@ -64,6 +63,7 @@ interface CriterioBusqueda {
 }
 
 export default function CancelarReservaPage() {
+
   const [criterios, setCriterios] = useState<CriterioBusqueda>({
     apellido: '',
     nombre: '',
@@ -80,19 +80,22 @@ export default function CancelarReservaPage() {
   const [cargando, setCargando] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-
   const validarFormulario = (): boolean => {
+
     if (!criterios.apellido.trim()) {
       setErrorValidacion('El campo apellido no puede estar vacío');
       return false;
     }
+
     setErrorValidacion('');
     return true;
   };
 
+
   const buscarReservas = async () => {
-    if (!validarFormulario()) return;
+    if (!validarFormulario()) {
+      return;
+    }
 
     setCargando(true);
     setMostrarResultados(false);
@@ -108,23 +111,41 @@ export default function CancelarReservaPage() {
       if (criterios.fechaInicio) params.append('fechaInicio', criterios.fechaInicio);
       if (criterios.fechaFin) params.append('fechaFin', criterios.fechaFin);
 
-      const response = await fetch(`/api/reservas/buscar?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await fetch(`http://localhost:8080/api/reservas/buscar?${params.toString()}`);
 
-      if (!response.ok) throw new Error('Error al buscar reservas');
+      if (!response.ok) {
+        throw new Error('Error al buscar reservas');
+      }
+
       const data = await response.json();
 
       if (Array.isArray(data) && data.length === 0) {
-        setToast({ message: 'No existen reservas para los criterios de búsqueda', type: 'info' });
+        setToast({
+          message: 'No existen reservas para los criterios de búsqueda',
+          type: 'info'
+        });
+        setMostrarResultados(true);
+        return;
+      }
+
+      if (data.mensaje) {
+        setToast({
+          message: data.mensaje,
+          type: 'info'
+        });
         setMostrarResultados(true);
         return;
       }
 
       setReservas(data);
       setMostrarResultados(true);
+
     } catch (error: any) {
-      setToast({ message: error.message || 'Error al buscar reservas', type: 'error' });
+      console.error('Error al buscar reservas:', error);
+      setToast({
+        message: error.message || 'Error al buscar reservas',
+        type: 'error'
+      });
     } finally {
       setCargando(false);
     }
@@ -148,46 +169,71 @@ export default function CancelarReservaPage() {
     }
   };
 
+
   const cancelarReservas = async () => {
     if (reservasSeleccionadas.size === 0) {
-      setToast({ message: 'Debe seleccionar al menos una reserva', type: 'error' });
+      setToast({
+        message: 'Debe seleccionar al menos una reserva',
+        type: 'error'
+      });
       return;
     }
 
     const confirmacion = window.confirm(
       `¿Está seguro que desea cancelar ${reservasSeleccionadas.size} reserva(s)?\n\n` +
-      `Esta acción:\n- Cancelará las reservas seleccionadas\n- Liberará las habitaciones asociadas\n- No se puede deshacer`
+      `Esta acción:\n` +
+      `- Cancelará las reservas seleccionadas\n` +
+      `- Liberará las habitaciones asociadas\n` +
+      `- No se puede deshacer\n\n` +
+      `¿Desea continuar?`
     );
+
     if (!confirmacion) return;
 
     setCargando(true);
+
     try {
-      const response = await fetch(`/api/reservas/cancelar`, {
+      const response = await fetch('http://localhost:8080/api/reservas/cancelar', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ idsReservas: Array.from(reservasSeleccionadas) })
+        body: JSON.stringify({
+          idsReservas: Array.from(reservasSeleccionadas)
+        })
       });
 
-      if (!response.ok) throw new Error('Error al cancelar reservas');
+      if (!response.ok) {
+        throw new Error('Error al cancelar reservas');
+      }
+
       const resultado = await response.json();
 
-      setToast({ message: resultado.mensaje || 'Reservas canceladas', type: 'success' });
-      setReservas([]);
-      setReservasSeleccionadas(new Set());
-      setMostrarResultados(false);
-      setCriterios({
-        apellido: '',
-        nombre: '',
-        numeroHabitacion: '',
-        tipoHabitacion: '',
-        fechaInicio: '',
-        fechaFin: ''
+      setToast({
+        message: resultado.mensaje || 'Reservas canceladas PRESIONE UNA TECLA PARA CONTINUAR...',
+        type: 'success'
       });
+
+      setTimeout(() => {
+        setReservas([]);
+        setReservasSeleccionadas(new Set());
+        setMostrarResultados(false);
+        setCriterios({
+          apellido: '',
+          nombre: '',
+          numeroHabitacion: '',
+          tipoHabitacion: '',
+          fechaInicio: '',
+          fechaFin: ''
+        });
+      }, 2000);
+
     } catch (error: any) {
-      setToast({ message: error.message || 'Error al cancelar reservas', type: 'error' });
+      console.error('Error al cancelar reservas:', error);
+      setToast({
+        message: error.message || 'Error al cancelar reservas',
+        type: 'error'
+      });
     } finally {
       setCargando(false);
     }
@@ -200,216 +246,346 @@ export default function CancelarReservaPage() {
 
   const handleCriterioChange = (campo: keyof CriterioBusqueda, valor: string) => {
     setCriterios(prev => ({ ...prev, [campo]: valor }));
-    if (campo === 'apellido' && errorValidacion) setErrorValidacion('');
+    if (campo === 'apellido' && errorValidacion) {
+      setErrorValidacion('');
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') buscarReservas();
+    if (e.key === 'Enter') {
+      buscarReservas();
+    }
   };
 
   return (
-    <AuthGate>
-      <div className="container" style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '2rem', marginBottom: '10px', color: '#333' }}>Cancelar Reserva</h1>
-        <Link href="/" style={{ display: 'block', marginBottom: '30px', color: '#0070f3', textDecoration: 'none' }}>
-          ← Volver al inicio
-        </Link>
+    <div className="container" style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
 
-        {/* Formulario de búsqueda con UI completa */}
-        <div style={{ backgroundColor: '#f9f9f9', padding: '30px', borderRadius: '10px', marginBottom: '30px' }}>
-          <h2 style={{ fontSize: '1.3rem', marginBottom: '15px', color: '#555' }}>Buscar Reservas</h2>
+      <h1 style={{ fontSize: '2rem', marginBottom: '10px', color: '#333' }}>
+            Cancelar Reserva
+      </h1>
+
+      <Link href="/" style={{ display: 'block', marginBottom: '30px', color: '#0070f3', textDecoration: 'none' }}>
+        ← Volver al inicio
+      </Link>
+
+      <div style={{
+        backgroundColor: '#f9f9f9',
+        padding: '30px',
+        borderRadius: '10px',
+        border: '1px solid #ddd',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        marginBottom: '30px'
+      }}>
+        <h2 style={{ fontSize: '1.3rem', marginBottom: '15px', color: '#555' }}>
+          Buscar Reservas
+        </h2>
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
-            <div>
-              <label style={{ fontWeight: 'bold' }}>Apellido: <span style={{ color: 'red' }}>*</span></label>
-              <input
-                id="input-apellido"
-                type="text"
-                value={criterios.apellido}
-                onChange={(e) => handleCriterioChange('apellido', e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ej: García"
-                autoFocus
-                className="nav-option"
-                disabled={cargando}
-              />
-            </div>
-            <div>
-              <label style={{ fontWeight: 'bold' }}>Nombre:</label>
-              <input
-                type="text"
-                value={criterios.nombre}
-                onChange={(e) => handleCriterioChange('nombre', e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ej: Juan"
-                className="nav-option"
-                disabled={cargando}
-              />
-            </div>
-                        <div>
-              <label style={{ fontWeight: 'bold' }}>Nº Habitación:</label>
-              <input
-                type="number"
-                value={criterios.numeroHabitacion}
-                onChange={(e) => handleCriterioChange('numeroHabitacion', e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ej: 101"
-                className="nav-option"
-                disabled={cargando}
-              />
-            </div>
-            <div>
-              <label style={{ fontWeight: 'bold' }}>Tipo Habitación:</label>
-              <input
-                type="text"
-                value={criterios.tipoHabitacion}
-                onChange={(e) => handleCriterioChange('tipoHabitacion', e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ej: Suite"
-                className="nav-option"
-                disabled={cargando}
-              />
-            </div>
-            <div>
-              <label style={{ fontWeight: 'bold' }}>Fecha Inicio:</label>
-              <input
-                type="date"
-                value={criterios.fechaInicio}
-                onChange={(e) => handleCriterioChange('fechaInicio', e.target.value)}
-                className="nav-option"
-                disabled={cargando}
-              />
-            </div>
-            <div>
-              <label style={{ fontWeight: 'bold' }}>Fecha Fin:</label>
-              <input
-                type="date"
-                value={criterios.fechaFin}
-                onChange={(e) => handleCriterioChange('fechaFin', e.target.value)}
-                className="nav-option"
-                disabled={cargando}
-              />
-            </div>
+
+          <div>
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>
+              Apellido: <span style={{ color: 'red' }}>*</span>
+            </label>
+            <input
+              id="input-apellido"
+              type="text"
+              value={criterios.apellido}
+              onChange={(e) => handleCriterioChange('apellido', e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ej: García"
+              autoFocus
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: errorValidacion ? '2px solid #dc3545' : '1px solid #ccc',
+                borderRadius: '5px',
+                fontSize: '1rem'
+              }}
+              disabled={cargando}
+            />
           </div>
 
-          {errorValidacion && (
-            <div style={{
-              color: '#dc3545',
-              marginTop: '15px',
-              padding: '12px',
-              backgroundColor: '#f8d7da',
-              border: '1px solid #f5c6cb',
-              borderRadius: '5px',
-              fontWeight: 'bold'
-            }}>
-              {errorValidacion}
-            </div>
-          )}
+          <div>
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>
+              Nombre:
+            </label>
+            <input
+              type="text"
+              value={criterios.nombre}
+              onChange={(e) => handleCriterioChange('nombre', e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ej: Juan"
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #ccc',
+                borderRadius: '5px',
+                fontSize: '1rem'
+              }}
+              disabled={cargando}
+            />
+          </div>
 
-          <button
-            onClick={buscarReservas}
-            disabled={cargando}
-            className="nav-option nav-option-secondary"
-            style={{
-              marginTop: '20px',
-              width: '100%',
-              padding: '15px',
-              fontWeight: 'bold',
-              backgroundColor: cargando ? '#ccc' : '#007bff',
-              color: 'white'
-            }}
-          >
-            {cargando ? 'Buscando...' : 'Buscar Reservas'}
-          </button>
+          <div>
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>
+              Nº Habitación:
+            </label>
+            <input
+              type="number"
+              value={criterios.numeroHabitacion}
+              onChange={(e) => handleCriterioChange('numeroHabitacion', e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ej: 101"
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #ccc',
+                borderRadius: '5px',
+                fontSize: '1rem'
+              }}
+              disabled={cargando}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>
+              Tipo Habitación:
+            </label>
+            <input
+              type="text"
+              value={criterios.tipoHabitacion}
+              onChange={(e) => handleCriterioChange('tipoHabitacion', e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ej: Suite"
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #ccc',
+                borderRadius: '5px',
+                fontSize: '1rem'
+              }}
+              disabled={cargando}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>
+              Fecha Inicio:
+            </label>
+            <input
+              type="date"
+              value={criterios.fechaInicio}
+              onChange={(e) => handleCriterioChange('fechaInicio', e.target.value)}
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #ccc',
+                borderRadius: '5px',
+                fontSize: '1rem'
+              }}
+              disabled={cargando}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>
+              Fecha Fin:
+            </label>
+            <input
+              type="date"
+              value={criterios.fechaFin}
+              onChange={(e) => handleCriterioChange('fechaFin', e.target.value)}
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #ccc',
+                borderRadius: '5px',
+                fontSize: '1rem'
+              }}
+              disabled={cargando}
+            />
+          </div>
         </div>
 
-        {/* Resultados */}
-        {mostrarResultados && reservas.length > 0 && (
-          <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '10px', marginBottom: '30px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <h2>Resultados de Búsqueda ({reservas.length})</h2>
-              <button onClick={seleccionarTodas} className="nav-option nav-option-secondary">
-                {reservasSeleccionadas.size === reservas.length ? 'Deseleccionar Todas' : 'Seleccionar Todas'}
-              </button>
-            </div>
+        {errorValidacion && (
+          <div style={{
+            color: '#dc3545',
+            marginTop: '15px',
+            padding: '12px',
+            backgroundColor: '#f8d7da',
+            border: '1px solid #f5c6cb',
+            borderRadius: '5px',
+            fontSize: '0.95rem',
+            fontWeight: 'bold'
+          }}>
+              {errorValidacion}
+          </div>
+        )}
 
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ backgroundColor: '#f8f9fa' }}>
-                    <th>Seleccionar</th>
-                    <th>ID</th>
-                    <th>Apellido</th>
-                    <th>Nombre</th>
-                    <th>Habitaciones</th>
-                    <th>Tipo</th>
-                    <th>Fecha Inicio</th>
-                    <th>Fecha Fin</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reservas.map((reserva) => (
-                    <tr key={reserva.id} style={{ borderBottom: '1px solid #dee2e6' }}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={reservasSeleccionadas.has(reserva.id)}
-                          onChange={() => toggleSeleccion(reserva.id)}
-                          style={{ cursor: 'pointer' }}
-                        />
-                      </td>
-                      <td>{reserva.id}</td>
-                      <td>{reserva.huespedPrincipal.apellido}</td>
-                      <td>{reserva.huespedPrincipal.nombre}</td>
-                      <td>
-                        {reserva.listaHabitacionesReservadas.map((rh, index) => (
+        <button
+          onClick={buscarReservas}
+          disabled={cargando}
+          style={{
+            marginTop: '20px',
+            width: '100%',
+            padding: '15px',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            color: 'white',
+            backgroundColor: cargando ? '#ccc' : '#007bff',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: cargando ? 'not-allowed' : 'pointer',
+            transition: 'background-color 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            if (!cargando) e.currentTarget.style.backgroundColor = '#0056b3';
+          }}
+          onMouseLeave={(e) => {
+            if (!cargando) e.currentTarget.style.backgroundColor = '#007bff';
+          }}
+        >
+          {cargando ? 'Buscando...' : 'Buscar Reservas'}
+        </button>
+      </div>
+
+      {mostrarResultados && reservas.length > 0 && (
+        <div style={{
+          backgroundColor: '#fff',
+          padding: '30px',
+          borderRadius: '10px',
+          border: '1px solid #ddd',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          marginBottom: '30px'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '1.3rem', color: '#555', margin: 0 }}>
+              Resultados de Búsqueda ({reservas.length})
+            </h2>
+            <button
+              onClick={seleccionarTodas}
+              style={{
+                padding: '8px 15px',
+                fontSize: '0.9rem',
+                backgroundColor: '#6c757d',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              {reservasSeleccionadas.size === reservas.length ? 'Deseleccionar Todas' : 'Seleccionar Todas'}
+            </button>
+          </div>
+
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{
+              width: '100%',
+              borderCollapse: 'collapse',
+              fontSize: '0.95rem'
+            }}>
+              <thead>
+                <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
+                  <th style={{ padding: '12px', textAlign: 'left' }}>Seleccionar</th>
+                  <th style={{ padding: '12px', textAlign: 'left' }}>ID</th>
+                  <th style={{ padding: '12px', textAlign: 'left' }}>Apellido</th>
+                  <th style={{ padding: '12px', textAlign: 'left' }}>Nombre</th>
+                  <th style={{ padding: '12px', textAlign: 'left' }}>Habitaciones</th>
+                  <th style={{ padding: '12px', textAlign: 'left' }}>Tipo</th>
+                  <th style={{ padding: '12px', textAlign: 'left' }}>Fecha Inicio</th>
+                  <th style={{ padding: '12px', textAlign: 'left' }}>Fecha Fin</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reservas.map((reserva) => (
+                  <tr key={reserva.id} style={{ borderBottom: '1px solid #dee2e6' }}>
+                    <td style={{ padding: '12px' }}>
+                      <input
+                        type="checkbox"
+                        checked={reservasSeleccionadas.has(reserva.id)}
+                        onChange={() => toggleSeleccion(reserva.id)}
+                        style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                      />
+                    </td>
+                    <td style={{ padding: '12px' }}>{reserva.id}</td>
+                    <td style={{ padding: '12px', fontWeight: 'bold' }}>{reserva.huespedPrincipal.apellido}</td>
+                    <td style={{ padding: '12px' }}>{reserva.huespedPrincipal.nombre}</td>
+                    <td style={{ padding: '12px' }}>
+                      {reserva.listaHabitacionesReservadas
+                        .map((rh, index) => (
                           <span key={index}>
                             {rh.habitacion.numeroHabitacion}
                             {index < reserva.listaHabitacionesReservadas.length - 1 ? ', ' : ''}
                           </span>
-                        ))}
-                      </td>
-                      <td>{reserva.listaHabitacionesReservadas.map(rh => rh.habitacion.tipo).join(', ')}</td>
-                      <td>{reserva.listaHabitacionesReservadas[0]?.fecha_inicio || '-'}</td>
-                      <td>{reserva.listaHabitacionesReservadas[0]?.fecha_fin || '-'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div style={{ marginTop: '30px', display: 'flex', gap: '15px' }}>
-              <button
-                onClick={cancelarReservas}
-                disabled={cargando || reservasSeleccionadas.size === 0}
-                className="nav-option nav-option-secondary"
-                style={{
-                  flex: 1,
-                  backgroundColor: (cargando || reservasSeleccionadas.size === 0) ? '#ccc' : '#dc3545',
-                  color: 'white'
-                }}
-              >
-                {cargando ? 'Cancelando...' : `ACEPTAR (${reservasSeleccionadas.size})`}
-              </button>
-              <button
-                onClick={deshacerSeleccion}
-                disabled={cargando}
-                className="nav-option nav-option-secondary"
-                style={{ flex: 1, backgroundColor: '#f8f9fa', color: '#333' }}
-              >
-                CANCELAR
-              </button>
-            </div>
+                        ))
+                      }
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      {reserva.listaHabitacionesReservadas.map(rh => rh.habitacion.tipo).join(', ')}
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      {reserva.listaHabitacionesReservadas[0]?.fecha_inicio || '-'}
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      {reserva.listaHabitacionesReservadas[0]?.fecha_fin || '-'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        )}
 
-        {toast && (
-          <ToastNotification
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </div>
-    </AuthGate>
+          <div style={{ marginTop: '30px', display: 'flex', gap: '15px' }}>
+            <button
+              onClick={cancelarReservas}
+              disabled={cargando || reservasSeleccionadas.size === 0}
+              style={{
+                flex: 1,
+                padding: '15px',
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                color: 'white',
+                backgroundColor: (cargando || reservasSeleccionadas.size === 0) ? '#ccc' : '#dc3545',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: (cargando || reservasSeleccionadas.size === 0) ? 'not-allowed' : 'pointer',
+                transition: 'background-color 0.2s'
+              }}
+            >
+              {cargando ? 'Cancelando...' : `ACEPTAR (${reservasSeleccionadas.size})`}
+            </button>
+
+            <button
+              onClick={deshacerSeleccion}
+              disabled={cargando}
+              style={{
+                flex: 1,
+                padding: '15px',
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                color: '#333',
+                backgroundColor: '#f8f9fa',
+                border: '1px solid #dee2e6',
+                borderRadius: '5px',
+                cursor: cargando ? 'not-allowed' : 'pointer',
+                transition: 'background-color 0.2s'
+              }}
+            >
+              CANCELAR
+            </button>
+          </div>
+
+
+        </div>
+      )}
+
+      {toast && (
+        <ToastNotification
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+    </div>
   );
 }
