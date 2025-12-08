@@ -180,7 +180,6 @@ ALTER TABLE responsable_de_pago ADD CONSTRAINT responsable_de_pago_pkey PRIMARY 
 ALTER TABLE usuario ADD CONSTRAINT usuario_pkey PRIMARY KEY (id);
 
 -- Unique constraints
-ALTER TABLE factura ADD CONSTRAINT factura_responsable_de_pago_id_key UNIQUE (responsable_de_pago_id);
 ALTER TABLE nota_de_credito ADD CONSTRAINT nota_de_credito_responsable_de_pago_id_key UNIQUE (responsable_de_pago_id);
 ALTER TABLE persona ADD CONSTRAINT persona_direccion_id_key UNIQUE (direccion_id);
 ALTER TABLE reserva_lista_habitaciones_rerservadas ADD CONSTRAINT reserva_lista_habitaciones_rerservadas_id_key UNIQUE (lista_habitaciones_rerservadas_id);

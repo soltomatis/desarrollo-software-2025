@@ -119,6 +119,9 @@ const FacturacionPage = () => {
             });
             if (respuesta.ok) {
                 const data = await respuesta.json(); 
+                if (data?.id) {
+                    await actualizarCheckOut(data.id, formData.horaSalida);
+                }
                 setEstadiaEncontrada(data);
                 setBusquedaExitosa(true);
             } else {
@@ -127,6 +130,31 @@ const FacturacionPage = () => {
             }
         } catch (err: any) {
             setError(`Error en la búsqueda: ${err.message}`);
+        }
+    };
+    const actualizarCheckOut = async (estadiaId: number, horaSalida: string) => {
+        try {
+            const urlCheckOut = `/api/estadia/checkout/${estadiaId}`;
+            const datosCheckOut = {
+                horaSalida: horaSalida
+            };
+
+            const respuestaCheckOut = await fetch(urlCheckOut, {
+                method: 'PUT', 
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify(datosCheckOut),
+            });
+
+            if (respuestaCheckOut.ok) {
+                console.log(`✅ Check-Out actualizado con éxito para la estadía ID: ${estadiaId}`);
+  
+            } else {
+                const errorTexto = await respuestaCheckOut.text();
+                throw new Error(errorTexto || 'Error al actualizar la fecha de check out.');
+            }
+        } catch (err: any) {
+            console.error('Error durante el PUT de Check-Out:', err);
+            alert(`⚠️ ADVERTENCIA: La búsqueda fue exitosa, pero falló la actualización del Check-Out: ${err.message}`);
         }
     };
 
