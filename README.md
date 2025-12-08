@@ -76,36 +76,6 @@ Frontend disponible en: `http://localhost:3000`
 
 ---
 
-## Testing
-
-### Ejecutar todos los tests
-
-```bash
-mvn clean test
-```
-
-### Cobertura de código (Jacoco)
-
-```bash
-mvn jacoco:report
-# Ver reporte en: target/site/jacoco/index.html
-```
-
-### Tests por patrón
-
-```bash
-# Tests de STRATEGY
-mvn test -Dtest=EstrategiaFacturacionTest
-
-# Tests de FACTORY
-mvn test -Dtest=PagoFactoryTest
-
-# Tests de DECORATOR
-mvn test -Dtest=FacturacionDecoratorTest
-```
-
----
-
 ## Casos de Uso Implementados
 
 ### AuthController
