@@ -212,118 +212,226 @@ const FacturacionPage = () => {
     };
 
     return (
-        <AuthGate>
-          <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-            <h1>Facturación - Búsqueda de Estadía</h1>
-            <p>Ingrese el número de habitación y la hora de salida para facturar.</p>
+    <AuthGate>
+        <div className="facturacion-root" style={{ padding: '40px', maxWidth: '1000px', margin: '0 auto' }}>
+        <h1 style={{ fontSize: '1.8rem', marginBottom: '8px', color: '#333' }}>Facturación</h1>
+        <p style={{ marginTop: 0, marginBottom: 18, color: '#555' }}>
+            Busque la estadía por número de habitación y hora de salida.
+        </p>
 
-            <form onSubmit={manejarBusqueda}>
-                {error && <p style={{ color: 'red', fontWeight: 'bold' }}>{error}</p>}
-                
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="numeroHabitacion">Número de Habitación:</label>
-                    <input
-                        type="text"
-                        id="numeroHabitacion"
-                        name="numeroHabitacion"
-                        value={formData.numeroHabitacion}
-                        onChange={handleChange}
-                        required
-                        className="nav-option"
-                    />
-                </div>
+        <div style={{
+            backgroundColor: '#f9f9f9',
+            padding: 18,
+            borderRadius: 10,
+            marginBottom: 20,
+            border: '1px solid #eee'
+        }}>
+            {error && (
+            <div style={{
+                backgroundColor: '#fff0f0',
+                color: '#b00020',
+                padding: 10,
+                borderRadius: 6,
+                marginBottom: 12,
+                border: '1px solid #f4c2c2',
+                fontWeight: 600
+            }}>{error}</div>
+            )}
 
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="horaSalida">Hora de Salida (HH:MM):</label>
-                    <input
-                        type="time"
-                        id="horaSalida"
-                        name="horaSalida"
-                        value={formData.horaSalida}
-                        onChange={handleChange}
-                        required
-                        className="nav-option"
-                    />
-                </div>
+            <form onSubmit={manejarBusqueda} style={{ display: 'grid', gridTemplateColumns: '1fr 180px', gap: 12, alignItems: 'end' }}>
+            <div>
+                <label style={{ display: 'block', fontSize: 13, color: '#222', marginBottom: 6 }}>Número de Habitación</label>
+                <input
+                type="text"
+                id="numeroHabitacion"
+                name="numeroHabitacion"
+                value={formData.numeroHabitacion}
+                onChange={handleChange}
+                required
+                placeholder="Ej: 101"
+                style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: 6,
+                    border: '1px solid #ddd',
+                    background: '#fff'
+                }}
+                />
+            </div>
 
-                <button type="submit" className="nav-option nav-option-secondary">
-                  Buscar Estadía
+            <div>
+                <label style={{ display: 'block', fontSize: 13, color: '#222', marginBottom: 6 }}>Hora de Salida</label>
+                <input
+                type="time"
+                id="horaSalida"
+                name="horaSalida"
+                value={formData.horaSalida}
+                onChange={handleChange}
+                required
+                style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: 6,
+                    border: '1px solid #ddd',
+                    background: '#fff'
+                }}
+                />
+            </div>
+
+            <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                <button
+                type="submit"
+                style={{
+                    padding: '10px 16px',
+                    backgroundColor: '#0070f3',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: 8,
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                }}
+                >
+                Buscar Estadía
                 </button>
+            </div>
             </form>
+        </div>
 
-            {estadiaEncontrada && estadiaEncontrada.huespedes && (
-                <>
-                    <HuespedesEstadia 
-                        huespedes={estadiaEncontrada.huespedes}
-                        onHuespedSeleccionado={manejarHuespedSeleccionado}
+        {estadiaEncontrada && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 18 }}>
+            <div>
+                <div className="facturacion-root" style={{ marginBottom: 12 }}>
+                <h2 style={{ margin: '6px 0', color: '#222' }}>Huéspedes</h2>
+                <div data-huespedes className="panel" style={{ background: '#fff', border: '1px solid #eee', padding: 12, borderRadius: 8 }}>
+                    <HuespedesEstadia
+                    huespedes={estadiaEncontrada.huespedes}
+                    onHuespedSeleccionado={manejarHuespedSeleccionado}
                     />
+                </div>
+                </div>
 
-                    <div style={{ marginTop: '30px', borderTop: '2px solid #ccc', paddingTop: '20px' }}>
-                        <h3>O facturar a un Tercero (Flujo 5.B)</h3>
-                        
-                        {!modoTercero ? (
-                            <button onClick={() => setModoTercero(true)} className="nav-option nav-option-secondary">
-                              Ingresar CUIT Tercero
-                            </button>
-                        ) : (
-                            <div style={{ background: '#f9f9f9', padding: '15px', borderRadius: '5px' }}>
-                                <div style={{ display: 'flex', gap: '10px' }}>
-                                    <input 
-                                        type="text" 
-                                        placeholder="Ingrese CUIT" 
-                                        value={cuitTercero} 
-                                        onChange={(e) => setCuitTercero(e.target.value)}
-                                        className="nav-option"
-                                    />
-                                    <button onClick={buscarTercero} className="nav-option nav-option-secondary">Buscar</button>
-                                    <button onClick={() => { setModoTercero(false); cancelarTercero(); }} className="nav-option nav-option-secondary">Cerrar</button>
-                                </div>
+                <div className="facturacion-root" style={{ marginTop: 12 }}>
+                <h3 style={{ margin: '6px 0', color: '#222' }}>Facturar a un tercero</h3>
+                <div data-huespedes className="panel" style={{ background: '#fff', border: '1px solid #eee', padding: 12, borderRadius: 8 }}>
+                    {!modoTercero ? (
+                    <button
+                        onClick={() => setModoTercero(true)}
+                        style={{
+                        padding: '8px 12px',
+                        borderRadius: 8,
+                        border: '1px solid #ccc',
+                        background: '#f5f7fa',
+                        cursor: 'pointer'
+                        }}
+                    >
+                        Ingresar CUIT Tercero
+                    </button>
+                    ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <div style={{ display: 'flex', gap: 8 }}>
+                        <input
+                            type="text"
+                            placeholder="CUIT"
+                            value={cuitTercero}
+                            onChange={(e) => setCuitTercero(e.target.value)}
+                            style={{ flex: 1, padding: 8, borderRadius: 6, border: '1px solid #ddd' }}
+                        />
+                        <button onClick={buscarTercero} style={{ padding: '8px 12px', borderRadius: 6, background: '#0070f3', color: '#fff', border: 'none' }}>Buscar</button>
+                        <button onClick={() => { setModoTercero(false); cancelarTercero(); }} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #ddd', background: '#fff' }}>Cerrar</button>
+                        </div>
 
-                                {terceroEncontrado && (
-                                    <div style={{ marginTop: '15px', border: '1px solid green', padding: '10px' }}>
-                                        <p><strong>Razón Social:</strong> {terceroEncontrado.razonSocial}</p>
-                                        <p><strong>CUIT:</strong> {terceroEncontrado.cuit}</p>
-                                        
-                                        <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                                            <button onClick={aceptarTercero} className="nav-option nav-option-secondary" style={{ backgroundColor: 'green', color: 'white' }}>
-                                              ACEPTAR
-                                            </button>
-                                            <button onClick={cancelarTercero} className="nav-option nav-option-secondary" style={{ backgroundColor: 'red', color: 'white' }}>
-                                              CANCELAR
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {mostrarFormularioAlta && (
-                                    <div style={{ marginTop: '15px', border: '1px solid orange', padding: '10px' }}>
-                                        <h4>CU03: Dar Alta de Responsable de Pago</h4>
-                                        <p>Aquí se cargaría el formulario para ingresar la Razón Social y demás datos necesarios.</p>
-                                        <button onClick={() => { alert("Responsable dado de alta (Simulado). Volviendo al punto 5."); setMostrarFormularioAlta(false); setModoTercero(false); }} className="nav-option nav-option-secondary">
-                                            Simular Alta y Aceptar
-                                        </button>
-                                    </div>
-                                )}
+                        {terceroEncontrado && (
+                        <div style={{ padding: 10, borderRadius: 6, background: '#f7fff6', border: '1px solid #e6ffed' }}>
+                            <div><strong>Razón Social:</strong> {terceroEncontrado.razonSocial}</div>
+                            <div><strong>CUIT:</strong> {terceroEncontrado.cuit}</div>
+                            <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+                            <button onClick={aceptarTercero} style={{ padding: '8px 10px', borderRadius: 6, background: '#16a34a', color: '#fff', border: 'none' }}>Aceptar</button>
+                            <button onClick={cancelarTercero} style={{ padding: '8px 10px', borderRadius: 6, border: '1px solid #ddd', background: '#fff' }}>Cancelar</button>
                             </div>
+                        </div>
+                        )}
+
+                        {mostrarFormularioAlta && (
+                        <div style={{ padding: 10, borderRadius: 6, background: '#fff7e6', border: '1px solid #ffedd5' }}>
+                            <div style={{ fontWeight: 600, marginBottom: 6 }}>Dar Alta Responsable</div>
+                            <div style={{ fontSize: 13, color: '#444' }}>Simulación — no hay formulario en esta vista.</div>
+                            <div style={{ marginTop: 8 }}>
+                            <button onClick={() => { alert("Responsable simulado"); setMostrarFormularioAlta(false); setModoTercero(false); }} style={{ padding: '8px 10px', borderRadius: 6, background: '#0070f3', color: '#fff', border: 'none' }}>Simular Alta</button>
+                            </div>
+                        </div>
                         )}
                     </div>
-                    
-                    {resumenFactura && (
-                        <ResumenFactura
-                            resumen={resumenFactura}
-                            onAceptarFactura={() => manejarAceptarFactura(selectedConsumoIds)}
-                            isLoading={isLoading}
-                            selectedIds={selectedConsumoIds}
-                            onToggleItemSelection={handleToggleConsumo}
-                            subtotalNetoCalculado={subtotalNetoSeleccionado}
-                            montoIVACalculado={montoIVASeleccionado}
-                            totalAPagarCalculado={totalAPagarSeleccionado}
-                        />
                     )}
-                </>
-            )}
-          </div>
-        </AuthGate>
+                </div>
+                </div>
+            </div>
+
+            <aside className="facturacion-root">
+                <h2 style={{ margin: '6px 0', color: '#222' }}>Resumen</h2>
+                <div style={{ background: '#fff', border: '1px solid #eee', padding: 12, borderRadius: 8 }}>
+                {resumenFactura ? (
+                    <ResumenFactura
+                    resumen={resumenFactura}
+                    onAceptarFactura={() => manejarAceptarFactura(selectedConsumoIds)}
+                    isLoading={isLoading}
+                    selectedIds={selectedConsumoIds}
+                    onToggleItemSelection={handleToggleConsumo}
+                    subtotalNetoCalculado={subtotalNetoSeleccionado}
+                    montoIVACalculado={montoIVASeleccionado}
+                    totalAPagarCalculado={totalAPagarSeleccionado}
+                    />
+                ) : (
+                    <div style={{ color: '#666', fontSize: 14 }}>Seleccione un huésped o busque un tercero para calcular el resumen.</div>
+                )}
+                </div>
+            </aside>
+            </div>
+        )}
+        <style jsx>{`
+
+                .facturacion-root > h1,
+                .facturacion-root > p,
+                .facturacion-root > h2,
+                .facturacion-root > h3,
+                .facturacion-root > div > h2,
+                .facturacion-root > div > h3 {
+                    color: #fff !important;
+                }
+                
+            /* Forzar texto negro en paneles blancos e inputs */
+            .panel,
+            .tercero-card,
+            aside,
+            .panel * {
+                color: #000 !important;
+            }
+
+            /* Inputs, selects y textareas en negro (incluye placeholders legibles) */
+            input, select, textarea {
+                color: #000 !important;
+            }
+
+            /* Placeholder ligeramente gris, legible sobre fondo blanco */
+            input::placeholder,
+            textarea::placeholder {
+                color: #6b6b6b !important;
+                opacity: 1;
+            }
+
+            /* Asegurar títulos y párrafos en negro en las secciones principales */
+            h1, h2, h3, p, label, .section-title {
+                color: #000 !important;
+            }
+
+            /* Si tu componente ResumenFactura o HuespedesEstadia usan colores internos
+                que no heredan, este selector intentará forzarlos también (último recurso). */
+            .panel :is(div, span, p, li, td, th) {
+                color: #000 !important;
+            }
+        `}</style>
+
+        </div>
+    </AuthGate>
     );
 };
 
