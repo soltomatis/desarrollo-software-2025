@@ -15,9 +15,14 @@ import tp.desarrollo.dao.HabitacionDaoDB;
 import tp.desarrollo.dto.EstadoHabitacionDTO;
 import tp.desarrollo.dto.HabitacionDTO;
 import tp.desarrollo.enums.Estado;
+import tp.desarrollo.patrones.observer.Impl.HabitacionEstadoManager;
 
 @Service
 public class Gestor_Habitacion {
+
+    @Autowired
+    private HabitacionEstadoManager habitacionEstadoManager;
+
     @Autowired
     HabitacionDaoDB habitacionDAO;
 
@@ -68,6 +73,13 @@ public class Gestor_Habitacion {
             habitacion.setHistoriaEstados(historiaEstados);
         }
         historiaEstados.add(nuevoEstado);
+
+        // NOTIFICAR A OBSERVADORES
+        habitacionEstadoManager.cambiarEstado(
+                habitacion,
+                Estado.RESERVADA,
+                "Reserva confirmada desde " + fecha_inicio + " hasta " + fecha_fin
+        );
 
         habitacionDAO.actualizarHabitacion(habitacion);
     }

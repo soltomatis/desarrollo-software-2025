@@ -16,11 +16,17 @@ import lombok.Data;
 public class Habitacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long numeroHabitacion;
+
     private String tipo;
+
     private int cantidadHuespedes;
+
     private int cantidadCamaI;
+
     private int cantidadCamaD;
+
     private int cantidadCamaKS;
 
     @OneToMany (cascade = CascadeType.ALL)

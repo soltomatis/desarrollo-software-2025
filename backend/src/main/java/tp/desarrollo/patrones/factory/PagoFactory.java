@@ -1,10 +1,9 @@
-package tp.desarrollo.clases;
+package tp.desarrollo.patrones.factory;
 
-import tp.desarrollo.repositorio.Impl.PagoCheque;
-import tp.desarrollo.repositorio.Impl.PagoEfectivo;
-import tp.desarrollo.repositorio.Impl.PagoMonedaExtranjera;
-import tp.desarrollo.repositorio.Impl.PagoTarjeta;
-import tp.desarrollo.repositorio.PagoStrategy;
+import tp.desarrollo.patrones.factory.Impl.PagoCheque;
+import tp.desarrollo.patrones.factory.Impl.PagoEfectivo;
+import tp.desarrollo.patrones.factory.Impl.PagoMonedaExtranjera;
+import tp.desarrollo.patrones.factory.Impl.PagoTarjeta;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

@@ -7,9 +7,9 @@ package tp.desarrollo.gestores;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import tp.desarrollo.clases.Factura;
-import tp.desarrollo.clases.PagoFactory;
+import tp.desarrollo.patrones.factory.PagoFactory;
 import tp.desarrollo.dao.FacturaDaoDB;
-import tp.desarrollo.repositorio.PagoStrategy;
+import tp.desarrollo.patrones.factory.PagoStrategy;
 
 import java.util.Map;
 

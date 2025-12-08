@@ -12,7 +12,6 @@ import tp.desarrollo.enums.CondicionIVA;
 import tp.desarrollo.enums.TipoDocumento;
 
 @NoArgsConstructor
-@Data
 @Setter
 @Getter
 public class HuespedDTO extends PersonaDTO{

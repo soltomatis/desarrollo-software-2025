@@ -63,7 +63,7 @@ public class Desarrollo {
 
             switch (opcion) {
                 case "1":
-                    // --- Ingreso de parámetros de búsqueda ---
+                    // --- Ingre1so de parámetros de búsqueda ---
                     System.out.println("\nIngrese los datos del huésped a buscar (puede dejar campos vacíos):");
 
                     System.out.print("Nombre: ");

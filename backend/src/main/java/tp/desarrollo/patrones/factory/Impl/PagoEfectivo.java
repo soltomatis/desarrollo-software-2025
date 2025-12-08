@@ -1,6 +1,6 @@
-package tp.desarrollo.repositorio.Impl;
+package tp.desarrollo.patrones.factory.Impl;
 
-import tp.desarrollo.repositorio.PagoStrategy;
+import tp.desarrollo.patrones.factory.PagoStrategy;
 
 public class PagoEfectivo implements PagoStrategy {
 

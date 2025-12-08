@@ -23,10 +23,10 @@ import tp.desarrollo.dao.ResponsableDaoDB;
 import tp.desarrollo.dto.ConsumoDTO;
 import tp.desarrollo.dto.FacturaResumenDTO;
 import tp.desarrollo.enums.CondicionIVA;
-import tp.desarrollo.repositorio.EstrategiaFacturacion;
-import tp.desarrollo.repositorio.Impl.FacturaATipoA;
-import tp.desarrollo.repositorio.Impl.FacturaBTipoB;
-import tp.desarrollo.repositorio.Impl.FacturaCMonotributista;
+import tp.desarrollo.patrones.strategy.EstrategiaFacturacion;
+import tp.desarrollo.patrones.strategy.Impl.FacturaATipoA;
+import tp.desarrollo.patrones.strategy.Impl.FacturaBTipoB;
+import tp.desarrollo.patrones.strategy.Impl.FacturaCMonotributista;
 
 @Service
 public class Gestor_Factura {

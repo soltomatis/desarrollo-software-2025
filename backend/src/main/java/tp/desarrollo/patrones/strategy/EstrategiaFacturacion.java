@@ -1,4 +1,4 @@
-package tp.desarrollo.repositorio;
+package tp.desarrollo.patrones.strategy;
 
 public interface EstrategiaFacturacion {
 
