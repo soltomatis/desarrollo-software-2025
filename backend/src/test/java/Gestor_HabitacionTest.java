@@ -21,12 +21,16 @@ import tp.desarrollo.dao.HabitacionDaoDB;
 import tp.desarrollo.dto.HabitacionDTO;
 import tp.desarrollo.enums.Estado;
 import tp.desarrollo.gestores.Gestor_Habitacion;
+import tp.desarrollo.patrones.observer.Impl.HabitacionEstadoManager;
 
 @ExtendWith(MockitoExtension.class) 
 public class Gestor_HabitacionTest {
 
     @Mock
     private HabitacionDaoDB repositorioHabitacion;
+    @Mock
+    private HabitacionEstadoManager habitacionEstadoManager;
+
     @InjectMocks
     private Gestor_Habitacion gestorHabitacion;
 
