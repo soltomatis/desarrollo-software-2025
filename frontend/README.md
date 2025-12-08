@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+cat > /tmp/readme_simple.md << 'EOF'
+# Sistema Hotelero - Implementación de Patrones de Diseño
 
-## Getting Started
+**Trabajo Práctico Final - Desarrollo de Software 2025**
 
-First, run the development server:
+---
+
+## Resumen Ejecutivo
+
+Sistema hotelero **Spring Boot 3.x** con **Next.js 14** que implementa **3 patrones de diseño formales** en el backend para mejorar mantenibilidad, extensibilidad y calidad del código.
+
+---
+## Instalación y Configuración
+
+### Requisitos Previos
+
+- Java 21+
+- Maven 3.9+
+- PostgreSQL 16+
+- Node.js 18+ (para frontend)
+
+### Frontend - Next.js
 
 ```bash
+cd ../frontend
+
+# Instalar dependencias
+npm install
+
+# Ejecutar
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Frontend disponible en: `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
+## Variables de Entorno
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`.env.local`:
 
-## Learn More
+```
+NEXT_PUBLIC_API_URL=http://localhost:8080/api
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Flujo Principal
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Login** → Obtener token JWT
+2. **Dashboard** → Menú de opciones
+3. **Huéspedes** → Crear/buscar huésped
+4. **Reservas** → Crear reserva (seleccionar habitación + fechas)
+5. **Check-in** → Registrar ingreso de huésped
+6. **Estadías** → Agregar consumos durante la estadía
+7. **Facturas** → Generar factura con habitación + consumos
+8. **Pagos** → Procesar pago de factura
+9. **Check-out** → Dar de alta la habitación
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Autores
 
-## Deploy on Vercel
+- **Alvarez, Juan Francisco**
+- **Buxman, Martín**
+- **Tomatis, María Sol**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Última actualización:** Diciembre 8, 2025
