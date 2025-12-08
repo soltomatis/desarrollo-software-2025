@@ -29,6 +29,7 @@ public class Gestor_Estadia {
         if (habitacion == null) {
             throw new EntityNotFoundException("No se encontró la habitación con el número: " + numeroHabitacion);
         }
+        System.out.println("Habitación encontrada: " + habitacion.getNumeroHabitacion());
         Estadia estadiaActiva = estadiaDaoDB.buscarEstadiaActivaPorHabitacionId(habitacion.getNumeroHabitacion());
         
         if (estadiaActiva == null) {
