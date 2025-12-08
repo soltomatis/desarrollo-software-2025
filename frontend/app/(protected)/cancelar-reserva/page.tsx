@@ -80,6 +80,8 @@ export default function CancelarReservaPage() {
   const [cargando, setCargando] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
   const validarFormulario = (): boolean => {
 
     if (!criterios.apellido.trim()) {
@@ -103,6 +105,10 @@ export default function CancelarReservaPage() {
     setReservasSeleccionadas(new Set());
 
     try {
+      if (!token) {
+        throw new Error('No hay token de autenticación. Por favor, inicia sesión.');
+      }
+
       const params = new URLSearchParams();
       if (criterios.apellido) params.append('apellido', criterios.apellido);
       if (criterios.nombre) params.append('nombre', criterios.nombre);
@@ -111,9 +117,14 @@ export default function CancelarReservaPage() {
       if (criterios.fechaInicio) params.append('fechaInicio', criterios.fechaInicio);
       if (criterios.fechaFin) params.append('fechaFin', criterios.fechaFin);
 
-      const response = await fetch(`http://localhost:8080/api/reservas/buscar?${params.toString()}`);
+      const response = await fetch(`http://localhost:8080/api/reservas/buscar?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Token inválido o expirado. Por favor, inicia sesión nuevamente.');
+        }
         throw new Error('Error al buscar reservas');
       }
 
@@ -193,10 +204,15 @@ export default function CancelarReservaPage() {
     setCargando(true);
 
     try {
+      if (!token) {
+        throw new Error('No hay token de autenticación. Por favor, inicia sesión.');
+      }
+
       const response = await fetch('http://localhost:8080/api/reservas/cancelar', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           idsReservas: Array.from(reservasSeleccionadas)
@@ -204,6 +220,9 @@ export default function CancelarReservaPage() {
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Token inválido o expirado. Por favor, inicia sesión nuevamente.');
+        }
         throw new Error('Error al cancelar reservas');
       }
 
@@ -246,25 +265,31 @@ export default function CancelarReservaPage() {
 
   const handleCriterioChange = (campo: keyof CriterioBusqueda, valor: string) => {
     setCriterios(prev => ({ ...prev, [campo]: valor }));
-    if (campo === 'apellido' && errorValidacion) {
-      setErrorValidacion('');
-    }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       buscarReservas();
     }
   };
 
   return (
-    <div className="container" style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
+    <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
 
       <h1 style={{ fontSize: '2rem', marginBottom: '10px', color: '#333' }}>
-            Cancelar Reserva
+        Cancelar Reserva
       </h1>
 
-      <Link href="/" style={{ display: 'block', marginBottom: '30px', color: '#0070f3', textDecoration: 'none' }}>
+      <Link
+        href="/"
+        style={{
+          display: 'block',
+          marginBottom: '30px',
+          color: '#0070f3',
+          textDecoration: 'none',
+          fontSize: '1rem'
+        }}
+      >
         ← Volver al inicio
       </Link>
 
@@ -276,12 +301,16 @@ export default function CancelarReservaPage() {
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         marginBottom: '30px'
       }}>
-        <h2 style={{ fontSize: '1.3rem', marginBottom: '15px', color: '#555' }}>
-          Buscar Reservas
+        <h2 style={{ fontSize: '1.3rem', marginBottom: '20px', color: '#555' }}>
+          Criterios de Búsqueda
         </h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
-
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: '15px',
+          marginBottom: '20px'
+        }}>
           <div>
             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>
               Apellido: <span style={{ color: 'red' }}>*</span>
@@ -293,15 +322,15 @@ export default function CancelarReservaPage() {
               onChange={(e) => handleCriterioChange('apellido', e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ej: García"
-              autoFocus
               style={{
                 width: '100%',
                 padding: '10px',
-                border: errorValidacion ? '2px solid #dc3545' : '1px solid #ccc',
+                border: '1px solid #ccc',
                 borderRadius: '5px',
                 fontSize: '1rem'
               }}
               disabled={cargando}
+              autoFocus
             />
           </div>
 
@@ -328,10 +357,10 @@ export default function CancelarReservaPage() {
 
           <div>
             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>
-              Nº Habitación:
+              Número Habitación:
             </label>
             <input
-              type="number"
+              type="text"
               value={criterios.numeroHabitacion}
               onChange={(e) => handleCriterioChange('numeroHabitacion', e.target.value)}
               onKeyPress={handleKeyPress}
@@ -418,7 +447,7 @@ export default function CancelarReservaPage() {
             fontSize: '0.95rem',
             fontWeight: 'bold'
           }}>
-              {errorValidacion}
+            {errorValidacion}
           </div>
         )}
 
