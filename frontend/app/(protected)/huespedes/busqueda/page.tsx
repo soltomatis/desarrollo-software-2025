@@ -51,7 +51,7 @@ export default function PaginaBuscarHuesped() {
         num_documento: criterios.num_documento,
       });
 
-      const url = `http://localhost:8080/api/huespedes/buscar?${params.toString()}`;
+      const url = `/api/huespedes/buscar?${params.toString()}`;
       console.log("URL de Búsqueda Enviada:", url);
 
       const respuesta = await fetch(url, {

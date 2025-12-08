@@ -2,12 +2,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
     return [
       {
         source: "/api/:path*",
-        destination: `${apiBaseUrl}/:path*`,
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*` ,
         // todas las llamadas /api/* van al backend Spring Boot
       },
     ];

@@ -24,7 +24,7 @@ export function useAuth({ skipInitialCheck = false }: UseAuthOptions = {}) {
       return;
     }
     try {
-      const res = await fetch("http://localhost:8080/api/me", {
+      const res = await fetch("/api/me", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -68,7 +68,7 @@ export function useAuth({ skipInitialCheck = false }: UseAuthOptions = {}) {
   }, [checkSession]);
 
   const login = async (username: string, password: string) => {
-    const res = await fetch("http://localhost:8080/api/login", {
+    const res = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),

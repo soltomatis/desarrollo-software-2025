@@ -6,7 +6,7 @@ export type User = {
 };
 
 export async function login(username: string, password: string): Promise<User> {
-  const data = await http('http://localhost:8080/api/login', {
+  const data = await http('/api/login', {
     method: 'POST',
     body: { username, password },
   });
