@@ -1,4 +1,4 @@
-package tp.desarrollo.gestores;
+package tp.desarrollo.servicios;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -6,16 +6,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Service;
 
 import tp.desarrollo.clases.EstadoHabitacion;
 import tp.desarrollo.clases.Habitacion;
-import tp.desarrollo.dao.HabitacionDaoDB;
 import tp.desarrollo.dto.EstadoHabitacionDTO;
 import tp.desarrollo.dto.HabitacionDTO;
 import tp.desarrollo.enums.Estado;
 import tp.desarrollo.patrones.observer.Impl.HabitacionEstadoManager;
+import tp.desarrollo.repositorio.HabitacionDaoDB;
 
 @Service
 public class Gestor_Habitacion {

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import tp.desarrollo.dto.CancelarReservaDTO;
 import tp.desarrollo.dto.ReservaDTO;
-import tp.desarrollo.gestores.Gestor_Reserva;
+import tp.desarrollo.servicios.Gestor_Reserva;
 
 import java.util.HashMap;
 import java.util.List;

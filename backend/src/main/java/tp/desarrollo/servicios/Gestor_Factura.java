@@ -1,4 +1,4 @@
-package tp.desarrollo.gestores;
+package tp.desarrollo.servicios;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +14,6 @@ import tp.desarrollo.clases.Estadia;
 import tp.desarrollo.clases.Factura;
 import tp.desarrollo.clases.Huesped;
 import tp.desarrollo.clases.Responsable_de_pago;
-import tp.desarrollo.dao.ConsumoDaoDB;
-import tp.desarrollo.dao.DireccionDaoDB;
-import tp.desarrollo.dao.EstadiaDaoDB;
-import tp.desarrollo.dao.FacturaDaoDB;
-import tp.desarrollo.dao.HuespedDaoDB;
-import tp.desarrollo.dao.ResponsableDaoDB;
 import tp.desarrollo.dto.ConsumoDTO;
 import tp.desarrollo.dto.FacturaResumenDTO;
 import tp.desarrollo.enums.CondicionIVA;
@@ -27,6 +21,12 @@ import tp.desarrollo.patrones.strategy.EstrategiaFacturacion;
 import tp.desarrollo.patrones.strategy.Impl.FacturaATipoA;
 import tp.desarrollo.patrones.strategy.Impl.FacturaBTipoB;
 import tp.desarrollo.patrones.strategy.Impl.FacturaCMonotributista;
+import tp.desarrollo.repositorio.ConsumoDaoDB;
+import tp.desarrollo.repositorio.DireccionDaoDB;
+import tp.desarrollo.repositorio.EstadiaDaoDB;
+import tp.desarrollo.repositorio.FacturaDaoDB;
+import tp.desarrollo.repositorio.HuespedDaoDB;
+import tp.desarrollo.repositorio.ResponsableDaoDB;
 
 @Service
 public class Gestor_Factura {

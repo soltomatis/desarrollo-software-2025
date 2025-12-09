@@ -5,11 +5,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tp.desarrollo.clases.*;
-import tp.desarrollo.dao.*;
 import tp.desarrollo.dto.FacturaResumenDTO;
 import tp.desarrollo.enums.CondicionIVA;
-
-import tp.desarrollo.gestores.Gestor_Factura;
+import tp.desarrollo.repositorio.ConsumoDaoDB;
+import tp.desarrollo.repositorio.DireccionDaoDB;
+import tp.desarrollo.repositorio.EstadiaDaoDB;
+import tp.desarrollo.repositorio.FacturaDaoDB;
+import tp.desarrollo.repositorio.HuespedDaoDB;
+import tp.desarrollo.repositorio.ResponsableDaoDB;
+import tp.desarrollo.servicios.Gestor_Factura;
 
 import java.util.Arrays;
 import java.util.Collections;

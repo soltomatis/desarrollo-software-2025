@@ -2,14 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package tp.desarrollo.gestores;
+package tp.desarrollo.servicios;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import tp.desarrollo.clases.Factura;
 import tp.desarrollo.patrones.factory.PagoFactory;
-import tp.desarrollo.dao.FacturaDaoDB;
 import tp.desarrollo.patrones.factory.PagoStrategy;
+import tp.desarrollo.repositorio.FacturaDaoDB;
 
 import java.util.Map;
 

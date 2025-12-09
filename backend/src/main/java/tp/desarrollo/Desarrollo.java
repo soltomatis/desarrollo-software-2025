@@ -4,14 +4,14 @@
 
 package tp.desarrollo;
 
-import tp.desarrollo.gestores.Gestor_Usuario;
+import tp.desarrollo.repositorio.HuespedDaoArchivos;
+import tp.desarrollo.repositorio.ReservaDaoArchivos;
+import tp.desarrollo.repositorio.UsuarioDaoArchivos;
+import tp.desarrollo.servicios.Gestor_Usuario;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import tp.desarrollo.dao.HuespedDaoArchivos;
-import tp.desarrollo.dao.UsuarioDaoArchivos;
-import tp.desarrollo.dao.ReservaDaoArchivos;
 import java.util.Scanner;
 import tp.desarrollo.enums.TipoDocumento;
 

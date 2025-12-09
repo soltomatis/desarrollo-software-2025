@@ -1,4 +1,4 @@
-package tp.desarrollo.dao;
+package tp.desarrollo.repositorio;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

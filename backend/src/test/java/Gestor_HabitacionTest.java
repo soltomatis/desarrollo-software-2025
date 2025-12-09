@@ -17,11 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import tp.desarrollo.clases.EstadoHabitacion;
 import tp.desarrollo.clases.Habitacion;
-import tp.desarrollo.dao.HabitacionDaoDB;
 import tp.desarrollo.dto.HabitacionDTO;
 import tp.desarrollo.enums.Estado;
-import tp.desarrollo.gestores.Gestor_Habitacion;
 import tp.desarrollo.patrones.observer.Impl.HabitacionEstadoManager;
+import tp.desarrollo.repositorio.HabitacionDaoDB;
+import tp.desarrollo.servicios.Gestor_Habitacion;
 
 @ExtendWith(MockitoExtension.class) 
 public class Gestor_HabitacionTest {

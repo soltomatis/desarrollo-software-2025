@@ -1,4 +1,4 @@
-package tp.desarrollo.gestores;
+package tp.desarrollo.servicios;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import tp.desarrollo.clases.*;
-import tp.desarrollo.dao.HabitacionDaoDB;
-import tp.desarrollo.dao.HuespedDaoDB;
-import tp.desarrollo.dao.ReservaDaoDB;
-import tp.desarrollo.dao.ReservaHabitacionDaoDB;
 import tp.desarrollo.dto.HabitacionDTO;
 import tp.desarrollo.dto.HuespedDTO;
 import tp.desarrollo.dto.ReservaDTO;
 import tp.desarrollo.dto.ReservaHabitacionDTO;
 import tp.desarrollo.enums.Estado;
+import tp.desarrollo.repositorio.HabitacionDaoDB;
+import tp.desarrollo.repositorio.HuespedDaoDB;
+import tp.desarrollo.repositorio.ReservaDaoDB;
+import tp.desarrollo.repositorio.ReservaHabitacionDaoDB;
 
 @Service
 public class Gestor_Reserva {

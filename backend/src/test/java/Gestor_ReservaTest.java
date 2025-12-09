@@ -18,13 +18,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import tp.desarrollo.clases.*;
-import tp.desarrollo.dao.*;
 import tp.desarrollo.dto.*;
 import tp.desarrollo.enums.CondicionIVA;
 import tp.desarrollo.enums.Estado;
 import tp.desarrollo.enums.TipoDocumento;
-import tp.desarrollo.gestores.Gestor_Habitacion;
-import tp.desarrollo.gestores.Gestor_Reserva;
+import tp.desarrollo.repositorio.HabitacionDaoDB;
+import tp.desarrollo.repositorio.HuespedDaoDB;
+import tp.desarrollo.repositorio.ReservaDaoDB;
+import tp.desarrollo.repositorio.ReservaHabitacionDaoDB;
+import tp.desarrollo.servicios.Gestor_Habitacion;
+import tp.desarrollo.servicios.Gestor_Reserva;
 
 @ExtendWith(MockitoExtension.class)
 public class Gestor_ReservaTest {

@@ -1,4 +1,4 @@
-package tp.desarrollo.dao;
+package tp.desarrollo.repositorio;
 
 import org.springframework.stereotype.Repository;
 

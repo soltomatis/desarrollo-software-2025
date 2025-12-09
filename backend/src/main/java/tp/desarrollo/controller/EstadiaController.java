@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.persistence.EntityNotFoundException;
 import tp.desarrollo.clases.Estadia;
 import tp.desarrollo.dto.CheckOutRequest;
-import tp.desarrollo.gestores.Gestor_Estadia;
+import tp.desarrollo.servicios.Gestor_Estadia;
 
 @RestController
 @RequestMapping("api/estadia")
