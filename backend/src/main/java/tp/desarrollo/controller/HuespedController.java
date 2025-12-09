@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import tp.desarrollo.dto.HuespedDTO;
-import tp.desarrollo.servicios.Gestor_Usuario;
+import tp.desarrollo.services.Gestor_Usuario;
 
 @RestController
 @RequestMapping("/api/huespedes")

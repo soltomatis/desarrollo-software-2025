@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RestController;
 
 import tp.desarrollo.dto.HabitacionDTO;
-import tp.desarrollo.servicios.Gestor_Habitacion;
+import tp.desarrollo.services.Gestor_Habitacion;
 
 import java.time.LocalDate;
 import java.util.List;

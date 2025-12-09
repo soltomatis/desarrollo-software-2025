@@ -1,4 +1,4 @@
-package tp.desarrollo.servicios;
+package tp.desarrollo.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
 import tp.desarrollo.clases.Estadia;
 import tp.desarrollo.clases.Habitacion;
-import tp.desarrollo.repositorio.EstadiaDaoDB;
-import tp.desarrollo.repositorio.HabitacionDaoDB;
+import tp.desarrollo.repository.EstadiaDaoDB;
+import tp.desarrollo.repository.HabitacionDaoDB;
 @Service
 public class Gestor_Estadia {
     @Autowired

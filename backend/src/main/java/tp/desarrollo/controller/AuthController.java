@@ -13,7 +13,7 @@ import tp.desarrollo.dto.LoginRequest;
 import tp.desarrollo.dto.LoginResponse;
 import tp.desarrollo.dto.UserInfoResponse;
 import tp.desarrollo.clases.Usuario;
-import tp.desarrollo.repositorio.UserRepository;
+import tp.desarrollo.repository.UserRepository;
 import tp.desarrollo.security.AppUserDetails;
 import tp.desarrollo.security.JwtUtil;
 

@@ -1,4 +1,4 @@
-package tp.desarrollo.repositorio;
+package tp.desarrollo.repository;
 import tp.desarrollo.interfaces.HuespedDAO;
 import tp.desarrollo.enums.CondicionIVA;
 import tp.desarrollo.enums.TipoDocumento;

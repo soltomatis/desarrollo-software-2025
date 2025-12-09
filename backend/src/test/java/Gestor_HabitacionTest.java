@@ -20,8 +20,8 @@ import tp.desarrollo.clases.Habitacion;
 import tp.desarrollo.dto.HabitacionDTO;
 import tp.desarrollo.enums.Estado;
 import tp.desarrollo.patrones.observer.Impl.HabitacionEstadoManager;
-import tp.desarrollo.repositorio.HabitacionDaoDB;
-import tp.desarrollo.servicios.Gestor_Habitacion;
+import tp.desarrollo.repository.HabitacionDaoDB;
+import tp.desarrollo.services.Gestor_Habitacion;
 
 @ExtendWith(MockitoExtension.class) 
 public class Gestor_HabitacionTest {

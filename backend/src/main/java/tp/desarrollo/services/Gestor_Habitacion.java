@@ -1,4 +1,4 @@
-package tp.desarrollo.servicios;
+package tp.desarrollo.services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import tp.desarrollo.dto.EstadoHabitacionDTO;
 import tp.desarrollo.dto.HabitacionDTO;
 import tp.desarrollo.enums.Estado;
 import tp.desarrollo.patrones.observer.Impl.HabitacionEstadoManager;
-import tp.desarrollo.repositorio.HabitacionDaoDB;
+import tp.desarrollo.repository.HabitacionDaoDB;
 
 @Service
 public class Gestor_Habitacion {

@@ -1,4 +1,4 @@
-package tp.desarrollo.repositorio;
+package tp.desarrollo.repository;
 
 import tp.desarrollo.clases.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;

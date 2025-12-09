@@ -17,9 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import jakarta.persistence.EntityNotFoundException;
 import tp.desarrollo.clases.Estadia;
 import tp.desarrollo.clases.Habitacion;
-import tp.desarrollo.repositorio.EstadiaDaoDB;
-import tp.desarrollo.repositorio.HabitacionDaoDB;
-import tp.desarrollo.servicios.Gestor_Estadia;
+import tp.desarrollo.repository.EstadiaDaoDB;
+import tp.desarrollo.repository.HabitacionDaoDB;
+import tp.desarrollo.services.Gestor_Estadia;
 
 @ExtendWith(MockitoExtension.class)
 public class Gestor_EstadiaTest {

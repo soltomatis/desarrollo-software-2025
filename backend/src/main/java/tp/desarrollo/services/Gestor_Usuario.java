@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package tp.desarrollo.servicios;
+package tp.desarrollo.services;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,13 +19,13 @@ import jakarta.transaction.Transactional;
 import tp.desarrollo.clases.*;
 import tp.desarrollo.dto.*;
 import tp.desarrollo.enums.TipoDocumento;
-import tp.desarrollo.excepciones.HuespedConReservasExcepcion;
-import tp.desarrollo.repositorio.EstadiaDaoDB;
-import tp.desarrollo.repositorio.HuespedDaoArchivos;
-import tp.desarrollo.repositorio.HuespedDaoDB;
-import tp.desarrollo.repositorio.ReservaDaoArchivos;
-import tp.desarrollo.repositorio.ReservaDaoDB;
-import tp.desarrollo.repositorio.UsuarioDaoArchivos;
+import tp.desarrollo.exception.HuespedConReservasExcepcion;
+import tp.desarrollo.repository.EstadiaDaoDB;
+import tp.desarrollo.repository.HuespedDaoArchivos;
+import tp.desarrollo.repository.HuespedDaoDB;
+import tp.desarrollo.repository.ReservaDaoArchivos;
+import tp.desarrollo.repository.ReservaDaoDB;
+import tp.desarrollo.repository.UsuarioDaoArchivos;
 
 
 @Service

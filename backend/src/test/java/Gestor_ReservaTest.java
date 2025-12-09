@@ -22,12 +22,12 @@ import tp.desarrollo.dto.*;
 import tp.desarrollo.enums.CondicionIVA;
 import tp.desarrollo.enums.Estado;
 import tp.desarrollo.enums.TipoDocumento;
-import tp.desarrollo.repositorio.HabitacionDaoDB;
-import tp.desarrollo.repositorio.HuespedDaoDB;
-import tp.desarrollo.repositorio.ReservaDaoDB;
-import tp.desarrollo.repositorio.ReservaHabitacionDaoDB;
-import tp.desarrollo.servicios.Gestor_Habitacion;
-import tp.desarrollo.servicios.Gestor_Reserva;
+import tp.desarrollo.repository.HabitacionDaoDB;
+import tp.desarrollo.repository.HuespedDaoDB;
+import tp.desarrollo.repository.ReservaDaoDB;
+import tp.desarrollo.repository.ReservaHabitacionDaoDB;
+import tp.desarrollo.services.Gestor_Habitacion;
+import tp.desarrollo.services.Gestor_Reserva;
 
 @ExtendWith(MockitoExtension.class)
 public class Gestor_ReservaTest {

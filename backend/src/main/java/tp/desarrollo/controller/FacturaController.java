@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tp.desarrollo.clases.Responsable_de_pago;
 import tp.desarrollo.dto.CalculoFacturaRequest;
 import tp.desarrollo.dto.FacturaResumenDTO;
-import tp.desarrollo.servicios.Gestor_Factura;
+import tp.desarrollo.services.Gestor_Factura;
 
 @RestController
 @RequestMapping("api/factura")
@@ -25,7 +25,7 @@ public class FacturaController {
     @Autowired
     Gestor_Factura gestorFactura;
     @Autowired
-    tp.desarrollo.repositorio.ResponsableDaoDB responsableDaoDB;
+    tp.desarrollo.repository.ResponsableDaoDB responsableDaoDB;
 
     @PostMapping(value = "/resumen")
     public ResponseEntity<?> obtenerResumenConMap(@RequestBody CalculoFacturaRequest request) {

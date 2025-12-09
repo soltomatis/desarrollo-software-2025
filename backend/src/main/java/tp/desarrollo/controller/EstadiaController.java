@@ -1,7 +1,5 @@
 package tp.desarrollo.controller;
 
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.persistence.EntityNotFoundException;
 import tp.desarrollo.clases.Estadia;
 import tp.desarrollo.dto.CheckOutRequest;
-import tp.desarrollo.servicios.Gestor_Estadia;
+import tp.desarrollo.services.Gestor_Estadia;
 
 @RestController
 @RequestMapping("api/estadia")

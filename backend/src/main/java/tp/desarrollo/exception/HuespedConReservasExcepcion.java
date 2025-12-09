@@ -1,4 +1,4 @@
-package tp.desarrollo.excepciones;
+package tp.desarrollo.exception;
 
 /*
   Excepción personalizada que se lanza cuando se intenta eliminar un huésped

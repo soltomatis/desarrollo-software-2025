@@ -22,14 +22,14 @@ import tp.desarrollo.clases.*;
 import tp.desarrollo.dto.*;
 import tp.desarrollo.enums.CondicionIVA;
 import tp.desarrollo.enums.TipoDocumento;
-import tp.desarrollo.repositorio.EstadiaDaoDB;
-import tp.desarrollo.repositorio.HuespedDaoArchivos;
-import tp.desarrollo.repositorio.HuespedDaoDB;
-import tp.desarrollo.repositorio.ReservaDaoArchivos;
-import tp.desarrollo.repositorio.ReservaDaoDB;
-import tp.desarrollo.repositorio.UsuarioDaoArchivos;
-import tp.desarrollo.servicios.Gestor_Habitacion;
-import tp.desarrollo.servicios.Gestor_Usuario;
+import tp.desarrollo.repository.EstadiaDaoDB;
+import tp.desarrollo.repository.HuespedDaoArchivos;
+import tp.desarrollo.repository.HuespedDaoDB;
+import tp.desarrollo.repository.ReservaDaoArchivos;
+import tp.desarrollo.repository.ReservaDaoDB;
+import tp.desarrollo.repository.UsuarioDaoArchivos;
+import tp.desarrollo.services.Gestor_Habitacion;
+import tp.desarrollo.services.Gestor_Usuario;
 
 @ExtendWith(MockitoExtension.class)
 public class Gestor_UsuarioTest {

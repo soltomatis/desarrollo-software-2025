@@ -1,4 +1,4 @@
-package tp.desarrollo.servicios;
+package tp.desarrollo.services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ import tp.desarrollo.dto.HuespedDTO;
 import tp.desarrollo.dto.ReservaDTO;
 import tp.desarrollo.dto.ReservaHabitacionDTO;
 import tp.desarrollo.enums.Estado;
-import tp.desarrollo.repositorio.HabitacionDaoDB;
-import tp.desarrollo.repositorio.HuespedDaoDB;
-import tp.desarrollo.repositorio.ReservaDaoDB;
-import tp.desarrollo.repositorio.ReservaHabitacionDaoDB;
+import tp.desarrollo.repository.HabitacionDaoDB;
+import tp.desarrollo.repository.HuespedDaoDB;
+import tp.desarrollo.repository.ReservaDaoDB;
+import tp.desarrollo.repository.ReservaHabitacionDaoDB;
 
 @Service
 public class Gestor_Reserva {
