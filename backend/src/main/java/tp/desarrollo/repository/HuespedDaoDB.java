@@ -90,4 +90,8 @@ public Huesped buscarHuespedPorDatos(String nombre, String apellido, String tele
     public void eliminar(Huesped huesped) {
         em.remove(em.contains(huesped) ? huesped : em.merge(huesped));
     }
+    @Transactional
+    public void actualizar(Huesped huespedOriginal) {
+        em.merge(huespedOriginal);
+    }
 }

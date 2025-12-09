@@ -46,12 +46,7 @@ export default function PaginaBuscarHuesped() {
 
   const manejarBusqueda = async (e: FormEvent) => {
     e.preventDefault();
-
-    if (!criterios.apellido.trim()) {
-      setErrorValidacion('El campo apellido no puede estar vacío');
-      return;
-    }
-
+    
     setCargando(true);
     setBusquedaRealizada(true);
     setResultadosBusqueda([]);
@@ -94,8 +89,17 @@ export default function PaginaBuscarHuesped() {
       setCargando(false);
     }
   };
-
-  const manejarSiguiente = () => {
+  const manejarModificar = () => {
+    if (huespedSeleccionado) {
+      try {
+        sessionStorage.setItem('huespedParaModificar', JSON.stringify(huespedSeleccionado));
+      } catch (e) {
+        console.error('Error al guardar en sessionStorage:', e);
+      }
+      router.push(`/huespedes/modificar?id=${huespedSeleccionado.id}`);
+    }
+  };
+  const manejarBorrar = () => {
     if (huespedSeleccionado) {
       try {
         sessionStorage.setItem('huespedParaBorrar', JSON.stringify(huespedSeleccionado));
@@ -117,7 +121,7 @@ export default function PaginaBuscarHuesped() {
       <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
 
         <h1 style={{ fontSize: '2rem', marginBottom: '10px', color: '#333' }}>
-          Eliminar Huésped
+          Buscar Huésped
         </h1>
 
         <Link
@@ -154,7 +158,7 @@ export default function PaginaBuscarHuesped() {
 
             <div>
               <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>
-                Apellido: <span style={{ color: 'red' }}>*</span>
+                Apellido: 
               </label>
               <input
                 type="text"
@@ -170,6 +174,7 @@ export default function PaginaBuscarHuesped() {
                   border: '1px solid #ccc',
                   borderRadius: '5px',
                   fontSize: '1rem'
+                , color: '#1a1a1a'
                 }}
                 disabled={cargando}
                 autoFocus
@@ -193,7 +198,8 @@ export default function PaginaBuscarHuesped() {
                   padding: '10px',
                   border: '1px solid #ccc',
                   borderRadius: '5px',
-                  fontSize: '1rem'
+                  fontSize: '1rem', 
+                  color: '#1a1a1a'
                 }}
                 disabled={cargando}
               />
@@ -213,7 +219,7 @@ export default function PaginaBuscarHuesped() {
                   padding: '10px',
                   border: '1px solid #ccc',
                   borderRadius: '5px',
-                  fontSize: '1rem'
+                  fontSize: '1rem', color: '#1a1a1a'
                 }}
                 disabled={cargando}
               >
@@ -243,7 +249,7 @@ export default function PaginaBuscarHuesped() {
                   padding: '10px',
                   border: '1px solid #ccc',
                   borderRadius: '5px',
-                  fontSize: '1rem'
+                  fontSize: '1rem', color: '#1a1a1a'
                 }}
                 disabled={cargando}
               />
@@ -309,7 +315,8 @@ export default function PaginaBuscarHuesped() {
               <table style={{
                 width: '100%',
                 borderCollapse: 'collapse',
-                fontSize: '0.95rem'
+                fontSize: '0.95rem',
+                color: '#000'
               }}>
                 <thead>
                   <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
@@ -354,25 +361,62 @@ export default function PaginaBuscarHuesped() {
             </div>
 
             <div style={{ marginTop: '30px', display: 'flex', gap: '15px' }}>
-              <button
-                onClick={manejarSiguiente}
-                disabled={!huespedSeleccionado || cargando}
-                style={{
-                  flex: 1,
-                  padding: '15px',
-                  fontSize: '1.1rem',
-                  fontWeight: 'bold',
-                  color: 'white',
-                  backgroundColor: (!huespedSeleccionado || cargando) ? '#ccc' : '#28a745',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: (!huespedSeleccionado || cargando) ? 'not-allowed' : 'pointer',
-                  transition: 'background-color 0.2s'
-                }}
-              >
-                Siguiente
-              </button>
-            </div>
+
+                  <button
+                    onClick={manejarModificar}
+                    disabled={!huespedSeleccionado || cargando}
+                    style={{
+                      flex: 1,
+                      padding: '15px',
+                      fontSize: '1.1rem',
+                      fontWeight: 'bold',
+                      color: 'white',
+                      backgroundColor: (!huespedSeleccionado || cargando) ? '#ccc' : '#007bff',
+                      border: 'none',
+                      borderRadius: '5px',
+                      cursor: (!huespedSeleccionado || cargando) ? 'not-allowed' : 'pointer',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                        if (!huespedSeleccionado || cargando) return;
+                        e.currentTarget.style.backgroundColor = '#0056b3';
+                    }}
+                    onMouseLeave={(e) => {
+                        if (!huespedSeleccionado || cargando) return;
+                        e.currentTarget.style.backgroundColor = '#007bff';
+                    }}
+                  >
+                    Modificar
+                  </button>
+
+                  <button
+                    onClick={manejarBorrar}
+                    disabled={!huespedSeleccionado || cargando}
+                    style={{
+                      flex: 1,
+                      padding: '15px',
+                      fontSize: '1.1rem',
+                      fontWeight: 'bold',
+                      color: 'white',
+                      backgroundColor: (!huespedSeleccionado || cargando) ? '#ccc' : '#dc3545', 
+                      border: 'none',
+                      borderRadius: '5px',
+                      cursor: (!huespedSeleccionado || cargando) ? 'not-allowed' : 'pointer',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                        if (!huespedSeleccionado || cargando) return;
+                        e.currentTarget.style.backgroundColor = '#bd2130';
+                    }}
+                    onMouseLeave={(e) => {
+                        if (!huespedSeleccionado || cargando) return;
+                        e.currentTarget.style.backgroundColor = '#dc3545';
+                    }}
+                  >
+                    Borrar
+                  </button>
+
+                </div>
           </div>
         )}
 

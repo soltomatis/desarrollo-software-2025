@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,6 +84,15 @@ public class HuespedController {
             Map<String, Object> errorMap = new HashMap<>();
             errorMap.put("mensaje", "Error al verificar historial: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMap);
+        }
+    }
+    @PatchMapping("/modificar/{id}")
+    public ResponseEntity<HuespedDTO> modificarHuesped(@PathVariable Long id, @RequestBody HuespedDTO huespedDTO) {
+        try {
+            HuespedDTO huespedActualizado = gestorHuesped.modificarHuesped(id, huespedDTO);
+            return new ResponseEntity<>(huespedActualizado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 }

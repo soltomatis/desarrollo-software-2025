@@ -87,45 +87,45 @@ public class Gestor_Usuario{
         return resultados;
     }
     private HuespedDTO mapearHuespedADTO(Huesped huesped) {
-    if (huesped == null) {
-        return null;
-    }
-    
-    HuespedDTO dto = new HuespedDTO();
-    
-    dto.setId(huesped.getId()); 
-    dto.setApellido(huesped.getApellido());
-    dto.setNombre(huesped.getNombre());
-    dto.setTipo_documento(huesped.getTipo_documento());
-    dto.setNum_documento(huesped.getNum_documento());
-    dto.setCuit(huesped.getCUIT());
-    dto.setFecha_nacimiento(huesped.getFecha_nacimiento());
-    dto.setNacionalidad(huesped.getNacionalidad());
-    
-    dto.setDireccion(mapearDireccionADTO(huesped.getDIRECCION()));
+        if (huesped == null) {
+            return null;
+        }
+        
+        HuespedDTO dto = new HuespedDTO();
+        
+        dto.setId(huesped.getId()); 
+        dto.setApellido(huesped.getApellido());
+        dto.setNombre(huesped.getNombre());
+        dto.setTipo_documento(huesped.getTipo_documento());
+        dto.setNum_documento(huesped.getNum_documento());
+        dto.setCuit(huesped.getCUIT());
+        dto.setFecha_nacimiento(huesped.getFecha_nacimiento());
+        dto.setNacionalidad(huesped.getNacionalidad());
+        
+        dto.setDireccion(mapearDireccionADTO(huesped.getDIRECCION()));
 
-    dto.setTelefono(huesped.getTelefono());
-    dto.setEmail(huesped.getEmail());
-    dto.setOcupacion(huesped.getOcupacion());
-    dto.setCondicionIVA(huesped.getCondicionIVA());
-    
-    return dto;
-}
-    private DireccionDTO mapearDireccionADTO(Direccion direccion) {
-    if (direccion == null) {
-        return null;
+        dto.setTelefono(huesped.getTelefono());
+        dto.setEmail(huesped.getEmail());
+        dto.setOcupacion(huesped.getOcupacion());
+        dto.setCondicionIVA(huesped.getCondicionIVA());
+        
+        return dto;
     }
-    DireccionDTO dto = new DireccionDTO();
-    dto.setCalle(direccion.getCalle());
-    dto.setNumero(direccion.getNumero());
-    dto.setDepartamento(direccion.getDepartamento());
-    dto.setPiso(direccion.getPiso());
-    dto.setCodigoPostal(direccion.getCodigoPostal());
-    dto.setLocalidad(direccion.getLocalidad());
-    dto.setProvincia(direccion.getProvincia());
-    dto.setPais(direccion.getPais());
-    return dto;
-}
+        private DireccionDTO mapearDireccionADTO(Direccion direccion) {
+        if (direccion == null) {
+            return null;
+        }
+        DireccionDTO dto = new DireccionDTO();
+        dto.setCalle(direccion.getCalle());
+        dto.setNumero(direccion.getNumero());
+        dto.setDepartamento(direccion.getDepartamento());
+        dto.setPiso(direccion.getPiso());
+        dto.setCodigoPostal(direccion.getCodigoPostal());
+        dto.setLocalidad(direccion.getLocalidad());
+        dto.setProvincia(direccion.getProvincia());
+        dto.setPais(direccion.getPais());
+        return dto;
+    }
     @Transactional
     public void borrarHuesped(Long id) {
         Huesped huesped = huespedDaoDB.buscarPorId(id);
@@ -186,6 +186,80 @@ public class Gestor_Usuario{
     }
     return respuesta;
 }
+
+    public HuespedDTO modificarHuesped(Long id, HuespedDTO huespedDTO) {
+        Huesped huespedOriginal = huespedDaoDB.buscarPorId(id);
+        if (huespedOriginal == null) {
+            throw new IllegalArgumentException("Huésped con ID " + id + " no encontrado.");
+        }
+        if (huespedDTO.getNombre() != null) {
+        huespedOriginal.setNombre(huespedDTO.getNombre());
+        }
+        if (huespedDTO.getApellido() != null) {
+        huespedOriginal.setApellido(huespedDTO.getApellido());
+        }
+        if (huespedDTO.getTelefono() != null) {
+        huespedOriginal.setTelefono(huespedDTO.getTelefono());
+        }
+        if (huespedDTO.getEmail() != null) {
+        huespedOriginal.setEmail(huespedDTO.getEmail());
+        }
+        if (huespedDTO.getOcupacion() != null) {
+        huespedOriginal.setOcupacion(huespedDTO.getOcupacion());
+        }
+        if (huespedDTO.getTipo_documento() != null) {
+        huespedOriginal.setTipoDocumento(huespedDTO.getTipo_documento());
+        }
+        if (huespedDTO.getNum_documento() != 0) {
+        huespedOriginal.setNumDocumento(huespedDTO.getNum_documento());
+        }
+        if (huespedDTO.getCuit() != 0) {
+        huespedOriginal.setCUIT(huespedDTO.getCuit());
+        }
+        if (huespedDTO.getFecha_nacimiento() != null) {
+        huespedOriginal.setFecha_nacimiento(huespedDTO.getFecha_nacimiento());
+        }
+        if (huespedDTO.getNacionalidad() != null) {
+        huespedOriginal.setNacionalidad(huespedDTO.getNacionalidad());
+        }
+        if (huespedDTO.getCondicionIVA() != null) {
+        huespedOriginal.setCondicionIVA(huespedDTO.getCondicionIVA());
+        }
+
+        if (huespedDTO.getDireccion() != null) {
+        DireccionDTO dirDTO = huespedDTO.getDireccion();
+        Direccion direccion = huespedOriginal.getDIRECCION();
+        if (dirDTO.getCalle() != null) {
+            direccion.setCalle(dirDTO.getCalle());
+        }
+        if (dirDTO.getNumero() != 0) {
+            direccion.setNumero(dirDTO.getNumero());
+        }
+        if (dirDTO.getDepartamento() != null) {
+            direccion.setDepartamento(dirDTO.getDepartamento());
+        }
+        if (dirDTO.getPiso() != 0) {
+            direccion.setPiso(dirDTO.getPiso());
+        }
+        if (dirDTO.getCodigoPostal() != 0) {
+            direccion.setCodigoPostal(dirDTO.getCodigoPostal());
+        }
+        if (dirDTO.getLocalidad() != null) {
+            direccion.setLocalidad(dirDTO.getLocalidad());
+        }
+        if (dirDTO.getProvincia() != null) {
+            direccion.setProvincia(dirDTO.getProvincia());
+        }
+        if (dirDTO.getPais() != null) {
+            direccion.setPais(dirDTO.getPais());
+        }
+        huespedOriginal.setDireccion(direccion);
+        }
+
+        huespedDaoDB.actualizar(huespedOriginal);
+        return mapearHuespedADTO(huespedOriginal);
+    }
+
 
 //Funciones ENTREGA 1
     public void modificar_huesped(Huesped huesped) {

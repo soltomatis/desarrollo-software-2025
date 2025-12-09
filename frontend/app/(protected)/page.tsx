@@ -4,20 +4,22 @@ import Link from "next/link";
 import { AuthGate } from "@/components/AuthGate";
 import { useAuth } from "@/hooks/useAuth";
 
-const optionsByRole: Record<string, { href: string; label: string }[]> = {
+const optionsByRole: Record<string, { href: string; label: string; actionId: string }[]> = {
   ROLE_ADMIN: [
-    { href: "/habitaciones/estado", label: "📊 Visualizar Estado de Habitaciones" },
-    { href: "/reservas", label: "📅 Reservar Habitaciones" },
-    { href: "/cancelar-reserva", label: "❌ Cancelar Reserva" },
-    { href: "/huespedes/busqueda", label: "🗑️ ️Dar de baja Huésped" },
-    { href: "/facturar", label: "📑 Facturar" },
+    { href: "/habitaciones/estado", label: "📊 Visualizar Estado de Habitaciones", actionId: "estado" },
+    { href: "/reservas", label: "📅 Reservar Habitaciones", actionId: "reservar" },
+    { href: "/cancelar-reserva", label: "❌ Cancelar Reserva", actionId: "cancelar" },
+    { href: "/huespedes/busqueda", label: "🗑️ Dar de baja Huésped", actionId: "baja" },
+    { href: "/huespedes/busqueda", label: "️✏️ Modificar Huésped", actionId: "modificar" },
+    { href: "/facturar", label: "📑 Facturar", actionId: "facturar" },
   ],
   ROLE_CONSERJE: [
-    { href: "/habitaciones/estado", label: "📊 Visualizar Estado de Habitaciones" },
-    { href: "/reservas", label: "📅 Reservar Habitaciones" },
-    { href: "/cancelar-reserva", label: "❌ Cancelar Reserva" },
-    { href: "/huespedes/busqueda", label: "️🗑️ Dar de baja Huésped" },
-    { href: "/facturar", label: "📑 Facturar" },
+    { href: "/habitaciones/estado", label: "📊 Visualizar Estado de Habitaciones", actionId: "estado" },
+    { href: "/reservas", label: "📅 Reservar Habitaciones", actionId: "reservar" },
+    { href: "/cancelar-reserva", label: "❌ Cancelar Reserva", actionId: "cancelar" },
+    { href: "/huespedes/busqueda", label: "🗑️ Dar de baja Huésped", actionId: "baja" },
+    { href: "/huespedes/busqueda", label: "️✏️ Modificar Huésped", actionId: "modificar" },
+    { href: "/facturar", label: "📑 Facturar", actionId: "facturar" },
   ],
 };
 
@@ -45,7 +47,7 @@ export default function Home() {
           {user?.role &&
             optionsByRole[user.role]?.map((opt) => (
               <Link
-                key={opt.href}
+                key={opt.actionId}
                 href={opt.href}
                 className="nav-option nav-option-secondary"
               >
