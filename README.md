@@ -76,110 +76,58 @@ Frontend disponible en: `http://localhost:3000`
 
 ---
 
-## Testing
-
-### Ejecutar todos los tests
-
-```bash
-mvn clean test
-```
-
-### Cobertura de código (Jacoco)
-
-```bash
-mvn jacoco:report
-# Ver reporte en: target/site/jacoco/index.html
-```
-
-### Tests por patrón
-
-```bash
-# Tests de STRATEGY
-mvn test -Dtest=EstrategiaFacturacionTest
-
-# Tests de FACTORY
-mvn test -Dtest=PagoFactoryTest
-
-# Tests de DECORATOR
-mvn test -Dtest=FacturacionDecoratorTest
-```
-
----
-
 ## Casos de Uso Implementados
 
 ### AuthController
 ```
-- POST /api/auth/login              // CU01 - Login
-- GET /api/auth/me                  // Obtener usuario actual
-- POST /api/auth/logout             // Logout
+- POST /api/auth/login              
+- GET /api/auth/me             
 ```
 ---
 
 ### HuespedController
 ```
-- GET /api/huespedes                    // Listar todos
-- GET /api/huespedes/{id}               // CU02 - Obtener por ID
-- GET /api/huespedes/buscar?documento   // Buscar por documento
-- GET /api/huespedes/buscar?email       // Buscar por email
-- POST /api/huespedes/crear             // CU09 - Crear huésped
-- PUT /api/huespedes/{id}               // CU10 - Editar huésped
-- DELETE /api/huespedes/{id}            // CU11 - Eliminar huésped
+- GET /api/huespedes/buscar                 
+- GET /api/huespedes/buscarPorId  
+- DELETE /api/huespedes/borrar
+- GET /api/huespedes/verificar-historial          
+
 ```
 ---
 
 ### HabitacionController
 ```
-- GET /api/habitaciones                     // Listar todas
-- GET /api/habitaciones/{id}                // Obtener habitación
-- GET /api/habitaciones/estado/{estado}     // Por estado (LIBRE, OCUPADA, etc)
-- POST /api/habitaciones/{id}/check-in      // CU15 - Check-in
-- POST /api/habitaciones/{id}/check-out     // CU15 - Check-out
+- GET /api/habitaciones/estado
 ```
 ---
 
 ### ReservaController
 ```
-- GET /api/reservas                                            // Listar reservas
-- GET /api/reservas/{id}                                       // Obtener reserva
-- GET /api/reservas/huesped/{huespedId}                        // Por huésped
-- GET /api/reservas/disponibilidad?fecha_inicio&fecha_fin      // Disponibilidad
-- POST /api/reservas/crear                                     // CU04 - Crear reserva
-- DELETE /api/reservas/{id}                                    // CU06 - Cancelar reserva
+- POST /api/reservas/crear    
+- GET /api/reservas/buscar
+- POST /api/reservas/cancelar
+- DELETE /api/reservas/cancelar/{id}
+                        
 ```
 ---
 
 ### EstadiaController
 ```
-- GET /api/estadias                         // Listar estadías
-- GET /api/estadias/{id}                    // Detalle estadía
-- POST /api/estadias/{id}/consumos/agregar  // Agregar consumo
-- GET /api/estadias/{id}/consumos           // Listar consumos
+- GET /api/estadia/buscar
+- PUT /api/estadia/checkout/{id}
 ```
 ---
 
 ### FacturaController
 ```
-- POST /api/factura/resumen                  // CU07 - Generar resumen
-- POST /api/factura/generar                  // CU07 - Generar factura
-- GET /api/factura/{id}/descargar            // Descargar PDF
-- GET /api/facturas                          // Listar todas
-- GET /api/facturas/{id}                     // Detalle factura
-- GET /api/facturas/huesped/{huespedId}      // Por huésped
-```
----
+- POST /api/factura/resumen
+- POST /api/factura/generar
+- GET /api/factura/buscar-cuit
 
-### PagoController
-
-```
-- POST /api/pagos/procesar           // CU16 - Procesar pago
-- POST /api/pagos/registrar-manual   // Registrar pago manual
-- GET /api/pagos                     // Listar pagos
-- GET /api/pagos/{id}                // Detalle pago
-- GET /api/pagos/factura/{facturaId} // Por factura
 ```
 
 ---
+
 ### Database connection error
 **Solución:**
 ```bash
