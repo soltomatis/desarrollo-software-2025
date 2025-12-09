@@ -243,10 +243,6 @@ const FacturacionPage = () => {
     <AuthGate>
         <div className="facturacion-root" style={{ padding: '40px', maxWidth: '1000px', margin: '0 auto' }}>
         <h1 style={{ fontSize: '1.8rem', marginBottom: '8px', color: '#333' }}>Facturación</h1>
-        <p style={{ marginTop: 0, marginBottom: 18, color: '#555' }}>
-            Busque la estadía por número de habitación y hora de salida.
-        </p>
-
         <div style={{
             backgroundColor: '#f9f9f9',
             padding: 18,
@@ -265,7 +261,9 @@ const FacturacionPage = () => {
                 fontWeight: 600
             }}>{error}</div>
             )}
-
+                    <p style={{ marginTop: 0, marginBottom: 18, color: '#555' }}>
+            Busque la estadía por número de habitación y hora de salida.
+        </p>
             <form onSubmit={manejarBusqueda} style={{ display: 'grid', gridTemplateColumns: '1fr 180px', gap: 12, alignItems: 'end' }}>
             <div>
                 <label style={{ display: 'block', fontSize: 13, color: '#222', marginBottom: 6 }}>Número de Habitación</label>
@@ -416,8 +414,6 @@ const FacturacionPage = () => {
             </div>
         )}
         <style jsx>{`
-
-                .facturacion-root > h1,
                 .facturacion-root > p,
                 .facturacion-root > h2,
                 .facturacion-root > h3,

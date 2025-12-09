@@ -184,7 +184,7 @@ return (
             </h1>
 
             <Link
-                href="/huespedes/buscar"
+                href="/huespedes/busqueda"
                 style={{
                     display: 'block',
                     marginBottom: '30px',
