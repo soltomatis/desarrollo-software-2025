@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import tp.desarrollo.clases.*;
+import tp.desarrollo.model.*;
 import tp.desarrollo.dto.HabitacionDTO;
 import tp.desarrollo.dto.HuespedDTO;
 import tp.desarrollo.dto.ReservaDTO;

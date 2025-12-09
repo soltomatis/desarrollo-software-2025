@@ -3,7 +3,7 @@ package tp.desarrollo.patrones.observer.Impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import tp.desarrollo.clases.EventoCambioEstadoHabitacion;
+import tp.desarrollo.model.EventoCambioEstadoHabitacion;
 import tp.desarrollo.patrones.observer.HabitacionObserver;
 
 @Service

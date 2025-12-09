@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import tp.desarrollo.clases.Consumo;
-import tp.desarrollo.clases.Direccion;
-import tp.desarrollo.clases.Estadia;
-import tp.desarrollo.clases.Factura;
-import tp.desarrollo.clases.Huesped;
-import tp.desarrollo.clases.Responsable_de_pago;
+import tp.desarrollo.model.Consumo;
+import tp.desarrollo.model.Direccion;
+import tp.desarrollo.model.Estadia;
+import tp.desarrollo.model.Factura;
+import tp.desarrollo.model.Huesped;
+import tp.desarrollo.model.Responsable_de_pago;
 import tp.desarrollo.dto.ConsumoDTO;
 import tp.desarrollo.dto.FacturaResumenDTO;
 import tp.desarrollo.enums.CondicionIVA;

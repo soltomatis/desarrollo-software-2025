@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import tp.desarrollo.clases.*;
+import tp.desarrollo.model.*;
 import tp.desarrollo.dto.*;
 import tp.desarrollo.enums.CondicionIVA;
 import tp.desarrollo.enums.Estado;

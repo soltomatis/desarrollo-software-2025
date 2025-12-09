@@ -6,7 +6,7 @@ package tp.desarrollo.interfaces;
 
 import java.util.List;
 
-import tp.desarrollo.clases.*;
+import tp.desarrollo.model.*;
 import tp.desarrollo.dto.*;
 import tp.desarrollo.enums.*;
 

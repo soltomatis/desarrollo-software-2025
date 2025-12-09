@@ -6,7 +6,7 @@ package tp.desarrollo.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import tp.desarrollo.clases.Factura;
+import tp.desarrollo.model.Factura;
 import tp.desarrollo.patrones.factory.PagoFactory;
 import tp.desarrollo.patrones.factory.PagoStrategy;
 import tp.desarrollo.repository.FacturaDaoDB;

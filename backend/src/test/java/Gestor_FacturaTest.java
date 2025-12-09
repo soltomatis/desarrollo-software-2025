@@ -4,7 +4,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tp.desarrollo.clases.*;
+import tp.desarrollo.model.*;
 import tp.desarrollo.dto.FacturaResumenDTO;
 import tp.desarrollo.enums.CondicionIVA;
 import tp.desarrollo.repository.ConsumoDaoDB;

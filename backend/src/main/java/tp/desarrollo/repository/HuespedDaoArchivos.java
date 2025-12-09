@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import tp.desarrollo.clases.Huesped;
+import tp.desarrollo.model.Huesped;
 import tp.desarrollo.dto.DireccionDTO;
 import tp.desarrollo.dto.HuespedDTO;
 @Repository
@@ -179,7 +179,7 @@ public class HuespedDaoArchivos implements HuespedDAO{
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                         LocalDate fechaLocal = LocalDate.parse(datos[8], formatter);
                         // Crear objeto Direccion
-                        tp.desarrollo.clases.Direccion direccion = new tp.desarrollo.clases.Direccion(
+                        tp.desarrollo.model.Direccion direccion = new tp.desarrollo.model.Direccion(
                             datos[9],
                             Integer.parseInt(datos[10]),
                             datos[11],

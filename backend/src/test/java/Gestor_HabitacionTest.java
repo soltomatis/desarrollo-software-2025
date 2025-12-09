@@ -15,8 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import tp.desarrollo.clases.EstadoHabitacion;
-import tp.desarrollo.clases.Habitacion;
+import tp.desarrollo.model.EstadoHabitacion;
+import tp.desarrollo.model.Habitacion;
 import tp.desarrollo.dto.HabitacionDTO;
 import tp.desarrollo.enums.Estado;
 import tp.desarrollo.patrones.observer.Impl.HabitacionEstadoManager;

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package tp.desarrollo.clases;
+package tp.desarrollo.model;
 
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonProperty;

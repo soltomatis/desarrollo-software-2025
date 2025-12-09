@@ -7,7 +7,7 @@ package tp.desarrollo.dto;
 import java.time.LocalDate;
 
 import lombok.*;
-import tp.desarrollo.clases.Huesped;
+import tp.desarrollo.model.Huesped;
 import tp.desarrollo.enums.CondicionIVA;
 import tp.desarrollo.enums.TipoDocumento;
 

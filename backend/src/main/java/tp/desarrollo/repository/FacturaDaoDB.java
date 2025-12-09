@@ -4,7 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import tp.desarrollo.clases.Factura;
+import tp.desarrollo.model.Factura;
 
 @Repository
 public class FacturaDaoDB {

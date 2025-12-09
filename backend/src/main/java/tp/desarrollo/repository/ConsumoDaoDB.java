@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import tp.desarrollo.clases.Consumo;
+import tp.desarrollo.model.Consumo;
 import tp.desarrollo.interfaces.ConsumoDAO;
 
 @Repository

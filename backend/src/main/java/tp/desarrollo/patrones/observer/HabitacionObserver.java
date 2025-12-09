@@ -1,6 +1,6 @@
 package tp.desarrollo.patrones.observer;
 
-import tp.desarrollo.clases.EventoCambioEstadoHabitacion;
+import tp.desarrollo.model.EventoCambioEstadoHabitacion;
 
 public interface HabitacionObserver {
 

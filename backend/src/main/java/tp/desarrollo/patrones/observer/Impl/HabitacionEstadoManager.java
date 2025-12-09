@@ -5,9 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import tp.desarrollo.clases.EstadoHabitacion;
-import tp.desarrollo.clases.EventoCambioEstadoHabitacion;
-import tp.desarrollo.clases.Habitacion;
+import tp.desarrollo.model.EstadoHabitacion;
+import tp.desarrollo.model.EventoCambioEstadoHabitacion;
+import tp.desarrollo.model.Habitacion;
 import tp.desarrollo.enums.Estado;
 import tp.desarrollo.patrones.observer.HabitacionObserver;
 

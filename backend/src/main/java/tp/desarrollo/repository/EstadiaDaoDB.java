@@ -5,8 +5,8 @@ import org.springframework.stereotype.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import tp.desarrollo.clases.Estadia;
-import tp.desarrollo.clases.Factura;
+import tp.desarrollo.model.Estadia;
+import tp.desarrollo.model.Factura;
 import tp.desarrollo.interfaces.EstadiaDAO;
 @Repository
 public class EstadiaDaoDB implements EstadiaDAO {

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import tp.desarrollo.clases.EventoCambioEstadoHabitacion;
+import tp.desarrollo.model.EventoCambioEstadoHabitacion;
 import tp.desarrollo.enums.Estado;
 import tp.desarrollo.patrones.observer.HabitacionObserver;
 

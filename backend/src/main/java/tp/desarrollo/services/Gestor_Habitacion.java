@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import tp.desarrollo.clases.EstadoHabitacion;
-import tp.desarrollo.clases.Habitacion;
+import tp.desarrollo.model.EstadoHabitacion;
+import tp.desarrollo.model.Habitacion;
 import tp.desarrollo.dto.EstadoHabitacionDTO;
 import tp.desarrollo.dto.HabitacionDTO;
 import tp.desarrollo.enums.Estado;

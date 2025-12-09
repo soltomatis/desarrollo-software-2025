@@ -4,7 +4,7 @@
  */
 package tp.desarrollo.interfaces;
 
-import tp.desarrollo.clases.Reserva;
+import tp.desarrollo.model.Reserva;
 
 /**
  *

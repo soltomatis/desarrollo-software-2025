@@ -1,4 +1,4 @@
-package tp.desarrollo.clases;
+package tp.desarrollo.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;

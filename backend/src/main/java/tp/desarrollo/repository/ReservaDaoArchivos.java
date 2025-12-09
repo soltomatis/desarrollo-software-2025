@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.springframework.stereotype.Repository;
 
-import tp.desarrollo.clases.Huesped;
+import tp.desarrollo.model.Huesped;
 @Repository
 public class ReservaDaoArchivos {
     private static final String RUTA_ARCHIVO_RESERVAS = "C:\\Users\\Maria Sol\\Desarrollo\\reservas_ejemplo.csv";

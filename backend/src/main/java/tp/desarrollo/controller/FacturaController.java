@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import tp.desarrollo.clases.Responsable_de_pago;
+import tp.desarrollo.model.Responsable_de_pago;
 import tp.desarrollo.dto.CalculoFacturaRequest;
 import tp.desarrollo.dto.FacturaResumenDTO;
 import tp.desarrollo.services.Gestor_Factura;

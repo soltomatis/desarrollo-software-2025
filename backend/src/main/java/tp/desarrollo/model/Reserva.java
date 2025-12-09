@@ -1,37 +1,36 @@
-package tp.desarrollo.clases;
+package tp.desarrollo.model;
 
-import java.time.LocalDate;
+import java.util.List;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
 @Data
-public class ReservaHabitacion {
+public class Reserva {
 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private int id;
 
-    @ManyToOne 
-    @JoinColumn(name = "habitacion_fk", nullable = false)
-    private Habitacion habitacion;
-
-    private LocalDate fecha_inicio;
-
-    private LocalDate fecha_fin;
+    @OneToMany(mappedBy = "reserva", 
+               cascade = CascadeType.ALL, 
+               orphanRemoval = true)
+    private List<ReservaHabitacion> listaHabitacionesRerservadas;
 
     @ManyToOne
-    @JoinColumn(name = "id_reserva")
+    @JoinColumn(name = "huesped_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Reserva reserva;
+    private Huesped huespedPrincipal;
 
 }

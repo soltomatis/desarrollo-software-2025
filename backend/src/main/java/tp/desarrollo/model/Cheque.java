@@ -1,5 +1,5 @@
 
-package tp.desarrollo.clases;
+package tp.desarrollo.model;
 import java.time.LocalDate;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import tp.desarrollo.clases.Reserva;
+import tp.desarrollo.model.Reserva;
 import tp.desarrollo.interfaces.ReservaDAO;
 
 @Repository

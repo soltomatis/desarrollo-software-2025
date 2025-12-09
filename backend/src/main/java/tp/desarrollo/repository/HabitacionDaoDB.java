@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import tp.desarrollo.clases.Habitacion;
+import tp.desarrollo.model.Habitacion;
 import tp.desarrollo.interfaces.HabitacionDAO;
 
 @Repository

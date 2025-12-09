@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import tp.desarrollo.clases.*;
+import tp.desarrollo.model.*;
 import tp.desarrollo.dto.*;
 import tp.desarrollo.enums.TipoDocumento;
 import tp.desarrollo.exception.HuespedConReservasExcepcion;

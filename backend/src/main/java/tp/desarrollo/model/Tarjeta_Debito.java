@@ -1,13 +1,12 @@
-package tp.desarrollo.clases;
+package tp.desarrollo.model;
 
 import jakarta.persistence.Entity;
 import lombok.Data;
-
 import lombok.EqualsAndHashCode;
 
+@Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Entity
-public class Efectivo extends Pago {
-	private double montoDePago;
+public class Tarjeta_Debito extends Tarjeta {
+    
 }

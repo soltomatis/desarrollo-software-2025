@@ -1,6 +1,6 @@
 package tp.desarrollo.services;
 
-import tp.desarrollo.clases.Usuario;
+import tp.desarrollo.model.Usuario;
 import tp.desarrollo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

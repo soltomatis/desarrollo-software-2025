@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.persistence.EntityNotFoundException;
-import tp.desarrollo.clases.Estadia;
+import tp.desarrollo.model.Estadia;
 import tp.desarrollo.dto.CheckOutRequest;
 import tp.desarrollo.services.Gestor_Estadia;
 

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import tp.desarrollo.clases.Responsable_de_pago;
+import tp.desarrollo.model.Responsable_de_pago;
 
 @Repository
 public class ResponsableDaoDB {

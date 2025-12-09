@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
-import tp.desarrollo.clases.Estadia;
-import tp.desarrollo.clases.Habitacion;
+import tp.desarrollo.model.Estadia;
+import tp.desarrollo.model.Habitacion;
 import tp.desarrollo.repository.EstadiaDaoDB;
 import tp.desarrollo.repository.HabitacionDaoDB;
 @Service
