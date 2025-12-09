@@ -94,13 +94,6 @@ export default function GrillaDisponibilidad({ habitaciones, fechaDesde, fechaHa
           ))}
         </tbody>
       </table>
-
-      <div style={{ marginTop: '15px', display: 'flex', gap: '15px', fontSize: '0.9rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}><div style={{ width: 15, height: 15, backgroundColor: '#28a745', marginRight: 5 }}></div> Libre</div>
-        <div style={{ display: 'flex', alignItems: 'center' }}><div style={{ width: 15, height: 15, backgroundColor: '#fd7e14', marginRight: 5 }}></div> Reservada</div>
-        <div style={{ display: 'flex', alignItems: 'center' }}><div style={{ width: 15, height: 15, backgroundColor: '#dc3545', marginRight: 5 }}></div> Ocupada</div>
-        <div style={{ display: 'flex', alignItems: 'center' }}><div style={{ width: 15, height: 15, backgroundColor: '#000000', marginRight: 5 }}></div> Fuera de Servicio</div>
-      </div>
     </div>
   );
 }

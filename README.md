@@ -155,6 +155,7 @@ CREATE DATABASE hotel_db;
 - **Alvarez, Juan Francisco**
 - **Buxman, Martín**
 - **Tomatis, María Sol**
+- **Sors, Vicente**
 
 ---
 
